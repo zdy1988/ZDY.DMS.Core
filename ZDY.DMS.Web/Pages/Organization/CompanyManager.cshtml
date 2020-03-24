@@ -1,0 +1,103 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.Organization.CompanyManagerModel
+@{
+    ViewData["Title"] = "CompanyManager";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <portlet title="查询条件" is-form="true" is-fit="true" data-model="list">
+            <form-builder>
+                <div class="row">
+                    <div class="col-md-3">
+                        <text-box field="CompanyName" name="公司名称"></text-box>
+                    </div>
+                    <div class="col-md-3">
+                        <text-box field="Phone" name="电话号码"></text-box>
+                    </div>
+                    <div class="col-md-3">
+                        <text-box field="Fax" name="传真号码"></text-box>
+                    </div>
+                    <div class="col-md-3">
+                        <text-box field="Address" name="公司地址"></text-box>
+                    </div>
+                </div>
+                <form-actions>
+                    <button type="reset" color="Default" data-bind="click:reset">重置条件</button>
+                    <button type="button" color="Green" data-bind="click:firstPage">点击查询</button>
+                </form-actions>
+            </form-builder>
+        </portlet>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <portlet title="公司列表" is-fit="true" data-model="list">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="btn-group pull-right">
+                        <button icon="Plus" color="Blue" data-bind="click:$root.goto, attr: {'data-url': '/Organization/CompanyDetail'}">
+                            新增公司
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <data-table is-show-checkbox-column="false">
+                <td data-bind="text:CompanyName" style="font-weight:bold"></td>
+                <td data-bind="text:Phone"></td>
+                <td data-bind="text:Fax"></td>
+                <td>
+                    <!-- ko text:Province --><!-- /ko --> <!-- ko text:City --><!-- /ko -->
+                </td>
+                <td data-bind="text:Address" width="50%"></td>
+                <td>
+                    <button size="Xs" color="BlueEbonyclay" icon="Home" data-bind="click:$root.goto, attr: {'data-url': '/Organization/DepartmentManager?companyId=' + Id }">
+                        部门
+                    </button>
+                    <button size="Xs" color="GreenSeagreen" icon="Edit" data-bind="click:$root.goto, attr: {'data-url': '/Organization/CompanyDetail?id=' + Id }">
+                        详情
+                    </button>
+                </td>
+            </data-table>
+            <pager></pager>
+        </portlet>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "bootstrap",
+            ui], function ($, ko, zdy) {
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                var table = zdy.table().options({
+                    fields: [
+                        { field: 'CompanyName', value: ko.observable(), method: zdy.querymethod.contains },
+                        { field: 'Phone', value: ko.observable(), method: zdy.querymethod.contains },
+                        { field: 'Fax', value: ko.observable(), method: zdy.querymethod.contains },
+                        { field: 'Address', value: ko.observable(), method: zdy.querymethod.contains }
+                    ],
+                    headers: [
+                        { text: '公司名称', field: 'CompanyName' },
+                        { text: '电话号码', field: 'Phone' },
+                        { text: '传真号码', field: 'Fax' },
+                        { text: '省市区域', field: 'City' },
+                        { text: '公司地址', field: 'Address' }
+                    ],
+                    defaultOrderBy: "TimeStamp",
+                    dataQueryUrl: 'Company/Search'
+                }).import(function () {
+
+                }).bind("list").load();
+
+            })
+    </script>
+}
+

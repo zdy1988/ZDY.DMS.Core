@@ -1,0 +1,6 @@
+﻿body {
+}
+
+.swagger-ui .opblock .opblock-summary-operation-id, .swagger-ui .opblock .opblock-summary-path, .swagger-ui .opblock .opblock-summary-path__deprecated {
+         font-family: 'Microsoft YaHei UI';
+}

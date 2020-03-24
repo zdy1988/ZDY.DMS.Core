@@ -1,0 +1,173 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.Permission.UserGroupManagerModel
+@{
+    ViewData["Title"] = "UserGroupManager";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <portlet title="角色列表" is-fit="true" is-show-tools="false" data-model="user-group-list">
+            <portlet-actions>
+                <button icon="Plus" color="Blue" data-bind="click:handleAdd" bs-toggle-modal="modal-user-group">
+                    新增角色
+                </button>
+            </portlet-actions>
+
+            <data-table is-show-checkbox-column="false">
+                <td data-bind="text:GroupName, click:$root.handleItemClick" style="font-weight:bold"></td>
+                <td>
+                    <button  size="Xs" color="GreenSeagreen" icon="Edit" data-bind="click:$root.handleDetail" bs-toggle-modal="modal-user-group">
+                        编辑
+                    </button>
+                </td>
+            </data-table>
+            <pager></pager>
+        </portlet>
+    </div>
+    <div class="col-md-8">
+        <portlet title="用户列表" is-fit="true" data-model="user-list" is-show-tools="false">
+            <portlet-actions>
+                <button icon="Save" color="RedHaze" data-bind="click:handleSaveGroupMember, visible:$root.selectData().length > 0">
+                    保存成员
+                </button>
+            </portlet-actions>
+            <data-table is-show-action-column="false">
+                <td data-bind="text:UserName" style="font-weight:bold"></td>
+                <td data-bind="text:NickName"></td>
+                <td data-bind="text:Mobile" style="font-weight:bold"></td>
+                <td data-bind="text:Gender"></td>
+            </data-table>
+            <pager></pager>
+        </portlet>
+    </div>
+    <div data-model="user-group-form">
+        <modal title="角色信息" id="modal-user-group">
+            <modal-body>
+                <div class="row">
+                    <div class="col-md-12">
+                        <text-box field="GroupName" is-required="true" name="角色名称"></text-box>
+                    </div>
+                </div>
+            </modal-body>
+            <modal-footer dismiss-text="关闭">
+                <button type="button" color="Red" data-bind="click:$root.delete, visible:Id()">删除</button>
+                <button type="button" color="Green" data-bind="click:update, visible:Id()">修改</button>
+                <button type="button" color="Green" data-bind="click:add, visible:!Id()">提交</button>
+            </modal-footer>
+        </modal>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "bootstrap",
+            "jstree",
+            ui], function ($, ko, zdy) {
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                var userGroupTable = zdy.table().options({
+                    headers: [
+                        { text: '角色名称', field: 'GroupName' }
+                    ],
+                    defaultOrderBy: "TimeStamp",
+                    dataQueryUrl: 'PermissionGroup/Search'
+                }).import(function () {
+                    var self = this
+
+                    this.CurrentGroupId = ko.observable()
+
+                    this.handleAdd = function () {
+                        userGroupForm.reset()
+                    }
+
+                    this.handleDetail = function (data) {
+                        userGroupForm.load(data)
+                    }
+
+                    this.handleItemClick = function (data) {
+                        self.CurrentGroupId(data.Id)
+                        userTable.handleLoadGroupMember()
+                    }
+
+                }).bind("user-group-list").load();
+
+                var userGroupForm = zdy.form().options({
+                    fields: [
+                        { field: 'Id', value: ko.observable() },
+                        { field: 'GroupName', value: ko.observable() }
+                    ],
+                    dataAddUrl: 'PermissionGroup/Add',
+                    dataUpdateUrl: 'PermissionGroup/Update',
+                    dataDeleteUrl: 'PermissionGroup/Delete'
+                }).import(function () {
+
+                    this.afterAdd = function () {
+                        $("#modal-user-group").modal('hide')
+                        userGroupTable.search()
+                    }
+
+                    this.afterUpdate = function () {
+                        $("#modal-user-group").modal('hide')
+                        userGroupTable.search()
+                    }
+
+                    this.afterDelete = function () {
+                        $("#modal-user-group").modal('hide')
+                        userGroupTable.search()
+                    }
+
+                }).bind("user-group-form");
+
+                var userTable = zdy.table().options({
+                    headers: [
+                        { text: '账号', field: 'UserName' },
+                        { text: '昵称', field: 'NickName' },
+                        { text: '手机号码', field: 'Mobile' },
+                        { text: '性别', field: 'Gender' }
+                    ],
+                    defaultOrderBy: "TimeStamp",
+                    dataQueryUrl: 'User/Search'
+                }).import(function () {
+
+                    this.handleSaveGroupMember = function () {
+                        var groupId = userGroupTable.CurrentGroupId()
+
+                        if (groupId == 0) {
+                            zdy.toastr.error("请先选择角色后再保存")
+                            return
+                        }
+
+                        var members = userTable.selectData().map(function (item) {
+                            return {
+                                UserId: item
+                            }
+                        })
+
+                        zdy.ajaxPost("Permission/AddUserGroupMember", {
+                            groupId: groupId,
+                            members: members
+                        }).done(function () { 
+                            zdy.toastr.success("保存成功")
+                        })
+                    }
+
+                    this.handleLoadGroupMember = function () {
+                        var groupId = userGroupTable.CurrentGroupId()
+                        zdy.ajaxPost("Permission/FindUserGroupMember", { groupId: groupId }).done(function (data) {
+                            var rst = data.Data.map(function (item) {
+                                return item.UserId
+                            })
+                            userTable.selectData(rst)
+                        })
+                    }
+
+                }).bind("user-list").load();
+            })
+    </script>
+}
+

@@ -1,0 +1,50 @@
+[
+  {
+    "outputFileName": "wwwroot/assets/global/scripts/app.min.js",
+    "inputFiles": [
+      "wwwroot/assets/global/scripts/app.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/assets/global/scripts/core/knockout.min.js",
+    "inputFiles": [
+      "wwwroot/assets/global/scripts/core/knockout.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/assets/global/scripts/core/require.min.js",
+    "inputFiles": [
+      "wwwroot/assets/global/scripts/core/require.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/assets/global/scripts/core/zdy.amd.min.js",
+    "inputFiles": [
+      "wwwroot/assets/global/scripts/core/zdy.amd.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/assets/global/scripts/core/zdy.amd.config.min.js",
+    "inputFiles": [
+      "wwwroot/assets/global/scripts/core/zdy.amd.config.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/assets/layouts/global/css/main.min.css",
+    "inputFiles": [
+      "wwwroot/assets/layouts/global/css/main.css"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/assets/layouts/global/scripts/main.min.js",
+    "inputFiles": [
+      "wwwroot/assets/layouts/global/scripts/main.js"
+    ]
+  },
+  {
+    "outputFileName": "wwwroot/assets/global/scripts/workflow/flow-designer.min.js",
+    "inputFiles": [
+      "wwwroot/assets/global/scripts/workflow/flow-designer.js"
+    ]
+  }
+]

@@ -1,0 +1,270 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.Admin.DictionaryManagerModel
+@inject ZDY.DMS.ServiceContracts.IDictionaryService DictionaryService
+@inject SelectOptionsFactory SelectOptionsFactory 
+@{
+    ViewData["Title"] = "DictionaryManager";
+
+    var Dictionary = DictionaryService.GetDictionary("DictionaryKinds");
+
+    var DictionaryKinds = SelectOptionsFactory.GetSelectOptionsByDictionary("DictionaryKinds");
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <portlet title="字典管理" is-fit="true" is-show-tools="false">
+            <tabs is-justified="true" mode="Custom">
+                <tab-content tab-name="字典标识">
+                    <div class="row" data-model="key-table">
+                        <div class="col-md-12">
+                            <div class="btn-group pull-right">
+                                <button icon="Plus" color="Blue" data-bind="click:handleAdd" bs-toggle-modal="modal-key-detail">
+                                    新增标识
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" data-model="key-table">
+                        <div class="col-md-12">
+                            <data-table is-show-checkbox-column="false" row-click-funtion="handleRowClick">
+                                <td data-bind="text:Name"></td>
+                                <td data-bind="text:Code"></td>
+                                <td data-bind="text:Order"></td>
+                                <td>
+                                    <lable data-bind="state: $root.dic('DictionaryKinds', Type, true)"></lable>
+                                </td>
+                                <td>
+                                    <button size="Xs" color="GreenSeagreen" icon="Edit" data-bind="click:$root.handleDetail" bs-toggle-modal="modal-key-detail">编辑</button>
+                                </td>
+                            </data-table>
+                            <pager></pager>
+                        </div>
+                    </div>
+                </tab-content>
+                <tab-content tab-name="字典数据">
+                    <div class="row" data-model="value-table">
+                        <div class="col-md-12">
+                            <div class="btn-group pull-right">
+                                <button icon="Plus" color="Blue" data-bind="click:handleAdd, visible: DictionaryKey() !== undefined" bs-toggle-modal="modal-value-detail">
+                                    新增数据
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row" data-model="value-table">
+                        <div class="col-md-12">
+                            <data-table is-show-checkbox-column="false">
+                                <td data-bind="text:Name"></td>
+                                <td data-bind="text:Value" style="overflow:auto; white-space: normal;"></td>
+                                <td data-bind="text:ParentValue"></td>
+                                <td data-bind="text:Order"></td>
+                                <td data-bind="text:Note"></td>
+                                <td>
+                                    <button size="Xs" color="GreenSeagreen" icon="Edit" data-bind="click:$root.handleDetail" bs-toggle-modal="modal-value-detail">
+                                        编辑
+                                    </button>
+                                </td>
+                            </data-table>
+                        </div>
+                    </div>
+                </tab-content>
+            </tabs>
+        </portlet>
+    </div>
+    <div data-model="key-form">
+        <modal title="字典标识" id="modal-key-detail">
+            <modal-body>
+                <div class="row">
+                    <div class="col-md-6">
+                        <text-box field="Name" is-required="true" name="名称"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Code" is-required="true" name="标识"></text-box>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <text-box field="Order" is-required="true" name="排序" text-box-type="Number"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <select-box field="Type" is-required="true" name="类型" options="@DictionaryKinds"></select-box>
+                    </div>
+                </div>
+            </modal-body>
+            <modal-footer dismiss-text="关闭">
+                <button type="button" color="Red" data-bind="click:$root.delete, visible:Id()">删除</button>
+                <button type="button" color="Green" data-bind="click:update, visible:Id()">修改</button>
+                <button type="button" color="Green" data-bind="click:add, visible:!Id()">提交</button>
+            </modal-footer>
+        </modal>
+    </div>
+    <div data-model="value-form">
+        <modal title="字典数据" id="modal-value-detail">
+            <modal-body> 
+                <div class="row">
+                    <div class="col-md-6">
+                        <text-box field="Name" is-required="true" name="名称"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Order" is-required="true" name="排序" text-box-type="Number"></text-box>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <text-box field="Value" is-required="true" name="值"></text-box>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <text-box field="ParentValue" name="父级值"></text-box>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <text-box field="Note" is-multiple="true" name="备注"></text-box>
+                    </div>
+                </div>
+            </modal-body>
+            <modal-footer dismiss-text="关闭">
+                <button type="button" color="Red" data-bind="click:$root.delete, visible:Id()">删除</button>
+                <button type="button" color="Green" data-bind="click:update, visible:Id()">修改</button>
+                <button type="button" color="Green" data-bind="click:add, visible:!Id()">提交</button>
+            </modal-footer>
+        </modal>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Dictionary)) ')
+
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "bootstrap",
+            ui], function ($, ko, zdy) { 
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                var keyTable = zdy.table().options({
+                    headers: [
+                        { text: '名称', field: 'Name', width: 'auto' },
+                        { text: '标识', field: 'Code', width: 'auto' },
+                        { text: '排序', field: 'Order', width: 'auto' },
+                        { text: '类型', field: 'Type', width: 'auto' }
+                    ],
+                    defaultOrderBy: "Order",
+                    dataQueryUrl: 'DictionaryKey/Search'
+                }).import(function () {
+
+                    this.dic(dictionary)
+
+                    this.handleRowClick = function (data) {
+                        valueTable.DictionaryKey(data.Code)
+                        valueTable.search()
+                    }
+
+                    this.handleAdd = function () { 
+                        keyForm.reset()
+                    }
+
+                    this.handleDetail = function (data, e) {
+                        keyForm.load(data)
+                    }
+
+                }).bind("key-table").load()
+
+                var keyForm = zdy.form().options({
+                    fields: [
+                        { field: 'Id', value: ko.observable() },
+                        { field: 'Name', value: ko.observable() },
+                        { field: 'Code', value: ko.observable() },
+                        { field: 'Order', value: ko.observable() },
+                        { field: 'Type', value: ko.observable() }
+                    ],
+                    dataAddUrl: 'DictionaryKey/Add',
+                    dataUpdateUrl: 'DictionaryKey/Update',
+                    dataDeleteUrl: 'DictionaryKey/Delete'
+                }).import(function () { 
+
+                    this.afterAdd = function () {
+                        $("#modal-key-detail").modal('hide')
+                        keyTable.search()
+                    }
+
+                    this.afterUpdate = function () { 
+                        $("#modal-key-detail").modal('hide')
+                        keyTable.search()
+                    }
+
+                    this.afterDelete = function () { 
+                        $("#modal-key-detail").modal('hide')
+                        keyTable.search()
+                    }
+
+                }).bind("key-form")
+
+                var valueTable = zdy.table().options({
+                    fields: [
+                        { field: 'DictionaryKey', value: ko.observable(), method: zdy.querymethod.equal }
+                    ],
+                    headers: [
+                        { text: '名称', field: 'Name', width: 'auto' },
+                        { text: '当前值', field: 'Value', width: 'auto' },
+                        { text: '父级值', field: 'ParentValue', width: 'auto' },
+                        { text: '排序', field: 'Order', width: 'auto' },
+                        { text: '备注', field: 'Note', width: 'auto' },
+                    ],
+                    pageSize: 10000,
+                    defaultOrderBy: "Order",
+                    dataQueryUrl: 'DictionaryValue/Search',
+                    isAsc: true
+                }).import(function () {
+
+                    this.handleAdd = function () {
+                        valueForm.reset()
+                        valueForm.DictionaryKey(this.DictionaryKey())
+                    }
+
+                    this.handleDetail = function (data) {
+                        valueForm.load(data)
+                    }
+
+                }).bind("value-table")
+
+                var valueForm = zdy.form().options({
+                    fields: [
+                        { field: 'Id', value: ko.observable() },
+                        { field: 'DictionaryKey', value: ko.observable() },
+                        { field: 'Name', value: ko.observable() },
+                        { field: 'Value', value: ko.observable() },
+                        { field: 'ParentValue', value: ko.observable() },
+                        { field: 'Order', value: ko.observable() },
+                        { field: 'Note', value: ko.observable() }
+                    ],
+                    dataAddUrl: 'DictionaryValue/Add',
+                    dataUpdateUrl: 'DictionaryValue/Update',
+                    dataDeleteUrl: 'DictionaryValue/Delete'
+                }).import(function () {
+
+                    this.afterAdd = function () {
+                        $("#modal-value-detail").modal('hide')
+                        valueTable.search()
+                    }
+
+                    this.afterUpdate = function () {
+                        $("#modal-value-detail").modal('hide')
+                        valueTable.search()
+                    }
+
+                    this.afterDelete = function () {
+                        $("#modal-value-detail").modal('hide')
+                        valueTable.search()
+                    }
+
+                }).bind("value-form")
+
+            })
+    </script>
+}

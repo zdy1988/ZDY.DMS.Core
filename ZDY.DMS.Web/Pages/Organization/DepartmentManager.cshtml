@@ -1,0 +1,142 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.Organization.DepartmentManagerModel
+@{
+    ViewData["Title"] = "DepartmentManager";
+}
+
+<div class="row">
+    <div class="col-md-8">
+        <portlet title="所有部门" is-fit="true" data-url="/Organization/DepartmentTree?companyId=@Model.CompanyId" id="departments-tree-portlet" style="min-height:600px;">
+        </portlet>
+    </div>
+    <div class="col-md-4">
+        <portlet title="部门信息" is-fit="true" is-form="true" data-model="form" style="min-height:600px;">
+            <form-builder>
+                <div class="row">
+                    <div class="col-md-12" data-bind="visible:ParentDepartmentName()">
+                        <text-box field="ParentDepartmentName" name="上级部门" is-disabled="true"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="DepartmentName" name="部门名称" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="Phone" name="部门电话" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="Fax" name="传真"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="Order" name="排序(数值越小越靠前)" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="Note" name="备注" is-multiple="true"></text-box>
+                    </div>
+                </div>
+                <form-actions>
+                    <button type="reset" color="Default" data-bind="click:reset">重置</button>
+                    <button type="button" color="RedMint" data-bind="click:$root.delete, visible:Id()">删除</button>
+                    <button type="button" color="Green" data-bind="click:update, visible:Id()">修改</button>
+                    <button type="button" color="Green" data-bind="click:add, visible:!Id()">提交</button>
+                </form-actions>
+            </form-builder>
+        </portlet>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "bootstrap",
+            ui], function ($, ko, zdy) {
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                $("#departments-tree-portlet").on("portlet.onload", function () {
+
+                    ui.app.initTreeTable();
+
+                    $(".table-tree > tbody").delegate(".btn", "click", function () {
+                        var json = $(this).closest("tr").attr("data-json");
+                        var data = JSON.parse(json);
+                        var action = $(this).attr("data-action")
+
+                        form.getInstance()[action](data)
+                    });
+                });
+
+                var LoadTree = function () {
+                    $("#departments-tree-portlet > .portlet-title > .tools > a.reload").trigger("click")
+                }
+
+                var GetParentDepartmentName = function (parentId) {
+                    var $ParentDepartmentNode = $(".table-tree > tbody tr td[data-id=" + parentId + "]");
+                    if ($ParentDepartmentNode) {
+                        return $ParentDepartmentNode.text();
+                    } else {
+                        return "";
+                    }
+                }
+
+                LoadTree()
+
+                var form = zdy.form().options({
+                    fields: [
+                        { field: 'Id', value: ko.observable() },
+                        { field: 'CompanyId', value: ko.observable('@Model.CompanyId') },
+                        { field: 'DepartmentName', value: ko.observable() },
+                        { field: 'Phone', value: ko.observable() },
+                        { field: 'Fax', value: ko.observable() },
+                        { field: 'Note', value: ko.observable() },
+                        { field: 'Order', value: ko.observable(0) },
+                        { field: 'ParentId', value: ko.observable() }
+                    ],
+                    dataAddUrl: 'Department/Add',
+                    dataUpdateUrl: 'Department/Update',
+                    dataDeleteUrl: 'Department/Delete'
+                }).import(function () {
+
+                    this.afterAdd = function (data) {
+                        LoadTree()
+                        this.reset()
+                    }
+
+                    this.afterUpdate = function (data) {
+                        LoadTree()
+                        this.reset()
+                    }
+
+                    this.afterDelete = function () {
+                        LoadTree()
+                        this.reset()
+                    }
+
+                    this.ParentDepartmentName = ko.observable()
+
+                    this.newChild = function (data) {
+                        this.reset()
+                        this.ParentId(data.Id)
+                        this.ParentDepartmentName(data.DepartmentName)
+                    }
+
+                    this.newBrother = function (data) {
+                        this.reset()
+                        this.ParentId(data.ParentId)
+                        this.ParentDepartmentName(GetParentDepartmentName(data.ParentId))
+                    }
+
+                    this.detailThis = function (data) {
+                        this.load(data)
+                        this.ParentDepartmentName(GetParentDepartmentName(data.ParentId))
+                    }
+
+
+
+                }).bind("form").load({})
+            });
+    </script>
+}
+
+

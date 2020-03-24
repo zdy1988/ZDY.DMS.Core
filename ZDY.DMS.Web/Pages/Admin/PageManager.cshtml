@@ -1,0 +1,395 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.Admin.PageManagerModel
+@{
+    ViewData["Title"] = "PageManager";
+
+    var PageType = new List<KeyValuePair<string, string>> {
+        new KeyValuePair<string, string>("P", "页面"),
+        new KeyValuePair<string, string>("N", "节点")
+    };
+
+    var IconSource = (new string[] {  "icon-user-female"
+            , "icon-user-follow"
+            , "icon-user-following"
+            , "icon-user-unfollow"
+            , "icon-trophy"
+            , "icon-screen-smartphone"
+            , "icon-screen-desktop"
+            , "icon-plane"
+            , "icon-notebook"
+            , "icon-moustache"
+            , "icon-mouse"
+            , "icon-magnet"
+            , "icon-energy"
+            , "icon-emoticon-smile"
+            , "icon-disc"
+            , "icon-cursor-move"
+            , "icon-crop"
+            , "icon-credit-card"
+            , "icon-chemistry"
+            , "icon-user"
+            , "icon-speedometer"
+            , "icon-social-youtube"
+            , "icon-social-twitter"
+            , "icon-social-tumblr"
+            , "icon-social-facebook"
+            , "icon-social-dropbox"
+            , "icon-social-dribbble"
+            , "icon-shield"
+            , "icon-screen-tablet"
+            , "icon-magic-wand"
+            , "icon-hourglass"
+            , "icon-graduation"
+            , "icon-ghost"
+            , "icon-game-controller"
+            , "icon-fire"
+            , "icon-eyeglasses"
+            , "icon-envelope-open"
+            , "icon-envelope-letter"
+            , "icon-bell"
+            , "icon-badge"
+            , "icon-anchor"
+            , "icon-wallet"
+            , "icon-vector"
+            , "icon-speech"
+            , "icon-puzzle"
+            , "icon-printer"
+            , "icon-present"
+            , "icon-playlist"
+            , "icon-pin"
+            , "icon-picture"
+            , "icon-map"
+            , "icon-layers"
+            , "icon-handbag"
+            , "icon-globe-alt"
+            , "icon-globe"
+            , "icon-frame"
+            , "icon-folder-alt"
+            , "icon-film"
+            , "icon-feed"
+            , "icon-earphones-alt"
+            , "icon-earphones"
+            , "icon-drop"
+            , "icon-drawer"
+            , "icon-docs"
+            , "icon-directions"
+            , "icon-direction"
+            , "icon-diamond"
+            , "icon-cup"
+            , "icon-compass"
+            , "icon-call-out"
+            , "icon-call-in"
+            , "icon-call-end"
+            , "icon-calculator"
+            , "icon-bubbles"
+            , "icon-briefcase"
+            , "icon-book-open"
+            , "icon-basket-loaded"
+            , "icon-basket"
+            , "icon-bag"
+            , "icon-action-undo"
+            , "icon-action-redo"
+            , "icon-wrench"
+            , "icon-umbrella"
+            , "icon-trash"
+            , "icon-tag"
+            , "icon-support"
+            , "icon-size-fullscreen"
+            , "icon-size-actual"
+            , "icon-shuffle"
+            , "icon-share-alt"
+            , "icon-share"
+            , "icon-rocket"
+            , "icon-question"
+            , "icon-pie-chart"
+            , "icon-pencil"
+            , "icon-note"
+            , "icon-music-tone-alt"
+            , "icon-music-tone"
+            , "icon-microphone"
+            , "icon-loop"
+            , "icon-logout"
+            , "icon-login"
+            , "icon-list"
+            , "icon-like"
+            , "icon-home"
+            , "icon-grid"
+            , "icon-graph"
+            , "icon-equalizer"
+            , "icon-dislike"
+            , "icon-cursor"
+            , "icon-control-start"
+            , "icon-control-rewind"
+            , "icon-control-play"
+            , "icon-control-pause"
+            , "icon-control-forward"
+            , "icon-control-end"
+            , "icon-calendar"
+            , "icon-bulb"
+            , "icon-bar-chart"
+            , "icon-arrow-up"
+            , "icon-arrow-right"
+            , "icon-arrow-left"
+            , "icon-arrow-down"
+            , "icon-ban"
+            , "icon-bubble"
+            , "icon-camcorder"
+            , "icon-camera"
+            , "icon-check"
+            , "icon-clock"
+            , "icon-close"
+            , "icon-cloud-download"
+            , "icon-cloud-upload"
+            , "icon-doc"
+            , "icon-envelope"
+            , "icon-eye"
+            , "icon-flag"
+            , "icon-folder"
+            , "icon-heart"
+            , "icon-info"
+            , "icon-key"
+            , "icon-link"
+            , "icon-lock"
+            , "icon-lock-open"
+            , "icon-magnifier"
+            , "icon-magnifier-add"
+            , "icon-magnifier-remove"
+            , "icon-paper-clip"
+            , "icon-paper-plane"
+            , "icon-plus"
+            , "icon-pointer"
+            , "icon-power"
+            , "icon-refresh"
+            , "icon-reload"
+            , "icon-settings"
+            , "icon-star"
+            , "icon-symbol-female"
+            , "icon-symbol-male"
+            , "icon-target"
+            , "icon-volume-1"
+            , "icon-volume-2"
+            , "icon-volume-off"
+            , "icon-users"}).OrderBy(t => t).Select(t => new KeyValuePair<string, string>(t, t)).ToList();
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <portlet title="所有页面" is-fit="true" data-url="/Admin/PageTree" id="pages-tree-portlet" data-model="tree">
+
+        </portlet>
+        <div id="tree-context-menu">
+            <ul class="dropdown-menu pull-left" role="menu">
+                <li>
+                    <a href="javascript:;" data-action="newChild">
+                        <i class="fa fa-plus"></i> 新增子级页面
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;" data-action="newBrother">
+                        <i class="fa fa-plus-square"></i> 新增同级页面
+                    </a>
+                </li>
+                <li class="divider"> </li>
+                <li>
+                    <a href="javascript:;" data-action="removeThis">
+                        <i class="fa fa-remove"></i> 删除当前节点
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <portlet title="页面信息" is-fit="true" is-form="true" data-model="form">
+            <form-builder>
+                <div class="row">
+                    <div class="col-md-12">
+                        <text-box field="PageName" name="页面名称" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="PageCode" name="页面代码" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="Level" name="页面等级" text-box-type="Number"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <select-box field="Type" name="页面类型" options="@PageType" is-required="true"></select-box>
+                    </div>
+                    <div class="col-md-12">
+                        <check-box field="IsInMenu" name="加入菜单？"></check-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="MenuName" name="菜单名称" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="Src" name="菜单链接" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <select-box field="Icon" options="@IconSource" name="菜单图标" is-use-place-holder="false" bind="select2:{templateResult: select2Template, templateSelection: select2Template, width: '100%', value: Icon()}"></select-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="Order" name="页面排序(数值越小越靠前)" text-box-type="Number" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <check-box field="IsPassed" name="是否不检查权限？"></check-box>
+                    </div>
+                    <div class="col-md-6">
+                        <check-box field="IsDisabled" name="是否禁用？"></check-box>
+                    </div>
+                </div>
+                <form-actions>
+                    <button type="reset" class="btn default" data-bind="click:reset">重置</button>
+                    <button type="button" class="btn green" data-bind="click:update, visible:Id()">修改</button>
+                    <button type="button" class="btn green" data-bind="click:add, visible:!Id()">提交</button>
+                </form-actions>
+            </form-builder>
+        </portlet>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "bootstrap",
+            "bootstrap-contextmenu",
+            "jquery-select2",
+            "jstree",
+            ui], function ($, ko, zdy) {
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                $("#pages-tree-portlet").on("portlet.onload", function () {
+                    tree.init()
+                    tree.initContextMenu()
+                })
+
+                var tree = zdy.module().import(function () {
+
+                    this.ContextMenuData = ko.observable()
+
+                    this.refresh = function () {
+
+                    }
+
+                    this.reload = function () {
+                        $("#pages-tree-portlet > .portlet-title > .tools > a.reload").trigger("click")
+                        return this
+                    }
+
+                    this.init = function () {
+                        $('#pages-tree').jstree({
+                            "core": {
+                                "themes": {
+                                    "dots" : true
+                                }
+                            },
+                            "types": {
+                                "default": {
+                                    "icon": "fa fa-folder icon-state-warning icon-lg"
+                                }
+                            },
+                            "plugins": ["types"]
+                        });
+
+                        $('#pages-tree').on('select_node.jstree', function (e, data) {
+                            var json = data.node.li_attr["data-json"]
+                            var model = JSON.parse(json)
+                            form.load(model)
+                        });
+
+                        $('#pages-tree').jstree(true).open_all()
+                    }
+
+                    this.initContextMenu = function () {
+                        $('#pages-tree').contextmenu({
+                            target: '#tree-context-menu',
+                            before: function (e) {
+                                e.preventDefault();
+                                if (e.target.tagName.toLowerCase() !== 'a') {
+                                    e.preventDefault();
+                                    this.closemenu();
+                                    return false;
+                                }
+
+                                var $currentTreeNode = $(e.target).parent()
+                                tree.ContextMenuData({
+                                    data: $currentTreeNode.data("json")
+                                })
+
+                                return true;
+                            },
+                            onItem: function (ctx, e) {
+                                var action = $(e.target).data("action")
+                                if (action) {
+                                    form[action](tree.ContextMenuData())
+                                }
+                            }
+                        });
+                    }
+
+                }).bind("tree").reload()
+
+                var form = zdy.form().options({
+                    fields: [
+                        { field: 'Id', value: ko.observable() },
+                        { field: 'ParentId', value: ko.observable() },
+                        { field: 'PageName', value: ko.observable() },
+                        { field: 'PageCode', value: ko.observable() },
+                        { field: 'Level', value: ko.observable() },
+                        { field: 'Type', value: ko.observable() },
+                        { field: 'IsInMenu', value: ko.observable(true) },
+                        { field: 'MenuName', value: ko.observable() },
+                        { field: 'Src', value: ko.observable() },
+                        { field: 'Icon', value: ko.observable() },
+                        { field: 'Order', value: ko.observable(0) },
+                        { field: 'IsPassed', value: ko.observable(false) },
+                        { field: 'IsDisabled', value: ko.observable(false) }
+                    ],
+                    dataAddUrl: 'Page/Add',
+                    dataUpdateUrl: 'Page/Update',
+                    dataDeleteUrl: 'Page/Delete'
+                }).import(function () {
+
+                    this.afterAdd = function (data) {
+                        tree.reload()
+                        this.reset()
+                    }
+
+                    this.afterUpdate = function (data) {
+                        tree.reload()
+                        this.reset()
+                    }
+
+                    this.afterDelete = function () {
+                        tree.reload()
+                        this.reset()
+                    }
+
+                    this.newChild = function (data) {
+                        this.reset()
+                        this.ParentId(data.data.Id)
+                    }
+
+                    this.newBrother = function (data) {
+                        this.reset()
+                        this.ParentId(data.data.ParentId)
+                    }
+
+                    this.removeThis = function (data) {
+                        this.load(data.data)
+                        this.delete()
+                    }
+
+                    this.select2Template = function (state) {
+                        var $state = $(
+                            "<span><i class='" + state.text + "'></i> ." + state.text + "</span>"
+                        );
+                        return $state;
+                    }
+
+                }).bind("form")
+            });
+    </script>
+}

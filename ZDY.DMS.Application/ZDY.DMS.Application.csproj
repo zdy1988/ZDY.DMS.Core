@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="AutoMapper\AutoMapProfileConfiguration.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="AutoMapper\AutoMapProfileConfiguration.tt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.1.2" />
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="3.1.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ZDY.DMS.Events\ZDY.DMS.Events.csproj" />
+    <ProjectReference Include="..\ZDY.DMS\ZDY.DMS.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Domain\ZDY.DMS.Domain.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Models\ZDY.DMS.Models.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.ServiceContracts\ZDY.DMS.ServiceContracts.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Tools\ZDY.DMS.Tools.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>C:\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\10.0.1\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+</Project>

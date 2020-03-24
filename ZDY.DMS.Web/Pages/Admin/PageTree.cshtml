@@ -1,0 +1,22 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.Admin.PageTreeModel
+@{
+    Layout = null;
+    ViewData["Title"] = "PageTree";
+}
+
+
+
+@if (Model.TreeData.Count > 0)
+{
+
+    <tree tree-data="@Model.TreeData" id="pages-tree"></tree>
+
+}
+else
+{
+
+    <h3 class="text-center demo-height">暂无部门数据！</h3>
+
+}
+

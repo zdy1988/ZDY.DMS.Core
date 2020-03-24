@@ -1,0 +1,16 @@
+dotnet ef migrations add Migration
+
+dotnet ef migrations remove
+
+dotnet ef database update
+
+Add-Migration Migration
+
+Update-Database Migration
+
+Add-Migration Migration_0001 -Context JxcDbContext
+
+Update-Database Migration_0001 -Context JxcDbContext
+
+//ªÒ»°Ω≈±æ
+Script-Migration -From Migration_0001 -To Migration_0001 -Context JxcDbContext

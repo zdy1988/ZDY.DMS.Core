@@ -1,0 +1,173 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.Permission.UserPermissionManagerModel
+@{
+    ViewData["Title"] = "UserPermissionManager";
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <portlet title="全部角色" is-fit="true" is-show-tools="false" data-model="user-group-list">
+            <data-table is-show-checkbox-column="false" is-show-action-column="false">
+                <td data-bind="text:GroupName, click: $root.handleItemClick"></td>
+            </data-table>
+            <pager></pager>
+        </portlet>
+    </div>
+    <div class="col-md-6">
+        <portlet title="页面权限" is-fit="true" data-url="/Admin/PageTree" id="pages-tree-portlet" data-model="tree">
+            <portlet-actions>
+                <button icon="Save" color="GreenDark" data-bind="click:handleSavePagePermissions">
+                    保存页面访问权限
+                </button>
+            </portlet-actions>
+        </portlet>
+    </div>
+</div>
+
+@section Styles {
+    <style type="text/css">
+        #pages-tree-portlet.portlet.light > .portlet-title > .tools {
+            display: none;
+        }
+
+        #pages-tree-portlet.portlet.light > .portlet-body {
+            padding-top: 26px;
+            padding-bottom: 36px;
+        }
+    </style>
+}
+
+@section Scripts {
+    <script type="text/javascript">
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "bootstrap",
+            "jstree",
+            ui], function ($, ko, zdy) {
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                $("#pages-tree-portlet").on("portlet.onload", function () {
+                    tree.init()
+                })
+
+                var tree = zdy.module().import(function () { 
+
+                    this.refresh = function () {
+
+                    }
+
+                    this.init = function () { 
+                        $('#pages-tree').jstree({
+                            "core": {
+                                "themes": {
+                                    "responsive": false
+                                }
+                            },
+                            "types": {
+                                "default": {
+                                    "icon": "fa fa-folder icon-state-warning icon-lg"
+                                }
+                            },
+                            "plugins": ["types", "checkbox"]
+                        })
+
+                        $('#pages-tree').jstree(true).open_all()
+                    }
+
+                    this.reload = function () { 
+                        $("#pages-tree-portlet > .portlet-title > .tools > a.reload").trigger("click")
+                        return this
+                    }
+
+                    this.handleSavePagePermissions = function () {
+
+                        var groupId = userGroupTable.CurrentGroupId()
+
+                        if (groupId == 0) {
+                            zdy.toastr.error("请先选择用户组后再保存")
+                            return
+                        }
+
+                        var selectedNode = $('#pages-tree').jstree(true).get_selected(true)
+
+                        var permissions = []
+
+                        for (var i = 0; i < selectedNode.length; i++) {
+                            permissions.push({
+                                PageId: selectedNode[i].data.json.Id
+                            })
+                            permissions.push({
+                                PageId: selectedNode[i].data.json.ParentId
+                            })
+                        }
+
+                        var data = {
+                            permissions: permissions,
+                            groupId: groupId
+                        }
+
+                        zdy.ajaxPost("Permission/SetUserGroupPagePermission", data).done(function () {
+                            zdy.toastr.success("保存成功")
+                        })
+                    }
+
+                    this.handleLoadPagePermissions = function () {
+
+                        var groupId = userGroupTable.CurrentGroupId()
+
+                        var treeData = $("#pages-tree li.jstree-node").map(function (index, node) {
+                            var json = $(node).data("json")
+                            var id = $(node).attr("id")
+                            return {
+                                json: json,
+                                id: id
+                            }
+                        });
+
+                        zdy.ajaxPost("Permission/FindUserGroupPagePermission", { groupId: groupId }).done(function (data) {
+                            var dataArray = data.Data.map(function (item) {
+                                return item.PageId
+                            })
+
+                            $("#pages-tree").jstree(true).select_all()
+
+                            treeData.map(function (index, item) {
+                                if (dataArray.indexOf(item.json.Id) == -1) {
+                                    $("#pages-tree").jstree(true).deselect_node(item.id)
+                                }
+                            })
+                        })
+
+                    }
+
+                }).bind("tree").reload()
+
+
+                var userGroupTable = zdy.table().options({
+                    fields: [
+
+                    ],
+                    headers: [
+                        { text: '角色名称', field: 'GroupName' }
+                    ],
+                    defaultOrderBy: "TimeStamp",
+                    dataQueryUrl: 'PermissionGroup/Search'
+                }).import(function () { 
+
+                    this.CurrentGroupId = ko.observable()
+
+                    this.handleItemClick = function (data) {
+
+                        userGroupTable.CurrentGroupId(data.Id)
+                        $("#pages-tree").jstree(true).deselect_all()
+                        tree.handleLoadPagePermissions()
+
+                    }
+
+                }).bind("user-group-list").load();
+            })
+    </script>
+}

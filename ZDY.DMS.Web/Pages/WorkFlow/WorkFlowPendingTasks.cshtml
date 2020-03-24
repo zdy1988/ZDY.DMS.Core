@@ -1,0 +1,98 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.WorkFlow.WorkFlowPendingTasksModel
+
+<div class="row">
+    <div class="col-md-12">
+        <portlet title="查询条件" is-form="true" is-fit="true" data-model="list">
+            <form-builder>
+                <div class="row">
+                    <div class="col-md-3">
+                        <text-box field="Title" name="实例名称"></text-box>
+                    </div>
+                    <div class="col-md-3">
+                        <text-box field="FlowName" name="所属流程"></text-box>
+                    </div>
+                    <div class="col-md-3">
+                        <text-box field="SenderName" name="发送人员"></text-box>
+                    </div>
+                    <div class="col-md-3">
+                        <text-box field="ReceiveName" name="接收人员"></text-box>
+                    </div>
+                </div>
+                <form-actions>
+                    <button color="Default" data-bind="click:reset">重置条件</button>
+                    <button color="Green" data-bind="click:firstPage">点击查询</button>
+                </form-actions>
+            </form-builder>
+        </portlet>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <portlet title="实例列表" is-fit="true" data-model="list">
+            <data-table is-show-checkbox-column="false">
+                <td data-bind="text:Title"></td>
+                <td data-bind="text:FlowName"></td>
+                <td data-bind="text:StepName"></td>
+                <td data-bind="text:SenderName"></td>
+                <td data-bind="text:SenderTime"></td>
+                <td data-bind="text:ReceiveName"></td>
+                <td data-bind="text:ReceiveTime"></td>
+                <td>
+                    <lable data-bind="state: $root.dic('WorkFlowTaskState', State, true)"></lable>
+                </td>
+                <td>
+                    <button size="Xs" color="Dark" is-outline="true" icon="Search" data-bind="click:$root.goto, attr: {'data-url': '/Admin/WorkflowManage/WorkFlowTaskExecute?id=' + ID}">详情</button>
+                </td>
+            </data-table>
+            <pager></pager>
+        </portlet>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Model.Dictionary)) ')
+
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "bootstrap",
+            ui], function ($, ko, zdy) {
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                var table = zdy.table().options({
+                    fields: [
+                        { field: 'Title', value: ko.observable(), method: zdy.querymethod.contains },
+                        { field: 'FlowName', value: ko.observable(), method: zdy.querymethod.contains },
+                        { field: 'SenderName', value: ko.observable(), method: zdy.querymethod.contains },
+                        { field: 'ReceiveName', value: ko.observable(), method: zdy.querymethod.contains },
+                        { field: 'State', value: [-1, 0, 1], method: zdy.querymethod.in }
+                    ],
+                    headers: [
+                        { text: '任务名称', field: 'Title' },
+                        { text: '所属流程', field: 'FlowName' },
+                        { text: '所在步骤', field: 'StepName' },
+                        { text: '发送人员', field: 'SenderName' },
+                        { text: '发送时间', field: 'SenderTime' },
+                        { text: '接收人员', field: 'ReceiveName' },
+                        { text: '接收时间', field: 'ReceiveTime' },
+                        { text: '任务状态', field: 'State' }
+                    ],
+                    defaultOrderBy: "ID",
+                    dataQueryUrl: 'WorkFlowTask/List'
+                }).import(function () {
+
+                    this.dic(dictionary)
+
+                }).bind("list").load();
+
+            })
+    </script>
+}
+
+
+

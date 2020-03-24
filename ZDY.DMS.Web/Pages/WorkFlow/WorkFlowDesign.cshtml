@@ -1,0 +1,776 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.WorkFlow.WorkFlowDesignModel
+@{
+    ViewData["Title"] = "FlowDesign";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <portlet title="流程设计" is-fit="true">
+            <div class="row margin-bottom-20" data-model="settings">
+                <div class="col-md-12">
+                    <div class="btn-group">
+                        <button icon="FolderOpen" color="GreenJungle" bs-toggle-modal="modal-table">
+                            打开流程
+                        </button>
+                        <button icon="Plus" color="BlueSharp" bs-toggle-modal="modal-new" data-bind="click:handleResetNewName">
+                            新建流程
+                        </button>
+                    </div>
+                    <div class="btn-group" data-bind="visible: ID()">
+                        <button icon="Edit" color="YellowSaffron" bs-toggle-modal="modal-settings">
+                            流程设置
+                        </button>
+                    </div>
+                    <div class="btn-group" data-bind="visible: ID()">
+                        <button icon="Empire" color="Red" data-bind="click:handleClearFlow">
+                            清空画布
+                        </button>
+                    </div>
+                    <div class="btn-group" data-bind="visible: ID()">
+                        <button icon="Save" color="BlueChambray" data-bind="click:handleSaveFlow">
+                            保存流程
+                        </button>
+                        <button icon="ShareAlt" color="BlueHoki" bs-toggle-modal="modal-save-as" data-bind="click:handleResetNewName">
+                            另存流程
+                        </button>
+                    </div>
+                    <div class="btn-group" data-bind="visible: ID()">
+                        <button icon="Upload" color="PurpleMedium" data-bind="click:handleInstallFlow">
+                            安装流程
+                        </button>
+                        <button icon="Download" color="GreenJungle" data-bind="click:handleUnInstallFlow">
+                            卸载流程
+                        </button>
+                        <button icon="Remove" color="RedPink" data-bind="click:$root.delete">
+                            删除流程
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="canvas"></div>
+                </div>
+            </div>
+        </portlet>
+    </div>
+</div>
+
+<div data-model="settings">
+    <modal title="新建流程" id="modal-new">
+        <modal-body>
+            <div class="row">
+                <div class="col-md-12">
+                    <form-builder>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <text-box field="NewName" name="流程名称"></text-box>
+                            </div>
+                        </div>
+                    </form-builder>
+                </div>
+            </div>
+        </modal-body>
+        <modal-footer dismiss-text="关闭">
+            <button type="button" class="btn green" data-bind="click:handleNewFlow">提交</button>
+        </modal-footer>
+    </modal>
+
+    <modal title="流程设置" size="Lg" id="modal-settings">
+        <modal-body>
+            <div class="row">
+                <div class="col-md-12">
+                    <form-builder>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <text-box field="Name" name="流程名称" is-required="true"></text-box>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <select-box field="Type" name="流程类型" options="@Model.WorkFlowKinds" is-use-place-holder="false" is-required="true"></select-box>
+                            </div>
+                            <div class="col-md-6">
+                                <select-box field="FormID" name="流程表单" options="@Model.WorkFlowFormOptions" is-use-place-holder="false" is-required="true"></select-box>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <select-box name="流程管理者" options="@Model.UserOptions" is-use-place-holder="false" is-multiple="true" bind="select2: {placeholder: '请选择...', width: '100%', multiple: true, value: Manager}"></select-box>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <select-box name="实例管理者" options="@Model.UserOptions" is-use-place-holder="false" is-multiple="true" bind="select2: {placeholder: '请选择...', width: '100%', multiple: true, value: InstanceManager}"></select-box>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <check-box field="IsRemoveCompleted" name="是否删除已完成？"></check-box>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <text-box field="Note" name="备注信息" is-multiple="true"></text-box>
+                            </div>
+                        </div>
+                    </form-builder>
+                </div>
+            </div>
+        </modal-body>
+        <modal-footer dismiss-text="关闭">
+            <button type="button" class="btn green" data-bind="click:update, visible:ID()!=0">修改</button>
+        </modal-footer>
+    </modal>
+
+    <modal title="另存流程" id="modal-save-as">
+        <modal-body>
+            <div class="row">
+                <div class="col-md-12">
+                    <form-builder>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <text-box field="NewName" name="新流程名称"></text-box>
+                            </div>
+                            <div class="col-md-12">
+                                <check-box field="IsOpenAfter" name="另存后立即打开"></check-box>
+                            </div>
+                        </div>
+                    </form-builder>
+                </div>
+            </div>
+        </modal-body>
+        <modal-footer dismiss-text="关闭">
+            <button type="button" class="btn green" data-bind="click:handleSaveAsFlow">提交</button>
+        </modal-footer>
+    </modal>
+
+    <modal title="安装报告" id="model-install-message" size="Lg">
+        <modal-body>
+            <note state="Danger">
+                安装的过程中出现错误，具体报告如下：
+            </note>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="scroller" style="height:400px">
+                        <data-table is-show-checkbox-column="false" is-show-header="false" source-key="InstallMessages">
+                            <td>
+                                <!-- ko text:Item3 --><!-- /ko -->：<!-- ko text:Item2 --><!-- /ko --><br />
+                                <!-- ko text:Item1 --><!-- /ko -->
+                            </td>
+                            <td data-bind="text:Item4" style="width: 100%; white-space: normal;"></td>
+                        </data-table>
+                    </div>
+                </div>
+            </div>
+        </modal-body>
+    </modal>
+</div>
+
+<div data-model="table">
+    <modal title="打开流程" size="Lg" id="modal-table">
+        <modal-body>
+            <div class="row">
+                <div class="col-md-8">
+                    <data-table is-show-checkbox-column="false">
+                        <td data-bind="text:Name"></td>
+                        <td data-bind="text:CreateTime"></td>
+                        <td>
+                            <lable data-bind="state:$root.dic('WorkFlowKinds', Type, true)"></lable>
+                        </td>
+                        <td>
+                            <lable data-bind="state:$root.dic('WorkFlowState', State, true)"></lable>
+                        </td>
+                        <td>
+                            <button size="Xs" color="RedHaze" data-bind="click:$root.handleSelected">加载</button>
+                        </td>
+                    </data-table>
+                    <pager></pager>
+                </div>
+                <div class="col-md-4">
+                    <form-builder>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <text-box field="Name" name="流程名称"></text-box>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <select-box field="Type" name="流程类型" options="@Model.WorkFlowKinds"></select-box>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <button color="Green" data-bind="click:firstPage">点击查询</button>
+                            </div>
+                        </div>
+                    </form-builder>
+                </div>
+            </div>
+        </modal-body>
+    </modal>
+</div>
+
+<div data-model="step-settings">
+    <modal title="步骤设置" size="Lg" id="modal-step-settings">
+        <modal-body>
+            <div class="row" data-bind="with: Step">
+                <div class="col-md-12">
+                    <tabs>
+                        <tab-content tab-name="基础设置">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <text-box field="StepID" name="步骤ID" is-required="true" is-disabled="true"></text-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <text-box field="StepName" name="步骤名称" is-required="true"></text-box>
+                                        </div>
+                                    </div>
+                                    <div class="row" data-bind="if: StepType == 1">
+                                        <div class="col-md-6">
+                                            <select-box field="SubFlowTactic" name="子流程规则" options="@Model.WorkFlowSubFlowTactic" is-use-place-holder="false" is-required="true"></select-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select-box field="SubFlowID" name="子流程" options="@Model.WorkFlowOptions" is-use-place-holder="false" is-required="true"></select-box>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <check-box field="IsShowOpinion" name="是否显示他人意见？"></check-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <check-box field="IsTimeoutReminding" name="超时提醒？"></check-box>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <select-box field="SignatureType" name="签名类型" options="@Model.WorkFlowSignatureKinds" is-use-place-holder="false"></select-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <text-box field="TimeLimit" name="时间限制（小时）" text-box-type="Number"></text-box>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <text-box field="Note" name="备注信息" is-multiple="true"></text-box>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </tab-content>
+                        <tab-content tab-name="规则设置">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select-box field="FlowControl" name="流转控制" options="@Model.WorkFlowControlKinds" is-use-place-holder="false"></select-box>
+                                </div>
+                                <div class="col-md-6">
+                                    <check-box field="IsAllowRunSelect" name="运行时是否允许选择？"></check-box>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select-box field="$root.HandlerType" name="处理者类型" options="@Model.WorkFlowHandlerKinds" is-use-place-holder="false"></select-box>
+                                </div>
+                                <div class="col-md-6">
+                                    <!-- ko if: $root.HandlerType() == 1 || $root.HandlerType() == 18 || $root.HandlerType() == 19 -->
+                                    <select-box name="步骤处理者" options="@Model.UserOptions" is-use-place-holder="false" is-multiple="true" bind="select2: {placeholder: '请选择...', width: '100%', multiple: true, value: $root.Handler}"></select-box>
+                                    <!-- /ko -->
+                                    <!-- ko if: $root.HandlerType() == 2 -->
+                                    <select-box name="步骤处理者" field="$root.Handler" options="@Model.DepartmentOptions" is-use-place-holder="false"></select-box>
+                                    <!-- /ko -->
+                                    <!-- ko if: $root.HandlerType() == 3 -->
+                                    <select-box name="步骤处理者" field="$root.Handler" options="@Model.UserGroupOptions" is-use-place-holder="false"></select-box>
+                                    <!-- /ko -->
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select-box field="HandleTactic" name="处理规则" options="@Model.WorkFlowHandleTactic" is-use-place-holder="false"></select-box>
+                                </div>
+                                <div class="col-md-6">
+                                    <text-box field="Percentage" name="处理规则百分比" text-box-type="Number"></text-box>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select-box field="BackTactic" name="回退规则" options="@Model.WorkFlowBackTactic" is-use-place-holder="false"></select-box>
+                                </div>
+                                <div class="col-md-6">
+                                    <select-box field="BackType" name="回退类型" options="@Model.WorkFlowBackKinds" is-use-place-holder="false"></select-box>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select-box field="CountersignatureTactic" name="会签规则" options="@Model.WorkFlowCountersignatureTactic" is-use-place-holder="false"></select-box>
+                                </div>
+                                <div class="col-md-6">
+                                    <text-box field="CountersignaturePercentage" name="会签规则百分比" text-box-type="Number"></text-box>
+                                </div>
+                            </div>
+                        </tab-content>
+                        <tab-content tab-name="步骤事件">
+                            <note>
+                                <strong class="text-info">提示</strong>
+                                事件触发时执行方法格式：DllName.TypeName.MethodName
+                            </note>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <text-box field="SubmitBeforeEvent" name="步骤提交前事件"></text-box>
+                                </div>
+                                <div class="col-md-6">
+                                    <text-box field="SubmitAfterEvent" name="步骤提交后事件"></text-box>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <text-box field="BackBeforeEvent" name="步骤退回前事件"></text-box>
+                                </div>
+                                <div class="col-md-6">
+                                    <text-box field="BackAfterEvent" name="步骤退回后事件"></text-box>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <text-box field="SubFlowActivationBeforeEvent" name="子流程激活前事件"></text-box>
+                                </div>
+                                <div class="col-md-6">
+                                    <text-box field="SubFlowActivationAfterEvent" name="子流程激活后事件"></text-box>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <text-box field="SubFlowFinishedEvent" name="子流程完成事件"></text-box>
+                                </div>
+                                <div class="col-md-6"></div>
+                            </div>
+                        </tab-content>
+                    </tabs>
+                </div>
+            </div>
+        </modal-body>
+        <modal-footer dismiss-text="关闭">
+            <button type="button" class="btn green" data-bind="click:handleSet">完成设置</button>
+        </modal-footer>
+    </modal>
+</div>
+
+<div data-model="transit-settings">
+    <modal title="条件设置" size="Lg" id="modal-transit-settings">
+        <modal-body>
+            <div class="row" data-bind="with: Transit">
+                <div class="col-md-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <text-box field="TransitID" name="条件ID" is-required="true" is-disabled="true"></text-box>
+                                </div>
+                                <div class="col-md-6">
+                                    <text-box field="TransitName" name="条件名称" is-required="true"></text-box>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <select-box field="ConditionType" name="条件类型" options="@Model.WorkFlowTransitConditionKinds" is-use-place-holder="false"></select-box>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <text-box field="ConditionValue" name="条件表达式" is-multiple="true"></text-box>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </modal-body>
+        <modal-footer dismiss-text="关闭">
+            <button type="button" class="btn green" data-bind="click:handleSet">完成设置</button>
+        </modal-footer>
+    </modal>
+</div>
+
+@section Styles{
+    <style type="text/css">
+
+        #canvas {
+            background-image: url(/assets/global/img/flow-canvas-bg.gif);
+            overflow: hidden;
+            border: 1px solid #c7c7c7;
+        }
+
+        .context-menu {
+            position: absolute;
+            width: 150px;
+            background-color: #eee;
+            border: 1px solid #bbb;
+            border-radius: 3px;
+            font-size: 12px;
+        }
+
+            .context-menu ul {
+                padding: 5px;
+                margin: 0;
+            }
+
+                .context-menu ul li {
+                    list-style: none;
+                }
+
+                    .context-menu ul li a {
+                        display: block;
+                        text-decoration: none;
+                        color: #555;
+                        line-height: 2em;
+                        padding: 0 0 0 6px;
+                    }
+
+                        .context-menu ul li a:hover {
+                            color: #000;
+                            background-color: #ccc;
+                        }
+    </style>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+    var dictionary = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Dictionary))')
+
+    require([
+            "jquery",
+            "ko",
+            "zdy",
+            "app",
+            "flow-designer",
+            "jquery-select2",
+            "bootstrap",
+            ui], function ($, ko, zdy, app, designer) {
+
+            var ui = arguments[arguments.length - 1];
+            ui.init();
+
+            var Step = function Step(unit) {
+                //基础信息
+                this.StepId = unit ? unit.id : "id"
+                this.StepType = unit ? (unit.subtype == 2 ? 0 : 1) : 0
+                this.StepName = unit ? unit.title : "新步骤"
+                this.IsShowOpinion = true
+                this.IsTimeoutReminding = true
+                this.TimeLimit = 8
+                this.SignatureType = 0
+                this.Note = ""
+                //流转策略
+                this.FlowControl = 0
+                this.IsAllowRunSelect = false
+                this.HandlerType = 0
+                this.Handler = ""
+                this.BackTactic = 0
+                this.HandleTactic = 0
+                this.BackType = 0
+                this.Percentage = 100
+                this.CountersignatureTactic = 0
+                this.CountersignaturePercentage = 100
+                this.SubFlowID = 0
+                this.SubFlowTactic = 0
+                //步骤事件
+                this.SubmitBeforeEvent = ""
+                this.SubmitAfterEvent = ""
+                this.BackBeforeEvent = ""
+                this.BackAfterEvent = ""
+                this.SubFlowActivationBeforeEvent = ""
+                this.SubFlowActivationAfterEvent = ""
+                this.SubFlowFinishedEvent = ""
+            }
+
+            var Transit = function (unit) {
+                //基础信息
+                this.TransitID = unit ? unit.id : "id"
+                this.TransitName = unit ? unit.title : "无条件"
+                this.FromStepID = unit ? unit.from : ""
+                this.ToStepID = unit ? unit.to : ""
+                //条件信息
+                this.ConditionType = 0
+                this.ConditionValue = ""
+            }
+
+            var initDesigner = function () {
+                var activities = [
+                    { 'id': '0755d21f-672e-4289-9c4e-a6c800c89fc5', 'subtype': 0, 'position': { x: 88, y: 60 }, 'title': '开始' },
+                    { 'id': 'c28dc449-50c9-440f-b539-a6c800c8af01', 'subtype': 1, 'position': { x: 88, y: 160 }, 'title': '初始审批', canSelect: false },
+                    { 'id': '6b475718-572c-4141-b6f7-a6c800d9cefd', 'subtype': 2, 'position': { x: 88, y: 260 }, 'title': '直接领导审批' },
+                    { 'id': '6b475718-572c-4141-b6f7-a6c800d9cef4', 'subtype': 2, 'position': { x: 300, y: 280 }, 'title': '直接领导审批2' }
+                ];
+                var transitions = [
+                    { 'id': 'db2faea5-81f2-4958-a075-a6c800ee41c1', 'subtype': 0, 'from': '0755d21f-672e-4289-9c4e-a6c800c89fc5', 'fromAngle': -5, 'to': 'c28dc449-50c9-440f-b539-a6c800c8af01', 'toAngle': -1, 'title': '无条件' },
+                    { 'id': 'c6a3680f-4343-4599-bd16-a6c8017b536e', 'subtype': 1, 'from': 'c28dc449-50c9-440f-b539-a6c800c8af01', 'fromAngle': -5, 'to': '6b475718-572c-4141-b6f7-a6c800d9cefd', 'toAngle': -1, 'title': '无条件' },
+                    { 'id': 'c6a3680f-4343-4599-bd16-a6c8017b5364', 'subtype': 1, 'from': 'c28dc449-50c9-440f-b539-a6c800c8af01', 'fromAngle': -5, 'to': '6b475718-572c-4141-b6f7-a6c800d9cef4', 'toAngle': -1, 'title': '无条件' }
+                ];
+
+                var flowDesigner = designer.init({
+                    designable: true,
+                    activityDataModel: Step,
+                    transitionDataModel: Transit,
+                    onUnitDblclick: function (e, unit) {
+                        handleUnitSetting(unit)
+                    },
+                    onUnitSetting: function (e, unit) {
+                        handleUnitSetting(unit)
+                    }
+                });
+
+                var handleUnitSetting = function (unit) {
+                    if (unit.type == 'Activity') {
+                        stepSettings.handleLoadUnit(unit)
+                    } else if (unit.type == 'Transition') {
+                        transitSettings.handleLoadUnit(unit)
+                    }
+                }
+
+                return flowDesigner
+            }
+
+            var designer = initDesigner()
+
+            var settings = zdy.form().options({
+                fields: [
+                    { field: 'ID', value: ko.observable() },
+                    { field: 'FormID', value: ko.observable() },
+                    { field: 'Name', value: ko.observable() },
+                    { field: 'Type', value: ko.observable() },
+                    { field: 'Manager', value: ko.observable() },
+                    { field: 'InstanceManager', value: ko.observable() },
+                    { field: 'IsRemoveCompleted', value: ko.observable() },
+                    { field: 'Note', value: ko.observable() }
+                ],
+                dataAddUrl: 'WorkFlow/Add',
+                dataUpdateUrl: 'WorkFlow/Update',
+                dataDeleteUrl: 'WorkFlow/Delete'
+            }).import(function () {
+
+                this.afterAdd = function (data) {
+                    this.ID(data.ID)
+                    designer.clear()
+                    $("#modal-new").modal("hide")
+                }
+
+                this.afterDelete = function () {
+                    this.reset()
+                    designer.clear()
+                }
+
+                this.NewName = ko.observable("")
+                this.IsOpenAfter = ko.observable(false)
+
+                this.handleResetNewName = function () {
+                    this.NewName("")
+                    this.IsOpenAfter(false)
+                }
+
+                this.handleClearFlow = function () {
+                    designer.clear()
+                }
+
+                this.handleNewFlow = function () {
+                    if (this.FormID() == "" || this.FormID() == undefined) {
+                        zdy.toastr.warning("还未发布过表单，请先创建表单");
+                        return
+                    }
+                    var name = this.NewName()
+                    if (name != "" && name != undefined) {
+                        this.reset()
+                        this.ID(undefined)
+                        this.Name(name)
+                        this.add()
+                    } else {
+                        zdy.toastr.success("请填写流程名称");
+                    }
+                }
+
+                this.handleSaveFlow = function () {
+                    var designJson = designer.getJson()
+                    var id = this.ID()
+                    zdy.ajaxPost("WorkFlow/SaveFlow", { id: id, designJson: designJson }).done(function (rst) {
+                        if (rst.IsSuccess) {
+                            zdy.toastr.success("保存成功");
+                        }
+                    })
+                }
+
+                this.handleSaveAsFlow = function () {
+                    var designJson = designer.getJson()
+                    var id = this.ID()
+                    var name = this.NewName()
+                    var isOpen = this.IsOpenAfter()
+                    zdy.ajaxPost("WorkFlow/SaveAsFlow", { id: id, name: name, designJson: designJson }).done(function (rst) {
+                        if (rst.IsSuccess) {
+                            if (isOpen) {
+                                settings.handleLoadFlow(rst.Data.ID)
+                            }
+                            $("#modal-save-as").modal("hide")
+                            zdy.toastr.success("另存成功");
+                        }
+                    })
+                }
+
+                this.InstallMessages = ko.observableArray()
+
+                this.handleInstallFlow = function () {
+                    var designJson = designer.getJson()
+                    var id = this.ID()
+                    var runJson = this.handleGetRunJson()
+                    zdy.ajaxPost("WorkFlow/InstallFlow", { id: id, designJson: designJson, runJson: runJson }).done(function (rst) {
+                        if (rst.IsSuccess) {
+                            if (rst.Data.IsInstallSuccess) {
+                                zdy.toastr.success("安装成功");
+                            } else {
+                                settings.InstallMessages(rst.Data.Messages)
+                                $("#model-install-message").modal("show")
+                                zdy.toastr.error("安装失败");
+                            }
+                        }
+                    })
+                }
+
+                this.handleUnInstallFlow = function () {
+                    var id = this.ID()
+                    zdy.ajaxPost("WorkFlow/UnInstallFlow", { id: id }).done(function (rst) {
+                        if (rst.IsSuccess) {
+                            zdy.toastr.success("卸载完成");
+                        }
+                    })
+                }
+
+                this.handleGetRunJson = function () {
+                    var designJson = designer.getJson()
+                    var data = JSON.parse(designJson);
+                    var rst = {
+                        Name: settings.Name(),
+                        Steps: [],
+                        Transits: []
+                    }
+                    if (data) {
+                        rst.Steps = data.activities.map(function (item) {
+                            return item.data
+                        })
+                        rst.Transits = data.transitions.map(function (item) {
+                            return item.data
+                        })
+                    }
+                    return JSON.stringify(rst)
+                }
+
+                this.handleLoadFlow = function (id) {
+                    zdy.ajaxPost("WorkFlow/FindById", { id: id }).done(function (rst) {
+                        if (rst.IsSuccess) {
+                            settings.load(rst.Data)
+
+                            if (rst.Data.DesignJson.length > 0) {
+                                try {
+                                    var data = JSON.parse(rst.Data.DesignJson)
+                                    designer.load(data)
+                                } catch (e) {
+                                    designer.clear()
+                                }
+                            } else {
+                                designer.clear()
+                            }
+
+                            zdy.toastr.success("加载完成");
+                        }
+                    })
+                }
+
+            }).bind("settings");
+
+            var table = zdy.table().options({
+                fields: [
+                    { field: 'Name', value: ko.observable(), method: zdy.querymethod.contains },
+                    { field: 'Type', value: ko.observable(), method: zdy.querymethod.equal }
+                ],
+                headers: [
+                    { text: '流程名称', field: 'Name' },
+                    { text: '创建时间', field: 'CreateTime' },
+                    { text: '流程类型', field: 'Type' },
+                    { text: '流程状态', field: 'State' }
+                ],
+                pageSize: 10,
+                defaultOrderBy: "ID",
+                dataQueryUrl: 'WorkFlow/List'
+            }).import(function () {
+
+                this.dic(dictionary)
+
+                this.handleSelected = function (item) {
+                    $("#modal-table").modal("hide")
+
+                    settings.handleLoadFlow(item.ID)
+                }
+
+            }).bind("table").load();
+
+            var stepSettings = zdy.module().import(function () {
+
+                this.Step = ko.observable(new Step())
+
+                this.Unit = undefined
+
+                this.HandlerType = ko.observable()
+
+                this.Handler = ko.observable("")
+
+                this.handleLoadUnit = function (unit) {
+                    this.Unit = unit
+                    this.Step(unit.data)
+                    this.HandlerType(unit.data.HandlerType)
+                    this.Handler(unit.data.Handler)
+
+                    $("#modal-step-settings").modal("show")
+                }
+
+                this.handleSet = function () {
+                    if (this.valid()) {
+                        this.Unit.title = this.Step().StepName
+                        this.Unit.refresh()
+                        $("#modal-step-settings").modal("hide")
+                    }
+                }
+
+            }).bind("step-settings")
+
+            stepSettings.HandlerType.subscribe(function (newValue) {
+                stepSettings.Unit.data.HandlerType = newValue
+            })
+            stepSettings.Handler.subscribe(function (newValue) {
+                stepSettings.Unit.data.Handler = newValue
+            })
+
+            var transitSettings = zdy.module().import(function () {
+
+                this.Transit = ko.observable(new Transit())
+
+                this.Unit = undefined
+
+                this.handleLoadUnit = function (unit) {
+                    this.Unit = unit
+                    this.Transit(unit.data)
+
+                    $("#modal-transit-settings").modal("show")
+                }
+
+                this.handleSet = function () {
+                    if (this.valid()) {
+                        this.Unit.title = this.Transit().TransitName
+                        this.Unit.subtype = this.Transit().ConditionType == "0" ? 1 : 0
+                        this.Unit.refresh()
+                        $("#modal-transit-settings").modal("hide")
+                    }
+                }
+
+            }).bind("transit-settings")
+        })
+    </script>
+}

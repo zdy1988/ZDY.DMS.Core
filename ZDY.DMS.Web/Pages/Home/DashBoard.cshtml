@@ -1,0 +1,315 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.Home.DashBoardModel
+@inject ZDY.DMS.ServiceContracts.IDictionaryService DictionaryService
+@inject SelectOptionsFactory SelectOptionsFactory
+@{
+    ViewData["Title"] = "DashBoard";
+    var Dictionary = DictionaryService.GetDictionary("WorkFlowTaskState");
+    var WorkFlowTaskState = SelectOptionsFactory.GetSelectOptionsByDictionary("WorkFlowTaskState");
+}
+
+<div class="row">
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 ">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-green-sharp">
+                        <span data-counter="counterup" data-value="7800">7800</span>
+                        <small class="font-green-sharp">元</small>
+                    </h3>
+                    <small>利润总额</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-pie-chart"></i>
+                </div>
+            </div>
+            <div class="progress-info">
+                <div class="progress">
+                    <span style="width: 76%;" class="progress-bar progress-bar-success green-sharp">
+                        <span class="sr-only">76% progress</span>
+                    </span>
+                </div>
+                <div class="status">
+                    <div class="status-title"> 完成预计目标 </div>
+                    <div class="status-number"> 76% </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 ">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-red-haze">
+                        <span data-counter="counterup" data-value="1349">1349</span>
+                    </h3>
+                    <small>最新反馈</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-like"></i>
+                </div>
+            </div>
+            <div class="progress-info">
+                <div class="progress">
+                    <span style="width: 85%;" class="progress-bar progress-bar-success red-haze">
+                        <span class="sr-only">85% change</span>
+                    </span>
+                </div>
+                <div class="status">
+                    <div class="status-title"> 完成改变 </div>
+                    <div class="status-number"> 85% </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 ">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-blue-sharp">
+                        <span data-counter="counterup" data-value="567">567</span>
+                    </h3>
+                    <small>近期订单</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-basket"></i>
+                </div>
+            </div>
+            <div class="progress-info">
+                <div class="progress">
+                    <span style="width: 45%;" class="progress-bar progress-bar-success blue-sharp">
+                        <span class="sr-only">45% grow</span>
+                    </span>
+                </div>
+                <div class="status">
+                    <div class="status-title"> 同比增长 </div>
+                    <div class="status-number"> 45% </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+        <div class="dashboard-stat2 ">
+            <div class="display">
+                <div class="number">
+                    <h3 class="font-purple-soft">
+                        <span data-counter="counterup" data-value="276">276</span>
+                    </h3>
+                    <small>新增客户</small>
+                </div>
+                <div class="icon">
+                    <i class="icon-user"></i>
+                </div>
+            </div>
+            <div class="progress-info">
+                <div class="progress">
+                    <span style="width: 57%;" class="progress-bar progress-bar-success purple-soft">
+                        <span class="sr-only">56% change</span>
+                    </span>
+                </div>
+                <div class="status">
+                    <div class="status-title"> 增长 </div>
+                    <div class="status-number"> 57% </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="portlet light ">
+            <div class="portlet-title tabbable-line">
+                <div class="caption">
+                    <i class="icon-bubbles font-dark hide"></i>
+                    <span class="caption-subject font-dark bold uppercase">工作审批</span>
+                </div>
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a href="#portlet_comments_1" data-toggle="tab"> 待办事项 </a>
+                    </li>
+                    <li>
+                        <a href="#portlet_comments_2" data-toggle="tab"> 已办事项 </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="portlet-body">
+                <div class="tab-content">
+                    <div class="tab-pane active" id="portlet_comments_1">
+                        <div data-model="pending-tasks">
+                            <div class="mt-comments scroller" style="height: 480px;">
+                                <!-- ko foreach: recordSet -->
+                                <div class="mt-comment">
+                                    <div class="mt-comment-img">
+                                        <i class="icon-cup" style="font-size: 38px;padding-top: 20px; color: rgb(120, 224, 232);"></i>
+                                    </div>
+                                    <div class="mt-comment-body">
+                                        <div class="mt-comment-info">
+                                            <span class="mt-comment-author" data-bind="text:Title">Michael Baker</span>
+                                            <span class="mt-comment-date" data-bind="text:SenderTime">26 Feb, 10:30AM</span>
+                                        </div>
+                                        <div class="mt-comment-text">
+                                            <!-- ko text: StepName --><!-- /ko -->
+                                        </div>
+                                        <div class="mt-comment-details">
+                                            <badge data-bind="state: $root.dic('WorkFlowTaskState', State, true)"></badge>
+                                            <ul class="mt-comment-actions">
+                                                <li>
+                                                    <a href="javascript:;" data-bind="click:$root.goto, attr: {'data-url': '/Admin/WorkflowManage/WorkFlowTaskExecute?id=' + Id}">处理审批</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /ko -->
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12 text-right">
+                                    <button data-bind="click:$root.goto, attr: {'data-url': '/Admin/WorkflowManage/WorkFlowPendingTasks'}">查看更多</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="portlet_comments_2">
+                        <div data-model="execute-task">
+                            <div class="mt-comments scroller" style="height: 480px;">
+                                <!-- ko foreach: recordSet -->
+                                <div class="mt-comment">
+                                    <div class="mt-comment-img">
+                                        <i class="icon-badge" style="font-size: 38px;padding-top: 20px; color: #368a92;"></i>
+                                    </div>
+                                    <div class="mt-comment-body">
+                                        <div class="mt-comment-info">
+                                            <span class="mt-comment-author" data-bind="text:Title">Michael Baker</span>
+                                            <span class="mt-comment-date" data-bind="text:SenderTime">26 Feb, 10:30AM</span>
+                                        </div>
+                                        <div class="mt-comment-text">
+                                            <!-- ko text: StepName --><!-- /ko -->
+                                        </div>
+                                        <div class="mt-comment-details">
+                                            <badge data-bind="state: $root.dic('WorkFlowTaskState', State, true)"></badge>
+                                            <ul class="mt-comment-actions">
+                                                <li>
+                                                    <a href="javascript:;" data-bind="click:$root.goto, attr: {'data-url': '/Admin/WorkflowManage/WorkFlowTaskExecute?id=' + Id}">查看审批</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /ko -->
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12 text-right">
+                                    <button data-bind="click:$root.goto, attr: {'data-url': '/Admin/WorkflowManage/WorkFlowExecuteTasks'}">查看更多</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+        <!-- BEGIN PORTLET-->
+        <div class="portlet light ">
+            <div class="portlet-title tabbable-line">
+                <div class="caption">
+                    <i class="icon-globe font-dark hide"></i>
+                    <span class="caption-subject font-dark bold uppercase">消息</span>
+                </div>
+            </div>
+            <div class="portlet-body" data-model="messages">
+                <div class="scroller" style="height: 480px;">
+                    <ul class="feeds" data-bind="if: recordSet().length > 0">
+                        <!-- ko foreach: recordSet -->
+                        <li>
+                            <div class="col1" style="cursor: pointer;">
+                                <div class="cont" style=" position:relative;">
+                                    <div class="cont-col1">
+                                        <div class="label label-sm label-info" style="position: absolute; top: 50%; margin-top: -12.5px;">
+                                            <i class="fa fa-bell-o"></i>
+                                        </div>
+                                    </div>
+                                    <div class="cont-col2">
+                                        <div class="desc" style="line-height: 1.8;">
+                                            <div data-bind="html:Content" style="display: inline-block;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col2">
+                                <div class="date" data-bind="dateDiff:PushTime"> Just now </div>
+                            </div>
+                        </li>
+                        <!-- /ko -->
+                    </ul>
+                    <p data-bind="if: recordSet().length == 0">
+                        暂无消息
+                    </p>
+                </div>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12 text-right">
+                        <button data-bind="click:$root.goto, attr: {'data-url': '/Admin/WorkflowManage/WorkFlowExecuteTasks'}">更多通知</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- END PORTLET-->
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Dictionary)) ')
+
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "app",
+            "bootstrap",
+            ui], function ($, ko, zdy, app) {
+
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+
+                var pendingTask = zdy.table().options({
+                    fields: [
+                        { field: 'State', value: [-1, 0, 1], method: zdy.querymethod.in }
+                    ],
+                    defaultOrderBy: "Id",
+                    dataQueryUrl: 'WorkFlowTask/List',
+                    pageSize: 10
+                }).import(function () {
+
+                    this.dic(dictionary)
+
+                }).bind("pending-tasks").load();
+
+                var executeTask = zdy.table().options({
+                    fields: [
+                        { field: 'State', value: [2, 3, 4, 5], method: zdy.querymethod.in }
+                    ],
+                    defaultOrderBy: "Id",
+                    dataQueryUrl: 'WorkFlowTask/List'
+                }).import(function () {
+
+                    this.dic(dictionary)
+
+                }).bind("execute-task").load();
+
+                var messages = zdy.table().options({
+                    defaultOrderBy: "PushTime",
+                    dataQueryUrl: 'Message/Pull'
+                }).import(function () {
+
+                    this.dic(dictionary)
+
+                }).bind("messages").load();
+
+            })
+    </script>
+}

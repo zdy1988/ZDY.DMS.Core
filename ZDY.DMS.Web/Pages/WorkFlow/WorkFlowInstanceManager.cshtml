@@ -1,0 +1,119 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.WorkFlow.WorkFlowInstanceManagerModel
+@{
+    ViewData["Title"] = "WorkFlowInstanceManager";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <portlet title="查询条件" is-form="true" is-fit="true" data-model="list">
+            <form-builder>
+                <div class="row">
+                    <div class="col-md-3">
+                        <text-box field="Title" name="实例名称"></text-box>
+                    </div>
+                    <div class="col-md-3">
+                        <text-box field="FlowName" name="所属流程"></text-box>
+                    </div>
+                    <div class="col-md-3">
+                        <text-box field="LastExecuteStepName" name="行进步骤"></text-box>
+                    </div>
+                    <div class="col-md-3">
+                        <text-box field="CreaterName" name="创建人员"></text-box>
+                    </div>
+                </div>
+                <form-actions>
+                    <button color="Default" data-bind="click:reset">重置条件</button>
+                    <button color="Green" data-bind="click:firstPage">点击查询</button>
+                </form-actions>
+            </form-builder>
+        </portlet>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <portlet title="实例列表" is-fit="true" data-model="list">
+            <data-table is-show-checkbox-column="false">
+                <td data-bind="text:Title"></td>
+                <td data-bind="text:FlowName"></td>
+                <td data-bind="text:LastExecuteStepName"></td>
+                <td data-bind="text:CreaterName"></td>
+                <td data-bind="text:CreateTime"></td>
+                <td data-bind="text:LastModifyTime"></td>
+                <td>
+                    <lable data-bind="state: $root.dic('WorkFlowInstanceState', State, true)"></lable>
+                </td>
+                <td>
+                    <button size="Xs" color="Dark" is-outline="true" icon="Search" data-bind="click:$root.HandleShowProcess">详情</button>
+                </td>
+            </data-table>
+            <pager></pager>
+        </portlet>
+    </div>
+</div>
+
+<modal title="审批过程" id="modal-work-process" size="Lg">
+    <modal-body>
+        <div class="row">
+            <div class="col-md-12">
+                <iframe frameborder="0" scrolling="no" style="width: 100%; border: none; height: 560px; margin-top: -48px;"></iframe>
+            </div>
+        </div>
+    </modal-body>
+</modal>
+
+@section Styles{
+    <style type="text/css">
+        #modal-work-process .modal-body {
+            padding: 0px;
+        }
+    </style>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Model.Dictionary)) ')
+
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "bootstrap",
+            ui], function ($, ko, zdy) {
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                var table = zdy.table().options({
+                    fields: [
+                        { field: 'Title', value: ko.observable(), method: zdy.querymethod.contains },
+                        { field: 'FlowName', value: ko.observable(), method: zdy.querymethod.contains },
+                        { field: 'LastExecuteStepName', value: ko.observable(), method: zdy.querymethod.contains },
+                        { field: 'CreaterName', value: ko.observable(), method: zdy.querymethod.contains }
+                    ],
+                    headers: [
+                        { text: '实例名称', field: 'Title' },
+                        { text: '所属流程', field: 'FlowName' },
+                        { text: '行进步骤', field: 'LastExecuteStepName' },
+                        { text: '创建人员', field: 'CreaterName' },
+                        { text: '创建时间', field: 'CreateTime' },
+                        { text: '归档时间', field: 'LastModifyTime' },
+                        { text: '实例状态', field: 'State' }
+                    ],
+                    defaultOrderBy: "ID",
+                    dataQueryUrl: 'WorkFlowInstance/List2'
+                }).import(function () {
+
+                    this.dic(dictionary)
+
+                    this.HandleShowProcess = function (item) {
+                        $("#modal-work-process").modal("show")
+                        $("#modal-work-process iframe").attr("src", "WorkFlowProcess?id=" + item.InstanceID)
+                    }
+
+                }).bind("list").load();
+
+            })
+    </script>
+}
+

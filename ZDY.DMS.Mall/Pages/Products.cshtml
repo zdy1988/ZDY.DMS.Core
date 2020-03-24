@@ -1,0 +1,242 @@
+﻿@page
+@model Zdy.Mall.Pages.ProductsModel
+@addTagHelper Zdy.Mall.TagHelpers.PagerTagHelper, Zdy.Mall
+@{
+    ViewData["Title"] = "Products";
+}
+
+@await Html.PartialAsync("_Breadcrumbs", "所有商品")
+<div class="products">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 products-left">
+                <div class="categories animated wow slideInUp" data-wow-delay=".5s">
+                    <h3>全部分类</h3>
+                    <ul class="cate">
+                        <li><a href="products.html">Best Selling</a> <span>(15)</span></li>
+                        <li><a href="products.html">Man</a> <span>(16)</span></li>
+                        <ul>
+                            <li><a href="products.html">Accessories</a> <span>(2)</span></li>
+                            <li><a href="products.html">Coats & Jackets</a> <span>(5)</span></li>
+                            <li><a href="products.html">Jeans</a> <span>(1)</span></li>
+                            <li><a href="products.html">New Arrivals</a> <span>(0)</span></li>
+                            <li><a href="products.html">Suits</a> <span>(1)</span></li>
+                            <li><a href="products.html">Casual Shirts</a> <span>(0)</span></li>
+                        </ul>
+                        <li><a href="products.html">Sales</a> <span>(15)</span></li>
+                        <li><a href="products.html">Woman</a> <span>(15)</span></li>
+                        <ul>
+                            <li><a href="products.html">Accessories</a> <span>(2)</span></li>
+                            <li><a href="products.html">New Arrivals</a> <span>(0)</span></li>
+                            <li><a href="products.html">Dresses</a> <span>(1)</span></li>
+                            <li><a href="products.html">Casual Shirts</a> <span>(0)</span></li>
+                            <li><a href="products.html">Shorts</a> <span>(4)</span></li>
+                        </ul>
+                    </ul>
+                </div>
+                <div class="new-products animated wow slideInUp" data-wow-delay=".5s">
+                    <h3>最新上架</h3>
+                    <div class="new-products-grids">
+                        <div class="new-products-grid">
+                            <div class="new-products-grid-left">
+                                <a href="single.html"><img src="images/6.jpg" alt=" " class="img-responsive" /></a>
+                            </div>
+                            <div class="new-products-grid-right">
+                                <h4><a href="single.html">occaecat cupidatat</a></h4>
+                                <div class="rating">
+                                    <div class="rating-left">
+                                        <img src="images/2.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/2.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/2.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/1.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/1.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="clearfix"> </div>
+                                </div>
+                                <div class="simpleCart_shelfItem new-products-grid-right-add-cart">
+                                    <p> <span class="item_price">$180</span><a class="item_add" href="#">add to cart </a></p>
+                                </div>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="new-products-grid">
+                            <div class="new-products-grid-left">
+                                <a href="single.html"><img src="images/26.jpg" alt=" " class="img-responsive" /></a>
+                            </div>
+                            <div class="new-products-grid-right">
+                                <h4><a href="single.html">eum fugiat quo</a></h4>
+                                <div class="rating">
+                                    <div class="rating-left">
+                                        <img src="images/2.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/2.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/2.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/1.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/1.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="clearfix"> </div>
+                                </div>
+                                <div class="simpleCart_shelfItem new-products-grid-right-add-cart">
+                                    <p> <span class="item_price">$250</span><a class="item_add" href="#">add to cart </a></p>
+                                </div>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                        <div class="new-products-grid">
+                            <div class="new-products-grid-left">
+                                <a href="single.html"><img src="images/11.jpg" alt=" " class="img-responsive" /></a>
+                            </div>
+                            <div class="new-products-grid-right">
+                                <h4><a href="single.html">officia deserunt</a></h4>
+                                <div class="rating">
+                                    <div class="rating-left">
+                                        <img src="images/2.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/2.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/2.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/1.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="rating-left">
+                                        <img src="images/1.png" alt=" " class="img-responsive">
+                                    </div>
+                                    <div class="clearfix"> </div>
+                                </div>
+                                <div class="simpleCart_shelfItem new-products-grid-right-add-cart">
+                                    <p> <span class="item_price">$259</span><a class="item_add" href="#">add to cart </a></p>
+                                </div>
+                            </div>
+                            <div class="clearfix"> </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="men-position animated wow slideInUp" data-wow-delay=".5s">
+                    <a href="single.html"><img src="images/27.jpg" alt=" " class="img-responsive" /></a>
+                    <div class="men-position-pos">
+                        <h4>Summer collection</h4>
+                        <h5><span>55%</span> Flat Discount</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 products-right">
+                <div class="products-right-grid">
+                    <div class="products-right-grids-position animated wow slideInRight" data-wow-delay=".5s">
+                        <img src="images/18.jpg" alt=" " class="img-responsive" />
+                        <div class="products-right-grids-position1">
+                            <h4>2018 秋季 新品</h4>
+                            <p>
+                                面向大众都市精英，及对生活、工作，有理想、有品位、有追求的顾客群体。他们关注世界的动向，勇于接受挑战，处于各个领域中的精英阶层。他们热衷于追求国际化、都市化的个人形象，在大众所能接受的时尚定义中寻求自我个性出彩但不出格的形象演绎。
+                            </p>
+                        </div>
+                    </div>
+                    <div class="products-right-grids animated wow slideInRight" data-wow-delay=".5s">
+                        <div class="sorting">
+                            <select id="country" onchange="change_country(this.value)" class="frm-field required sect">
+                                <option value="null">Default sorting</option>
+                                <option value="null">Sort by popularity</option>
+                                <option value="null">Sort by average rating</option>
+                                <option value="null">Sort by price</option>
+                            </select>
+                        </div>
+                        <div class="sorting-left">
+                            <select id="country1" onchange="change_country(this.value)" class="frm-field required sect">
+                                <option value="null">Item on page 9</option>
+                                <option value="null">Item on page 18</option>
+                                <option value="null">Item on page 32</option>
+                                <option value="null">All</option>
+                            </select>
+                        </div>
+                        <div class="clearfix"> </div>
+                    </div>
+                </div>
+                <div class="products-right-grids-bottom">
+
+                    @{
+                        var gridCount = 3;
+                        int itemCount = (int)Math.Ceiling(Convert.ToDouble(Model.Collections.Count() / gridCount));
+                    }
+
+                    @for (var i = 0; i < gridCount; i++)
+                    {
+                        <div class="col-md-4 products-right-grids-bottom-grid">
+
+                            @for (var j = 0; j < itemCount; j++)
+                            {
+                                int index = i * itemCount + j;
+
+                                var item = Model.Collections[index];
+
+                                <div class="new-collections-grid1 products-right-grid1 animated wow slideInUp" data-wow-delay=".5s">
+                                    <div class="new-collections-grid1-image">
+                                        <a href="detail?id=@item.ID" class="product-image">
+                                            <img src="@item.CoverUrl" alt=" " class="img-responsive" />
+                                        </a>
+                                        <div class="new-collections-grid1-image-pos">
+                                            <a href="detail?id=@item.ID">查看详情</a>
+                                        </div>
+                                        <div class="new-collections-grid1-right">
+                                            <div class="rating">
+                                                <div class="rating-left">
+                                                    <img src="images/2.png" alt=" " class="img-responsive" />
+                                                </div>
+                                                <div class="rating-left">
+                                                    <img src="images/2.png" alt=" " class="img-responsive" />
+                                                </div>
+                                                <div class="rating-left">
+                                                    <img src="images/2.png" alt=" " class="img-responsive" />
+                                                </div>
+                                                <div class="rating-left">
+                                                    <img src="images/1.png" alt=" " class="img-responsive" />
+                                                </div>
+                                                <div class="rating-left">
+                                                    <img src="images/1.png" alt=" " class="img-responsive" />
+                                                </div>
+                                                <div class="clearfix"> </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h4><a href="detail?id=@item.ID">@item.ProductName</a></h4>
+                                    <p>@item.ProductName</p>
+                                    <div class="simpleCart_shelfItem products-right-grid1-add-cart">
+                                        <p>
+                                            <i>¥@Math.Round(item.Price * 7 / 10, 1)</i>
+                                            <span class="item_price">¥@Math.Round(item.Price, 1)</span>
+                                            <a class="item_add" href="#">加入购物车 </a>
+                                        </p>
+                                    </div>
+                                </div>
+
+                            }
+
+                        </div>
+                    }
+
+                    <div class="clearfix"> </div>
+                </div>
+
+                <pager pager-option="@Model.PagerOption"></pager>
+
+            </div>
+        </div>
+    </div>
+</div>
+

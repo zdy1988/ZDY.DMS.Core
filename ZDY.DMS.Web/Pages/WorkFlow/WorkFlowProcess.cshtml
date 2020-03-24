@@ -1,0 +1,139 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.WorkFlow.WorkFlowProcessModel
+@using ZDY.DMS.Services.WorkFlowService
+
+@if (ViewData["ErrorMessage"] != null)
+{
+
+    <h2>@ViewData["ErrorMessage"]</h2>
+
+}
+else
+{
+
+    <tabs mode="Line">
+        <tab-content tab-name="图示">
+            <div id="canvas"></div>
+        </tab-content>
+        <tab-content tab-name="列表">
+            <div class="table-scrollable scroller" style="margin:0px !important; height:500px;">
+                <table class="table table-striped table-bordered table-hover table-active">
+                    <thead>
+                        <tr class="uppercase">
+                            <th style="width:100%"> 步骤名称 </th>
+                            <th> 发送人员 </th>
+                            <th> 发送时间 </th>
+                            <th> 接收人员 </th>
+                            <th> 接收时间 </th>
+                            <th> 处理时间 </th>
+                            <th style="width:1%"> 处理结果 </th>
+                            <th>备注信息</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model.WorkFlowProcess)
+                        {
+
+                            <tr>
+                                <td> @item.StepName </td>
+                                <td> @item.SenderName </td>
+                                <td> @item.SendTime </td>
+                                <td> @item.ReceiverName </td>
+                                <td> @item.ReceiveTime </td>
+                                <td> @item.ExecutedTime </td>
+                                <td> @item.GetTaskStateName() </td>
+                                <td> @item.Note </td>
+                            </tr>
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </tab-content>
+    </tabs>
+
+}
+
+@section Styles{
+    <style type="text/css">
+        #canvas {
+            background-image: url(/assets/global/img/flow-canvas-bg.gif);
+            overflow: hidden;
+            border: 1px solid #c7c7c7;
+        }
+
+        .tabs-top {
+            background-color: #fff;
+            padding: 0 10px;
+        }
+
+        .tabbable-line > .tab-content {
+            padding: 10px;
+        }
+
+        .table-scrollable {
+            border: none;
+        }
+    </style>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        var designData = @Html.Raw(Model.Instance.DesignJson)
+        var statusData = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Status))')
+
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "app",
+            "flow-designer",
+            "bootstrap",
+            ui], function ($, ko, zdy, app, designer) {
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                var initDesigner = function () {
+                    var flowDesigner = designer.init({
+                        designable: false,
+                        height: 500,
+                        activityDataModel: function () { },
+                        transitionDataModel: function () { }
+                    });
+
+                    return flowDesigner
+                }
+
+                var designer = initDesigner()
+
+                for (var key in statusData) {
+                    var item = statusData[key]
+                    for (var i = 0; i < item.length; i++) {
+                        var step = item[i]
+                        for (var j = 0; j < designData.activities.length; j++) {
+                            var step2 = designData.activities[j]
+                            if (step.StepID == step2.id) {
+                                step2.status = parseInt(key)
+                            }
+                        }
+                    }
+                }
+
+                designer.load(designData)
+
+                setInterval(function () {
+                    designer.refresh()
+                }, 1000)
+
+                $("#scale-range").change(function () {
+                    var value = $(this).val()
+                    console.log(designer.getZrenderInstance())
+                    designer.getZrenderInstance().Transformable({
+                        scale: [value, value]
+                    })
+                })
+            })
+    </script>
+}

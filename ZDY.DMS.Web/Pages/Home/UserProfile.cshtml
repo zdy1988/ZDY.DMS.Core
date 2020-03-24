@@ -1,0 +1,1951 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.Home.UserProfileModel
+@inject  SelectOptionsFactory SelectOptionsFactory
+@{
+    ViewData["Title"] = "UserProfile";
+
+    var Genders = new List<KeyValuePair<string, string>> {
+        new KeyValuePair<string, string>("男", "男"),
+        new KeyValuePair<string, string>("女", "女")
+    };
+
+    var DepartmentOptions = await SelectOptionsFactory.GetSelectDepartmentOptions();
+}
+
+<div class="row" data-model="profile">
+    <!-- BEGIN PROFILE SIDEBAR -->
+    <div class="col-md-3">
+        <!-- PORTLET MAIN -->
+        <div class="portlet light profile-sidebar-portlet">
+            <!-- SIDEBAR USERPIC -->
+            <div class="profile-userpic">
+                <img data-bind="img: AvatarUrl" class="img-responsive" alt="">
+            </div>
+            <!-- END SIDEBAR USERPIC -->
+            <!-- SIDEBAR USER TITLE -->
+            <div class="profile-usertitle">
+                <div class="profile-usertitle-name" data-bind="text:NickName"> Marcus Doe </div>
+                <div class="profile-usertitle-job" data-bind="text:Position"> Developer </div>
+            </div>
+            <!-- END SIDEBAR USER TITLE -->
+            <!-- SIDEBAR BUTTONS -->
+            <div class="profile-userbuttons">
+                <button type="button" class="btn btn-circle green btn-sm">Follow</button>
+                <button type="button" class="btn btn-circle red btn-sm">Message</button>
+            </div>
+            <!-- END SIDEBAR BUTTONS -->
+            <!-- SIDEBAR MENU -->
+            <div class="profile-usermenu">
+                <ul class="nav">
+                    <li data-bind="css: {'active': activePage() == 1}">
+                        <a href="javascript:;" data-bind="click:setActivePage" data-index="1">
+                            <i class="icon-home"></i> 信息概览
+                        </a>
+                    </li>
+                    <li data-bind="css: {'active': activePage() == 2}">
+                        <a href="javascript:;" data-bind="click:setActivePage" data-index="2">
+                            <i class="icon-settings"></i> 账号设置
+                        </a>
+                    </li>
+                    <li data-bind="css: {'active': activePage() == 3}">
+                        <a href="javascript:;" data-bind="click:setActivePage" data-index="3">
+                            <i class="icon-info"></i> 帮助
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- END MENU -->
+        </div>
+        <!-- END PORTLET MAIN -->
+        <!-- PORTLET MAIN -->
+        <div class="portlet light">
+            <!-- STAT -->
+            <div class="row list-separated profile-stat">
+                <div class="col-md-4 col-sm-4 col-xs-6">
+                    <div class="uppercase profile-stat-title"> 37 </div>
+                    <div class="uppercase profile-stat-text"> Projects </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-6">
+                    <div class="uppercase profile-stat-title"> 51 </div>
+                    <div class="uppercase profile-stat-text"> Tasks </div>
+                </div>
+                <div class="col-md-4 col-sm-4 col-xs-6">
+                    <div class="uppercase profile-stat-title"> 61 </div>
+                    <div class="uppercase profile-stat-text"> Uploads </div>
+                </div>
+            </div>
+            <!-- END STAT -->
+            <div>
+                <h4 class="profile-desc-title">About Marcus Doe</h4>
+                <span class="profile-desc-text"> Lorem ipsum dolor sit amet diam nonummy nibh dolore. </span>
+                <div class="margin-top-20 profile-desc-link">
+                    <i class="fa fa-globe"></i>
+                    <a href="http://www.keenthemes.com">www.keenthemes.com</a>
+                </div>
+                <div class="margin-top-20 profile-desc-link">
+                    <i class="fa fa-twitter"></i>
+                    <a href="http://www.twitter.com/keenthemes/">keenthemes</a>
+                </div>
+                <div class="margin-top-20 profile-desc-link">
+                    <i class="fa fa-facebook"></i>
+                    <a href="http://www.facebook.com/keenthemes/">keenthemes</a>
+                </div>
+            </div>
+        </div>
+        <!-- END PORTLET MAIN -->
+    </div>
+    <!-- END BEGIN PROFILE SIDEBAR -->
+    <!-- BEGIN PROFILE CONTENT -->
+    <div class="col-md-9">
+        <div class="row" data-bind="visible: activePage() == 1">
+            <div class="col-md-6">
+                <!-- BEGIN PORTLET -->
+                <div class="portlet light">
+                    <div class="portlet-title tabbable-line">
+                        <div class="caption caption-md">
+                            <span class="caption-subject font-blue-madison bold uppercase">提醒摘要</span>
+                        </div>
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#tab_1_1" data-toggle="tab"> System </a>
+                            </li>
+                            <li>
+                                <a href="#tab_1_2" data-toggle="tab"> Activities </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="portlet-body">
+                        <!--BEGIN TABS-->
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="tab_1_1">
+                                <div class="scroller" style="height: 305px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                                    <ul class="feeds">
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-success">
+                                                            <i class="fa fa-bell-o"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc">
+                                                            You have 4 pending tasks.
+                                                            <span class="label label-sm label-info">
+                                                                Take action
+                                                                <i class="fa fa-share"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> Just now </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bell-o"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc"> New version v1.4 just lunched! </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col2">
+                                                    <div class="date"> 20 mins </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-danger">
+                                                            <i class="fa fa-bolt"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> Database server #12 overloaded. Please fix the issue. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 24 mins </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-info">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> New order received and pending for process. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 30 mins </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-success">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> New payment refund and pending approval. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 40 mins </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-warning">
+                                                            <i class="fa fa-plus"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> New member registered. Pending approval. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 1.5 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-success">
+                                                            <i class="fa fa-bell-o"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc">
+                                                            Web server hardware needs to be upgraded.
+                                                            <span class="label label-sm label-default "> Overdue </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 2 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-default">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> Prod01 database server is overloaded 90%. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 3 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-warning">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> New group created. Pending manager review. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 5 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-info">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> Order payment failed. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 18 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-default">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> New application received. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 21 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-info">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> Dev90 web server restarted. Pending overall system check. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 22 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-default">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> New member registered. Pending approval </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 21 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-info">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> L45 Network failure. Schedule maintenance. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 22 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-default">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> Order canceled with failed payment. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 21 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-info">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> Web-A2 clound instance created. Schedule full scan. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 22 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-default">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> Member canceled. Schedule account review. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 21 hours </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-info">
+                                                            <i class="fa fa-bullhorn"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc"> New order received. Please take care of it. </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 22 hours </div>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="tab_1_2">
+                                <div class="scroller" style="height: 305px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                                    <ul class="feeds">
+                                        <li>
+                                            <a href="javascript:;">
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bell-o"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc"> New user registered </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col2">
+                                                    <div class="date"> Just now </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bell-o"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc"> New order received </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col2">
+                                                    <div class="date"> 10 mins </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <div class="col1">
+                                                <div class="cont">
+                                                    <div class="cont-col1">
+                                                        <div class="label label-sm label-danger">
+                                                            <i class="fa fa-bolt"></i>
+                                                        </div>
+                                                    </div>
+                                                    <div class="cont-col2">
+                                                        <div class="desc">
+                                                            Order #24DOP4 has been rejected.
+                                                            <span class="label label-sm label-danger ">
+                                                                Take action
+                                                                <i class="fa fa-share"></i>
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col2">
+                                                <div class="date"> 24 mins </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bell-o"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc"> New user registered </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col2">
+                                                    <div class="date"> Just now </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bell-o"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc"> New user registered </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col2">
+                                                    <div class="date"> Just now </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bell-o"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc"> New user registered </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col2">
+                                                    <div class="date"> Just now </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bell-o"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc"> New user registered </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col2">
+                                                    <div class="date"> Just now </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bell-o"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc"> New user registered </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col2">
+                                                    <div class="date"> Just now </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bell-o"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc"> New user registered </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col2">
+                                                    <div class="date"> Just now </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <div class="col1">
+                                                    <div class="cont">
+                                                        <div class="cont-col1">
+                                                            <div class="label label-sm label-success">
+                                                                <i class="fa fa-bell-o"></i>
+                                                            </div>
+                                                        </div>
+                                                        <div class="cont-col2">
+                                                            <div class="desc"> New user registered </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col2">
+                                                    <div class="date"> Just now </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!--END TABS-->
+                    </div>
+                </div>
+                <!-- END PORTLET -->
+            </div>
+            <div class="col-md-6">
+                <!-- BEGIN PORTLET -->
+                <div class="portlet light  tasks-widget">
+                    <div class="portlet-title">
+                        <div class="caption caption-md">
+                            <i class="icon-bar-chart theme-font hide"></i>
+                            <span class="caption-subject font-blue-madison bold uppercase">代办事项</span>
+                            <span class="caption-helper">16 pending</span>
+                        </div>
+                        <div class="inputs">
+                            <div class="portlet-input input-small input-inline">
+                                <div class="input-icon right">
+                                    <i class="icon-magnifier"></i>
+                                    <input type="text" class="form-control form-control-solid" placeholder="search...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="task-content">
+                            <div class="scroller" style="height: 282px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                                <!-- START TASK LIST -->
+                                <ul class="task-list">
+                                    <li>
+                                        <div class="task-checkbox">
+                                            <input type="hidden" value="1" name="test" />
+                                            <input type="checkbox" class="liChild" value="2" name="test" />
+                                        </div>
+                                        <div class="task-title">
+                                            <span class="task-title-sp"> Present 2013 Year IPO Statistics at Board Meeting </span>
+                                            <span class="label label-sm label-success">Company</span>
+                                            <span class="task-bell">
+                                                <i class="fa fa-bell-o"></i>
+                                            </span>
+                                        </div>
+                                        <div class="task-config">
+                                            <div class="task-config-btn btn-group">
+                                                <a class="btn btn-sm default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                    <i class="fa fa-cog"></i>
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-check"></i> Complete
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-pencil"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-trash-o"></i> Cancel
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="task-checkbox">
+                                            <input type="checkbox" class="liChild" value="" />
+                                        </div>
+                                        <div class="task-title">
+                                            <span class="task-title-sp"> Hold An Interview for Marketing Manager Position </span>
+                                            <span class="label label-sm label-danger">Marketing</span>
+                                        </div>
+                                        <div class="task-config">
+                                            <div class="task-config-btn btn-group">
+                                                <a class="btn btn-sm default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                    <i class="fa fa-cog"></i>
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-check"></i> Complete
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-pencil"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-trash-o"></i> Cancel
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="task-checkbox">
+                                            <input type="checkbox" class="liChild" value="" />
+                                        </div>
+                                        <div class="task-title">
+                                            <span class="task-title-sp"> AirAsia Intranet System Project Internal Meeting </span>
+                                            <span class="label label-sm label-success">AirAsia</span>
+                                            <span class="task-bell">
+                                                <i class="fa fa-bell-o"></i>
+                                            </span>
+                                        </div>
+                                        <div class="task-config">
+                                            <div class="task-config-btn btn-group">
+                                                <a class="btn btn-sm default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                    <i class="fa fa-cog"></i>
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-check"></i> Complete
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-pencil"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-trash-o"></i> Cancel
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="task-checkbox">
+                                            <input type="checkbox" class="liChild" value="" />
+                                        </div>
+                                        <div class="task-title">
+                                            <span class="task-title-sp"> Technical Management Meeting </span>
+                                            <span class="label label-sm label-warning">Company</span>
+                                        </div>
+                                        <div class="task-config">
+                                            <div class="task-config-btn btn-group">
+                                                <a class="btn btn-sm default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                    <i class="fa fa-cog"></i>
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-check"></i> Complete
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-pencil"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-trash-o"></i> Cancel
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="task-checkbox">
+                                            <input type="checkbox" class="liChild" value="" />
+                                        </div>
+                                        <div class="task-title">
+                                            <span class="task-title-sp"> Kick-off Company CRM Mobile App Development </span>
+                                            <span class="label label-sm label-info">Internal Products</span>
+                                        </div>
+                                        <div class="task-config">
+                                            <div class="task-config-btn btn-group">
+                                                <a class="btn btn-sm default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                    <i class="fa fa-cog"></i>
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-check"></i> Complete
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-pencil"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-trash-o"></i> Cancel
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="task-checkbox">
+                                            <input type="checkbox" class="liChild" value="" />
+                                        </div>
+                                        <div class="task-title">
+                                            <span class="task-title-sp"> Prepare Commercial Offer For SmartVision Website Rewamp </span>
+                                            <span class="label label-sm label-danger">SmartVision</span>
+                                        </div>
+                                        <div class="task-config">
+                                            <div class="task-config-btn btn-group">
+                                                <a class="btn btn-sm default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                    <i class="fa fa-cog"></i>
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-check"></i> Complete
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-pencil"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-trash-o"></i> Cancel
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="task-checkbox">
+                                            <input type="checkbox" class="liChild" value="" />
+                                        </div>
+                                        <div class="task-title">
+                                            <span class="task-title-sp"> Sign-Off The Comercial Agreement With AutoSmart </span>
+                                            <span class="label label-sm label-default">AutoSmart</span>
+                                            <span class="task-bell">
+                                                <i class="fa fa-bell-o"></i>
+                                            </span>
+                                        </div>
+                                        <div class="task-config">
+                                            <div class="task-config-btn btn-group">
+                                                <a class="btn btn-sm default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                    <i class="fa fa-cog"></i>
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-check"></i> Complete
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-pencil"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-trash-o"></i> Cancel
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="task-checkbox">
+                                            <input type="checkbox" class="liChild" value="" />
+                                        </div>
+                                        <div class="task-title">
+                                            <span class="task-title-sp"> Company Staff Meeting </span>
+                                            <span class="label label-sm label-success">Cruise</span>
+                                            <span class="task-bell">
+                                                <i class="fa fa-bell-o"></i>
+                                            </span>
+                                        </div>
+                                        <div class="task-config">
+                                            <div class="task-config-btn btn-group">
+                                                <a class="btn btn-sm default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                    <i class="fa fa-cog"></i>
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-check"></i> Complete
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-pencil"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-trash-o"></i> Cancel
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="last-line">
+                                        <div class="task-checkbox">
+                                            <input type="checkbox" class="liChild" value="" />
+                                        </div>
+                                        <div class="task-title">
+                                            <span class="task-title-sp"> KeenThemes Investment Discussion </span>
+                                            <span class="label label-sm label-warning">KeenThemes </span>
+                                        </div>
+                                        <div class="task-config">
+                                            <div class="task-config-btn btn-group">
+                                                <a class="btn btn-sm default" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                                    <i class="fa fa-cog"></i>
+                                                    <i class="fa fa-angle-down"></i>
+                                                </a>
+                                                <ul class="dropdown-menu pull-right">
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-check"></i> Complete
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-pencil"></i> Edit
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="javascript:;">
+                                                            <i class="fa fa-trash-o"></i> Cancel
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                <!-- END START TASK LIST -->
+                            </div>
+                        </div>
+                        <div class="task-footer">
+                            <div class="btn-arrow-link pull-right">
+                                <a href="javascript:;">See All Tasks</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END PORTLET -->
+            </div>
+        </div>
+        <div class="row" data-bind="visible: activePage() == 1">
+            <div class="col-md-12">
+                <!-- BEGIN PORTLET -->
+                <div class="portlet light ">
+                    <div class="portlet-title">
+                        <div class="caption caption-md">
+                            <i class="icon-bar-chart theme-font hide"></i>
+                            <span class="caption-subject font-blue-madison bold uppercase">客户支持</span>
+                            <span class="caption-helper">45 pending</span>
+                        </div>
+                        <div class="inputs">
+                            <div class="portlet-input input-inline input-small ">
+                                <div class="input-icon right">
+                                    <i class="icon-magnifier"></i>
+                                    <input type="text" class="form-control form-control-solid" placeholder="search...">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="scroller" style="height: 305px;" data-always-visible="1" data-rail-visible1="0" data-handle-color="#D7DCE2">
+                            <div class="general-item-list">
+                                <div class="item">
+                                    <div class="item-head">
+                                        <div class="item-details">
+                                            <img class="item-pic" src="../assets/layouts/layout2/img/avatar4.jpg">
+                                            <a href="" class="item-name primary-link">Nick Larson</a>
+                                            <span class="item-label">3 hrs ago</span>
+                                        </div>
+                                        <span class="item-status">
+                                            <span class="badge badge-empty badge-success"></span> Open
+                                        </span>
+                                    </div>
+                                    <div class="item-body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-head">
+                                        <div class="item-details">
+                                            <img class="item-pic" src="../assets/layouts/layout2/img/avatar4.jpg">
+                                            <a href="" class="item-name primary-link">Mark</a>
+                                            <span class="item-label">5 hrs ago</span>
+                                        </div>
+                                        <span class="item-status">
+                                            <span class="badge badge-empty badge-warning"></span> Pending
+                                        </span>
+                                    </div>
+                                    <div class="item-body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat tincidunt ut laoreet. </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-head">
+                                        <div class="item-details">
+                                            <img class="item-pic" src="../assets/layouts/layout2/img/avatar4.jpg">
+                                            <a href="" class="item-name primary-link">Nick Larson</a>
+                                            <span class="item-label">8 hrs ago</span>
+                                        </div>
+                                        <span class="item-status">
+                                            <span class="badge badge-empty badge-primary"></span> Closed
+                                        </span>
+                                    </div>
+                                    <div class="item-body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh. </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-head">
+                                        <div class="item-details">
+                                            <img class="item-pic" src="../assets/layouts/layout2/img/avatar4.jpg">
+                                            <a href="" class="item-name primary-link">Nick Larson</a>
+                                            <span class="item-label">12 hrs ago</span>
+                                        </div>
+                                        <span class="item-status">
+                                            <span class="badge badge-empty badge-danger"></span> Pending
+                                        </span>
+                                    </div>
+                                    <div class="item-body">
+                                        Consectetuer adipiscing elit Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-head">
+                                        <div class="item-details">
+                                            <img class="item-pic" src="../assets/layouts/layout2/img/avatar4.jpg">
+                                            <a href="" class="item-name primary-link">Richard Stone</a>
+                                            <span class="item-label">2 days ago</span>
+                                        </div>
+                                        <span class="item-status">
+                                            <span class="badge badge-empty badge-danger"></span> Open
+                                        </span>
+                                    </div>
+                                    <div class="item-body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, ut laoreet dolore magna aliquam erat volutpat. </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-head">
+                                        <div class="item-details">
+                                            <img class="item-pic" src="../assets/layouts/layout2/img/avatar4.jpg">
+                                            <a href="" class="item-name primary-link">Dan</a>
+                                            <span class="item-label">3 days ago</span>
+                                        </div>
+                                        <span class="item-status">
+                                            <span class="badge badge-empty badge-warning"></span> Pending
+                                        </span>
+                                    </div>
+                                    <div class="item-body"> Lorem ipsum dolor sit amet, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </div>
+                                </div>
+                                <div class="item">
+                                    <div class="item-head">
+                                        <div class="item-details">
+                                            <img class="item-pic" src="../assets/layouts/layout2/img/avatar4.jpg">
+                                            <a href="" class="item-name primary-link">Larry</a>
+                                            <span class="item-label">4 hrs ago</span>
+                                        </div>
+                                        <span class="item-status">
+                                            <span class="badge badge-empty badge-success"></span> Open
+                                        </span>
+                                    </div>
+                                    <div class="item-body"> Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- END PORTLET -->
+            </div>
+        </div>
+        <div class="row" data-bind="visible: activePage() == 2">
+            <div class="col-md-12">
+                <div class="portlet light">
+                    <div class="portlet-title tabbable-line">
+                        <div class="caption caption-md">
+                            <i class="icon-globe theme-font hide"></i>
+                            <span class="caption-subject font-blue-madison bold uppercase">账号设置</span>
+                        </div>
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#tab_2_1" data-toggle="tab">个人信息</a>
+                            </li>
+                            <li>
+                                <a href="#tab_2_2" data-toggle="tab">修改头像</a>
+                            </li>
+                            <li>
+                                <a href="#tab_2_3" data-toggle="tab">修改密码</a>
+                            </li>
+                            <li>
+                                <a href="#tab_2_4" data-toggle="tab">隐私设置</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="tab-content">
+                            <!-- PERSONAL INFO TAB -->
+                            <div class="tab-pane active" id="tab_2_1">
+                                <form-builder action="" id="form1">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <text-box field="UserName" name="用户账号" is-required="true"></text-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <text-box field="NickName" name="用户昵称" is-required="true"></text-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <text-box field="Mobile" name="手机号码" is-required="true"></text-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <text-box field="Email" name="电子邮箱" is-required="true"></text-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <text-box field="Phone" name="电话号码"></text-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <text-box field="Citys" name="省市区域" id="city-picker"></text-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <text-box field="Position" name="用户职位"></text-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <select-box field="DepartmentID" name="用户部门" is-required="true" options="@DepartmentOptions"></select-box>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <radio-box field="Gender" name="用户性别" options="@Genders" mode="Inline"></radio-box>
+                                        </div>
+                                    </div>
+                                    <div class="margin-top-10">
+                                        <button type="button" color="Green" data-bind="click:$root.update, visible:Id()!=0">提交修改</button>
+                                    </div>
+                                </form-builder>
+                            </div>
+                            <!-- END PERSONAL INFO TAB -->
+                            <!-- CHANGE AVATAR TAB -->
+                            <div class="tab-pane" id="tab_2_2">
+                                <p>
+                                    上传您的用户头像，支持 .jpg .png 格式图片上传
+                                </p>
+                                <form action="#" role="form">
+                                    <div class="form-group">
+                                        <div class="fileinput fileinput-new" data-provides="fileinput">
+                                            <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
+                                                <img src="/assets/global/img/no-image.jpg" alt="" />
+                                            </div>
+                                            <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"> </div>
+                                            <div>
+                                                <span class="btn default btn-file">
+                                                    <span class="fileinput-new"> 选择图片 </span>
+                                                    <span class="fileinput-exists"> 重新选择 </span>
+                                                    <input type="file" accept="image/*" name="..." id="avatarUploader">
+                                                </span>
+                                                <a href="javascript:;" class="btn default fileinput-exists" data-dismiss="fileinput"> 移除图片 </a>
+                                            </div>
+                                        </div>
+                                        <div class="clearfix margin-top-10">
+                                            <span class="label label-danger">NOTE! </span>
+                                            <span style="padding-left: 10px;">
+                                                附加图片缩略图支持Firefox、Chrome,Opera,Safari和ie 10
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="margin-top-10">
+                                        <a href="javascript:;" class="btn green" data-bind="click:handleUploadAvatar"> 保存头像 </a>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- END CHANGE AVATAR TAB -->
+                            <!-- CHANGE PASSWORD TAB -->
+                            <div class="tab-pane" id="tab_2_3">
+                                <form-builder>
+                                    <text-box field="OrgPassword" type="password" name="当前密码"></text-box>
+                                    <text-box field="NewPassword" type="password" name="设置密码"></text-box>
+                                    <text-box field="NewPassword2" type="password" name="重复密码"></text-box>
+                                    <div class="margin-top-10">
+                                        <a href="javascript:;" class="btn green" data-bind="click:changePassword"> 修改密码 </a>
+                                        <a href="javascript:;" class="btn default" data-bind="click:resetPassword"> 取消修改 </a>
+                                    </div>
+                                </form-builder>
+                            </div>
+                            <!-- END CHANGE PASSWORD TAB -->
+                            <!-- PRIVACY SETTINGS TAB -->
+                            <div class="tab-pane" id="tab_2_4">
+                                <form action="#">
+                                    <table class="table table-light table-hover">
+                                        <tr>
+                                            <td> Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus.. </td>
+                                            <td>
+                                                <div class="mt-radio-inline">
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="optionsRadios1" value="option1" /> Yes
+                                                        <span></span>
+                                                    </label>
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="optionsRadios1" value="option2" checked /> No
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td> Enim eiusmod high life accusamus terry richardson ad squid wolf moon </td>
+                                            <td>
+                                                <div class="mt-radio-inline">
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="optionsRadios11" value="option1" /> Yes
+                                                        <span></span>
+                                                    </label>
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="optionsRadios11" value="option2" checked /> No
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td> Enim eiusmod high life accusamus terry richardson ad squid wolf moon </td>
+                                            <td>
+                                                <div class="mt-radio-inline">
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="optionsRadios21" value="option1" /> Yes
+                                                        <span></span>
+                                                    </label>
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="optionsRadios21" value="option2" checked /> No
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td> Enim eiusmod high life accusamus terry richardson ad squid wolf moon </td>
+                                            <td>
+                                                <div class="mt-radio-inline">
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="optionsRadios31" value="option1" /> Yes
+                                                        <span></span>
+                                                    </label>
+                                                    <label class="mt-radio">
+                                                        <input type="radio" name="optionsRadios31" value="option2" checked /> No
+                                                        <span></span>
+                                                    </label>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    <!--end profile-settings-->
+                                    <div class="margin-top-10">
+                                        <a href="javascript:;" class="btn red"> Save Changes </a>
+                                        <a href="javascript:;" class="btn default"> Cancel </a>
+                                    </div>
+                                </form>
+                            </div>
+                            <!-- END PRIVACY SETTINGS TAB -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" data-bind="visible: activePage() == 3">
+            <div class="col-md-12">
+                <div class="portlet light ">
+                    <div class="portlet-title tabbable-line">
+                        <div class="caption caption-md">
+                            <i class="icon-globe theme-font hide"></i>
+                            <span class="caption-subject font-blue-madison bold uppercase">帮助</span>
+                        </div>
+                        <ul class="nav nav-tabs">
+                            <li class="active">
+                                <a href="#tab_3_1" data-toggle="tab">General Question</a>
+                            </li>
+                            <li>
+                                <a href="#tab_3_2" data-toggle="tab">Membership</a>
+                            </li>
+                            <li>
+                                <a href="#tab_3_3" data-toggle="tab">Terms Of Use</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="tab-content">
+                            <!-- GENERAL QUESTION TAB -->
+                            <div class="tab-pane active" id="tab_3_1">
+                                <div id="accordion1" class="panel-group">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion1" href="#accordion1_1"> 1. Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion1_1" class="panel-collapse collapse in">
+                                            <div class="panel-body">
+                                                Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                                                laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore
+                                                wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably
+                                                haven't heard of them accusamus labore sustainable VHS.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion1" href="#accordion1_2"> 2. Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion1_2" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Anim pariatur cliche reprehenderit,
+                                                enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf
+                                                moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente
+                                                ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore
+                                                sustainable VHS.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion1" href="#accordion1_3"> 3. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion1_3" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Anim pariatur cliche reprehenderit,
+                                                enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf
+                                                moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente
+                                                ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore
+                                                sustainable VHS.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-warning">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion1" href="#accordion1_4"> 4. Wolf moon officia aute, non cupidatat skateboard dolor brunch ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion1_4" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion1" href="#accordion1_5"> 5. Leggings occaecat craft beer farm-to-table, raw denim aesthetic ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion1_5" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. Food truck quinoa nesciunt laborum eiusmod.
+                                                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion1" href="#accordion1_6"> 6. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion1_6" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. Food truck quinoa nesciunt laborum eiusmod.
+                                                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion1" href="#accordion1_7"> 7. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion1_7" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. Food truck quinoa nesciunt laborum eiusmod.
+                                                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END GENERAL QUESTION TAB -->
+                            <!-- MEMBERSHIP TAB -->
+                            <div class="tab-pane" id="tab_3_2">
+                                <div id="accordion2" class="panel-group">
+                                    <div class="panel panel-warning">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion2" href="#accordion2_1"> 1. Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion2_1" class="panel-collapse collapse in">
+                                            <div class="panel-body">
+                                                <p>
+                                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
+                                                    nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
+                                                    beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt
+                                                    you probably haven't heard of them accusamus labore sustainable VHS.
+                                                </p>
+                                                <p>
+                                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
+                                                    nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft
+                                                    beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt
+                                                    you probably haven't heard of them accusamus labore sustainable VHS.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion2" href="#accordion2_2"> 2. Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion2_2" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Anim pariatur cliche reprehenderit,
+                                                enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf
+                                                moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente
+                                                ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore
+                                                sustainable VHS.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion2" href="#accordion2_3"> 3. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion2_3" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Anim pariatur cliche reprehenderit,
+                                                enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf
+                                                moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente
+                                                ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore
+                                                sustainable VHS.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion2" href="#accordion2_4"> 4. Wolf moon officia aute, non cupidatat skateboard dolor brunch ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion2_4" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion2" href="#accordion2_5"> 5. Leggings occaecat craft beer farm-to-table, raw denim aesthetic ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion2_5" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. Food truck quinoa nesciunt laborum eiusmod.
+                                                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion2" href="#accordion2_6"> 6. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion2_6" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. Food truck quinoa nesciunt laborum eiusmod.
+                                                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion2" href="#accordion2_7"> 7. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion2_7" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. Food truck quinoa nesciunt laborum eiusmod.
+                                                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END MEMBERSHIP TAB -->
+                            <!-- TERMS OF USE TAB -->
+                            <div class="tab-pane" id="tab_3_3">
+                                <div id="accordion3" class="panel-group">
+                                    <div class="panel panel-danger">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion3" href="#accordion3_1"> 1. Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion3_1" class="panel-collapse collapse in">
+                                            <div class="panel-body">
+                                                <p>
+                                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
+                                                    nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                                </p>
+                                                <p>
+                                                    Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa
+                                                    nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
+                                                </p>
+                                                <p>
+                                                    Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica,
+                                                    craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth
+                                                    nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-success">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion3" href="#accordion3_2"> 2. Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion3_2" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Anim pariatur cliche reprehenderit,
+                                                enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf
+                                                moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente
+                                                ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore
+                                                sustainable VHS.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion3" href="#accordion3_3"> 3. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion3_3" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Anim pariatur cliche reprehenderit,
+                                                enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf
+                                                moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente
+                                                ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore
+                                                sustainable VHS.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion3" href="#accordion3_4"> 4. Wolf moon officia aute, non cupidatat skateboard dolor brunch ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion3_4" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion3" href="#accordion3_5"> 5. Leggings occaecat craft beer farm-to-table, raw denim aesthetic ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion3_5" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. Food truck quinoa nesciunt laborum eiusmod.
+                                                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion3" href="#accordion3_6"> 6. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion3_6" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. Food truck quinoa nesciunt laborum eiusmod.
+                                                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title">
+                                                <a class="accordion-toggle accordion-toggle-styled" data-toggle="collapse" data-parent="#accordion3" href="#accordion3_7"> 7. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft ? </a>
+                                            </h4>
+                                        </div>
+                                        <div id="accordion3_7" class="panel-collapse collapse">
+                                            <div class="panel-body">
+                                                3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                                coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                                occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS. Food truck quinoa nesciunt laborum eiusmod.
+                                                Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- END TERMS OF USE TAB -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END PROFILE CONTENT -->
+</div>
+
+@section Styles{
+    <style type="text/css">
+        .portlet.light > .portlet-title > .caption.caption-md > .caption-subject {
+            font-size: 20px;
+        }
+
+
+        .profile-sidebar-portlet {
+            padding: 30px 0 0 0 !important;
+        }
+
+        .profile-userpic img {
+            float: none;
+            margin: 0 auto;
+            width: 50%;
+            height: 50%;
+            -webkit-border-radius: 50% !important;
+            -moz-border-radius: 50% !important;
+            border-radius: 50% !important;
+        }
+
+        .profile-usertitle {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .profile-usertitle-name {
+            color: #5a7391;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .profile-usertitle-job {
+            text-transform: uppercase;
+            color: #5b9bd1;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 7px;
+        }
+
+        .profile-userbuttons {
+            text-align: center;
+            margin-top: 10px;
+        }
+
+            .profile-userbuttons .btn {
+                margin-right: 5px;
+            }
+
+                .profile-userbuttons .btn:last-child {
+                    margin-right: 0;
+                }
+
+            .profile-userbuttons button {
+                text-transform: uppercase;
+                font-size: 11px;
+                font-weight: 600;
+                padding: 6px 15px;
+            }
+
+        .profile-usermenu {
+            margin-top: 30px;
+            padding-bottom: 20px;
+        }
+
+            .profile-usermenu ul li {
+                border-bottom: 1px solid #f0f4f7;
+            }
+
+                .profile-usermenu ul li:last-child {
+                    border-bottom: none;
+                }
+
+                .profile-usermenu ul li a {
+                    color: #93a3b5;
+                    font-size: 16px;
+                    font-weight: 400;
+                }
+
+                    .profile-usermenu ul li a i {
+                        margin-right: 8px;
+                        font-size: 16px;
+                    }
+
+                    .profile-usermenu ul li a:hover {
+                        background-color: #fafcfd;
+                        color: #5b9bd1;
+                    }
+
+                .profile-usermenu ul li.active a {
+                    color: #5b9bd1;
+                    background-color: #f6f9fb;
+                    border-left: 2px solid #5b9bd1;
+                    margin-left: -2px;
+                }
+
+        .profile-stat {
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f4f7;
+        }
+
+        .profile-stat-title {
+            color: #7f90a4;
+            font-size: 25px;
+            text-align: center;
+        }
+
+        .profile-stat-text {
+            color: #5b9bd1;
+            font-size: 11px;
+            font-weight: 800;
+            text-align: center;
+        }
+
+        .profile-desc-title {
+            color: #7f90a4;
+            font-size: 17px;
+            font-weight: 600;
+        }
+
+        .profile-desc-text {
+            color: #7e8c9e;
+            font-size: 14px;
+        }
+
+        .profile-desc-link i {
+            width: 22px;
+            font-size: 19px;
+            color: #abb6c4;
+            margin-right: 5px;
+        }
+
+        .profile-desc-link a {
+            font-size: 14px;
+            font-weight: 600;
+            color: #5b9bd1;
+        }
+    </style>
+}
+
+@section Scripts{
+    <script type="text/javascript">
+        var id = @Model.UserId
+
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "bootstrap",
+            "jquery-slimscroll",
+            "bootstrap-citypicker",
+            "bootstrap-fileinput",
+            ui], function ($, ko, zdy) {
+
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                var form = zdy.form().options({
+                    fields: [
+                        { field: 'Id', value: ko.observable(0) },
+                        { field: 'Avatar', value: ko.observable() },
+                        { field: 'AvatarUrl', value: ko.observable() },
+                        { field: 'DepartmentId', value: ko.observable() },
+                        { field: 'Email', value: ko.observable() },
+                        { field: 'Gender', value: ko.observable() },
+                        { field: 'IsDisabled', value: ko.observable() },
+                        { field: 'Mobile', value: ko.observable() },
+                        { field: 'NickName', value: ko.observable() },
+                        { field: 'Phone', value: ko.observableArray() },
+                        { field: 'Position', value: ko.observable() },
+                        { field: 'UserName', value: ko.observable() },
+                        { field: 'City', value: ko.observable() },
+                        { field: 'Country', value: ko.observable("China") },
+                        { field: 'Province', value: ko.observable() }
+                    ],
+                    dataUpdateUrl: 'User/Update'
+                }).import(function () {
+
+                    this.activePage = ko.observable(1)
+
+                    this.setActivePage = function (data, e) { 
+                        var index = $(e.target).data("index")
+                        this.activePage(index)
+                    }
+
+                    this.afterLoad = function (data) {
+
+                        $("#city-picker").citypicker({
+                            responsive: true,
+                            level: "city"
+                        });
+
+                        $("#city-picker").on("cp:updated", function () {
+                            var city = $('#city-picker').val()
+                            if (city !== undefined) {
+                                var address = city.split("/");
+                                var city = address[0] === undefined ? "" : address[0]
+                                var province = address[1] === undefined ? "" : address[1]
+                                form.City(city)
+                                form.Province(province)
+                            }
+                        })
+                    }
+
+                    this.Citys = ko.computed(function () {
+                        var array = [this.City(), this.Province()]
+                        return array.join("/")
+                    }, this)
+
+                    this.OrgPassword = ko.observable()
+                    this.NewPassword = ko.observable()
+                    this.NewPassword2 = ko.observable()
+
+                    this.changePassword = function () {
+                        var op = this.OrgPassword()
+                        var np = this.NewPassword()
+                        var np2 = this.NewPassword2()
+                        if (op.length > 0 && np.length > 0 && np2.length > 0) {
+                            if (np == np2) {
+                                zdy.ajaxPost("TokenAuth/ChangePassword", { orgPassword: op, newPassword: np }).done(function () {
+                                    zdy.toastr.success("修改成功")
+                                    form.resetPassword()
+                                })
+                            } else {
+                                zdy.toastr.error("两次输入的新密码不一致")
+                            }
+                        } else {
+                            zdy.toastr.error("请将新旧密码填写完整")
+                        }
+                    }
+                    this.resetPassword = function () {
+                        this.OrgPassword("")
+                        this.NewPassword("")
+                        this.NewPassword2("")
+                    }
+
+                    this.handleUploadAvatar = function () {
+                        var input = document.getElementById("avatarUploader")
+                        zdy.upload({ type: "Avatar", input: input }).done(function (rst) {
+                            var files = rst.Data
+                            form.Avatar(files[0].Id)
+                            form.AvatarUrl(files[0].Url)
+                            form.update()
+                        })
+                    }
+
+
+                }).bind("profile").load("User/FindUserById", { id: id });
+
+            })
+    </script>
+}

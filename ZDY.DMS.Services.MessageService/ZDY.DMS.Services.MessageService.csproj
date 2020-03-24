@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ZDY.DMS.AspNetCore\ZDY.DMS.AspNetCore.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Domain\ZDY.DMS.Domain.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Models\ZDY.DMS.Models.csproj" />
+  </ItemGroup>
+
+</Project>

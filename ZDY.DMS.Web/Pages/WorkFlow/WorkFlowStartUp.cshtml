@@ -1,0 +1,139 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.WorkFlow.WorkFlowStartUpModel
+
+@{
+    if (ViewData["ErrorMessage"] != null)
+    {
+
+        <h2>@ViewData["ErrorMessage"]</h2>
+
+    }
+    else
+    {
+
+        <portlet title="@Model.Flow.Name" is-fit="true" is-show-tools="false" data-model="flow-instance">
+
+            <div class="row margin-bottom-20">
+                <div class="col-md-12">
+                    <div class="btn-group">
+                        <button icon="Send" color="BlueSoft" data-bind="click:handleStartUpWorkFlow">
+                            发起流程
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <hr />
+            <div class="row">
+                <div class="col-md-12">
+                    <text-box name="任务标题" field="Title" is-required="true"></text-box>
+                </div>
+            </div>
+            <hr />
+            <form-builder action="" id="fb">
+                <div id="fb-render"></div>
+            </form-builder>
+
+        </portlet>
+
+    }
+}
+
+@section Styles{
+    <style type="text/css">
+        .rendered-form .fb-radio-group .radio-inline input + label {
+            margin-bottom: 1px;
+        }
+    </style>
+}
+
+@section Scripts{
+
+    <script type="text/javascript">
+        var formData = JSON.stringify( @Html.Raw(Model.Form.DesignJson) )
+        var flowId = @Model.Flow.Id
+        var title = '@Html.Raw(ViewData["Title"] == null ? "" : ViewData["Title"])'
+
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "app",
+            "bootstrap",
+            "form-render",
+            ui], function ($, ko, zdy, app) {
+
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                var initRender = function () {
+                    return $('#fb-render').formRender({
+                        dataType: 'json',
+                        formData: formData,
+                        notify: {
+                            error: function (message) {
+                                return console.error(message);
+                            },
+                            success: function (message) {
+                                $("*[required=required]").each(function () { 
+                                    $(this).attr("data-rule","required")
+                                })
+
+                                return console.log(message);
+                            },
+                            warning: function (message) {
+                                return console.warn(message);
+                            }
+                        }
+                    });
+                }
+
+                var formRenderInstance = initRender();
+
+                var flowInstance = zdy.module().import(function () {
+
+                    this.Title = ko.observable(title)
+
+                    this.handleStartUpWorkFlow = function () {
+
+                        if (this.valid()) { 
+
+                            zdy.confirm("确认要发起这个流程吗？").done(function () { 
+
+                                var data = $('#form_fb').serializeArray();
+                                var json = {}
+                                for (var i = 0; i < data.length; i++) {
+                                    var item = data[i]
+                                    json[item.name] = item.value
+                                }
+
+                                var formJson = formData
+                                var dataJson = JSON.stringify(json)
+                                var title = flowInstance.Title()
+
+                                zdy.ajaxPost("WorkFlowRun/StartUp", {
+                                    FormJson: formJson,
+                                    DataJson: dataJson,
+                                    Title: title,
+                                    FlowID: flowId
+                                }).done(function (rst) {
+
+                                    if (rst.IsSuccess) {
+                                        zdy.replacePage("/Admin/WorkflowManage/WorkFlowPendingTasks")
+                                        zdy.toastr.success("发起成功");
+                                    }
+
+                                })
+
+
+                            })
+
+                        }
+
+                    }
+
+                }).bind("flow-instance")
+            })
+
+    </script>
+
+}

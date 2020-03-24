@@ -1,0 +1,117 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.Organization.CompanyDetailModel
+@{
+    ViewData["Title"] = "CompanyDetail";
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <portlet title="公司信息" is-form="true" is-fit="true" data-model="form">
+            <form-builder>
+                <div class="row">
+                    <div class="col-md-6">
+                        <text-box field="CompanyName" name="公司名称" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Phone" name="公司电话"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Fax" name="传真号码"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Citys" name="省市区域" id="city-picker"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Order" name="排序"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="Address" name="公司地址"></text-box>
+                    </div>
+                    <div class="col-md-12">
+                        <text-box field="Note" name="备注信息" is-multiple="true"></text-box>
+                    </div>
+                </div>
+                <form-actions>
+                    <button type="button" color="Red" data-bind="click:$root.delete, visible:Id()">删除</button>
+                    <button type="button" color="Green" data-bind="click:update, visible:Id()">修改</button>
+                    <button type="button" color="Green" data-bind="click:add, visible:!Id()">提交</button>
+                </form-actions>
+            </form-builder>
+        </portlet>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "bootstrap",
+            "bootstrap-citypicker",
+            ui], function ($, ko, zdy) {
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                var id = window.location.toString().getUrlParm("id")
+
+                var form = zdy.form().options({
+                    fields: [
+                        { field: 'Id', value: ko.observable() },
+                        { field: 'Address', value: ko.observable() },
+                        { field: 'City', value: ko.observable() },
+                        { field: 'CompanyName', value: ko.observable() },
+                        { field: 'Fax', value: ko.observable() },
+                        { field: 'Note', value: ko.observable() },
+                        { field: 'Order', value: ko.observable() },
+                        { field: 'Phone', value: ko.observableArray() },
+                        { field: 'Province', value: ko.observable() }
+                    ],
+                    dataAddUrl: 'Company/Add',
+                    dataUpdateUrl: 'Company/Update',
+                    dataDeleteUrl: 'Company/Delete'
+                }).import(function () {
+
+                    this.afterAdd = function (data) {
+                        this.Id(data.Id)
+                    }
+
+                    this.afterDelete = function () {
+                        this.reset()
+                    }
+
+                    this.afterLoad = function (data) {
+
+                        $("#city-picker").citypicker({
+                            responsive: true,
+                            level: "city"
+                        });
+
+                        $("#city-picker").on("cp:updated", function () {
+                            var city = $('#city-picker').val()
+                            if (city !== undefined) {
+                                var address = city.split("/");
+                                var city = address[0] === undefined ? "" : address[0]
+                                var province = address[1] === undefined ? "" : address[1]
+                                form.City(city)
+                                form.Province(province)
+                            }
+                        })
+                    }
+
+                    this.Citys = ko.computed(function () {
+                        var array = [this.City(), this.Province()]
+                        return array.join("/")
+                    }, this)
+
+                }).bind("form");
+
+                if (id !== "") {
+                    form.load("Company/FindByKey", { id: id });
+                } else {
+                    form.load({});
+                }
+            })
+    </script>
+}
+

@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.1.2" />
+    <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ZDY.DMS.Application\ZDY.DMS.Application.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.AspNetCore\ZDY.DMS.AspNetCore.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Caching.InMemory\ZDY.DMS.Caching.InMemory.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.DataTransferObjects\ZDY.DMS.DataTransferObjects.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Domain\ZDY.DMS.Domain.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Events\ZDY.DMS.Events.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Extensions.DependencyInjection.Autofac\ZDY.DMS.Extensions.DependencyInjection.Autofac.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Metronic.TagHelpers\ZDY.DMS.Metronic.TagHelpers.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Models\ZDY.DMS.Models.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Querying.MySql\ZDY.DMS.Querying.MySql.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Repositories.EntityFramework\ZDY.DMS.Repositories.EntityFramework.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.ServiceContracts\ZDY.DMS.ServiceContracts.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.AdminService\ZDY.DMS.Services.AdminService.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.AuthService\ZDY.DMS.Services.AuthService.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.OrganizationService\ZDY.DMS.Services.OrganizationService.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.PermissionService\ZDY.DMS.Services.PermissionService.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.UserService\ZDY.DMS.Services.UserService.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.WorkFlowService\ZDY.DMS.Services.WorkFlowService.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Tools\ZDY.DMS.Tools.csproj" />
+    <ProjectReference Include="..\ZDY.DMS\ZDY.DMS.csproj" />
+  </ItemGroup>
+
+
+
+</Project>

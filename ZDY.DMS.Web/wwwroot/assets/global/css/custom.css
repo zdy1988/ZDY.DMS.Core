@@ -1,0 +1,307 @@
+﻿*[data-model] {
+    display: none;
+}
+
+body,
+h1, h2, h3, h4, h5, h6,
+.label,
+.badge,
+.dropdown-menu {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", SimSun, sans-serif !important;
+}
+
+body {
+    overflow-y: scroll;
+}
+
+.demo-height {
+    min-height: 600px;
+}
+
+.help-block.help-block-error {
+    font-size: 13px;
+}
+
+.modal-body .table-scrollable {
+    margin: 0px !important;
+}
+
+/*#region table*/
+
+.table-scrollable {
+    border: none;
+    border-bottom: 1px solid #e7ecf1;
+}
+
+    .table-scrollable > .table-bordered > tbody > tr > td:first-child {
+        border-left: 1px solid #e7ecf1;
+    }
+
+    .table-scrollable > .table-bordered > tbody > tr > td:last-child {
+        border-right: 1px solid #e7ecf1;
+    }
+
+    .table-scrollable > .table-bordered > thead > tr > th:first-child {
+        border-left: 1px solid #14B9D6;
+    }
+
+    .table-scrollable > .table-bordered > thead > tr > th:last-child {
+        border-right: 1px solid #14B9D6;
+    }
+
+    .table {
+        cursor: pointer;
+    }
+
+        .table > thead > tr > th {
+            padding-top: 12px !important;
+            padding-bottom: 12px !important;
+            background: #14B9D6 !important;
+        }
+
+        .table > thead > tr > th,
+        .table > thead > tr > th a,
+        .table > thead > tr > th i {
+            color: #fff !important;
+        }
+
+            .table > thead > tr > th.table-checkbox {
+                width: 50px;
+                text-align: center;
+            }
+
+    .table > tbody > tr > td.table-checkbox {
+        text-align: center;
+    }
+
+    .table > tbody > tr > td,
+    .table > tbody > tr > th,
+    .table > tfoot > tr > td,
+    .table > tfoot > tr > th,
+    .table > thead > tr > td,
+    .table > thead > tr > th {
+        word-break: break-all;
+        vertical-align: middle;
+        white-space: nowrap;
+        max-width: 240px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: normal;
+    }
+
+        .table > tbody > tr > td > .btn {
+            margin-right: 0px;
+            margin-left: 5px;
+        }
+
+            .table > tbody > tr > td > .btn:first-child {
+                margin-left: 0px;
+            }
+
+        .table > tbody > tr > td > .btn-xs {
+            padding: 2px 5px;
+        }
+
+/*#endregion*/
+
+/*#region table-tree*/
+
+.table-tree {
+
+}
+
+    .table-tree tr td:first-child i {
+        width: 20px;
+        vertical-align: top;
+        padding-top: 3px;
+    }
+
+    .table-tree .table-tree-item-level-1 td:first-child {
+        padding-left: 30px;
+    }
+
+    .table-tree .table-tree-item-level-2 td:first-child {
+        padding-left: 60px;
+    }
+
+    .table-tree .table-tree-item-level-3 td:first-child {
+        padding-left: 90px;
+    }
+
+    .table-tree .table-tree-item-level-4 td:first-child {
+        padding-left: 120px;
+    }
+
+    .table-tree .table-tree-item-level-5 td:first-child {
+        padding-left: 150px;
+    }
+
+    .table-tree .table-tree-item-level-6 td:first-child {
+        padding-left: 180px;
+    }
+
+    .table-tree .table-tree-item-level-7 td:first-child {
+        padding-left: 210px;
+    }
+
+    .table-tree .table-tree-item-level-8 td:first-child {
+        padding-left: 240px;
+    }
+
+/*#endregion*/
+
+/*#region checkbox radio*/
+
+input[type=checkbox] {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+    vertical-align: bottom;
+    background: #fff;
+    border: 1px solid #B9BBBE;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+}
+
+    input[type=checkbox]:active {
+        border-color: #c6c6c6;
+        background: #ebebeb;
+    }
+
+    input[type=checkbox]:hover {
+        border-color: #c6c6c6;
+        -webkit-box-shadow: inset 0 2px 2px rgba(0,0,0,0.1);
+        -moz-box-shadow: inset 0 2px 2px rgba(0,0,0,0.1);
+        box-shadow: inset 0 2px 2px rgba(0,0,0,0.1);
+    }
+
+    input[type=checkbox]:checked {
+        background: #fff;
+    }
+
+        input[type=checkbox]:checked::after {
+            content: url(../img/checkmark.png);
+            display: block;
+            position: absolute;
+            top: -1px;
+            left: -3px;
+        }
+
+    input[type=checkbox]:focus {
+        outline: none;
+        border-color: #4d90fe;
+    }
+
+input[type=radio] {
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    cursor: pointer;
+    vertical-align: bottom;
+    background: #fff;
+    border: 1px solid #B9BBBE;
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;
+    border-radius: 1px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    position: relative;
+}
+
+    input[type=radio]:active {
+        border-color: #c6c6c6;
+        background: #ebebeb;
+    }
+
+input[type=radio] {
+    -webkit-border-radius: 1em;
+    -moz-border-radius: 1em;
+    border-radius: 1em;
+    width: 20px;
+    height: 20px;
+}
+
+    input[type=radio]:checked {
+        background: #fff;
+    }
+
+        input[type=radio]:checked::after {
+            content: '';
+            display: block;
+            position: relative;
+            top: 4px;
+            left: 4px;
+            width: 10px;
+            height: 10px;
+            background: #666;
+            -webkit-border-radius: 1em;
+            -moz-border-radius: 1em;
+            border-radius: 1em;
+        }
+
+/*#endregion*/
+
+/*#region md-checkboxes*/
+
+.form-md-checkboxes > label {
+    color: #333;
+}
+
+/*#endregion*/
+
+/*#region portlet*/
+
+.portlet.light > .portlet-title > .caption > .caption-subject {
+    font-weight: 700 !important;
+}
+
+.portlet.light > .portlet-title > .caption > i {
+    margin-top: 5px;
+}
+
+.portlet.light > .portlet-title > .actions {
+    padding: 4px 0 0px;
+}
+
+.portlet.light > .portlet-title > .tools {
+    padding: 10px 0 6px;
+}
+
+.portlet-form .form-actions {
+    padding: 20px 0 0 0 !important;
+}
+
+/*#endregion*/
+
+/*#region alert*/
+
+.sweet-alert {
+    z-index: 10051 !important;
+}
+
+/*#endregion*/
+
+/*#region city-picker*/
+
+.city-picker-span {
+    border: 1px solid #c2cad8;
+    padding: 0px 12px;
+}
+
+    .form-control:focus,
+    .city-picker-span.focus,
+    .city-picker-span.open {
+        border-color: #66afe9;
+        outline: 0;
+    }
+
+/*#endregion*/

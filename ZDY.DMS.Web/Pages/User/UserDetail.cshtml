@@ -1,0 +1,137 @@
+﻿@page
+@model ZDY.DMS.Web.Pages.User.UserDetailModel
+@*@inject SelectOptionsFactory SelectOptionsFactory*@
+@{
+    ViewData["Title"] = "User";
+
+    var Genders = new List<KeyValuePair<string, string>> { 
+        new KeyValuePair<string, string>("男", "男"),
+        new KeyValuePair<string, string>("女", "女")
+    };
+
+    //var DepartmentOptions = await SelectOptionsFactory.GetSelectDepartmentOptions();
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <portlet title="用户信息" is-form="true" is-fit="true" data-model="form">
+            <form-builder action="" id="form1">
+                <div class="row">
+                    <div class="col-md-6">
+                        <text-box field="UserName" name="账号" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="NickName" name="昵称" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Name" name="姓名" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Mobile" name="手机号码" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Email" name="电子邮箱" is-required="true"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Phone" name="电话号码"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Citys" name="省市区域" id="city-picker"></text-box>
+                    </div>
+                    <div class="col-md-6">
+                        <text-box field="Position" name="职位"></text-box>
+                    </div>
+                    @*<div class="col-md-6">
+                        <select-box field="DepartmentId" name="部门" is-required="true" options="@DepartmentOptions"></select-box>
+                    </div>*@
+                    <div class="col-md-6">
+                        <radio-box field="Gender" name="性别" options="@Genders" mode="Inline"></radio-box>
+                    </div>
+                </div>
+                <form-actions>
+                    <button type="button" color="Red" data-bind="click:$root.delete, visible:Id()">删除</button>
+                    <button type="button" color="Green" data-bind="click:update, visible:Id()">修改</button>
+                    <button type="button" color="Green" data-bind="click:add, visible:!Id()">提交</button>
+                </form-actions>
+            </form-builder>
+        </portlet>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        require([
+            "jquery",
+            "ko",
+            "zdy",
+            "bootstrap",
+            "bootstrap-citypicker",
+            ui], function ($, ko, zdy) {
+                var ui = arguments[arguments.length - 1];
+                ui.init();
+
+                var id = window.location.toString().getUrlParm("id")
+
+                var form = zdy.form().options({
+                    fields: [
+                        { field: 'Id', value: ko.observable() },
+                        { field: 'Avatar', value: ko.observable() },
+                        { field: 'DepartmentId', value: ko.observable() },
+                        { field: 'Email', value: ko.observable() },
+                        { field: 'Gender', value: ko.observable() },
+                        { field: 'Mobile', value: ko.observable() },
+                        { field: 'Name', value: ko.observable() },
+                        { field: 'NickName', value: ko.observable() },
+                        { field: 'Phone', value: ko.observableArray() },
+                        { field: 'Position', value: ko.observable() },
+                        { field: 'UserName', value: ko.observable() },
+                        { field: 'City', value: ko.observable() },
+                        { field: 'Province', value: ko.observable() }
+                    ],
+                    dataAddUrl: 'User/Add',
+                    dataUpdateUrl: 'User/Update',
+                    dataDeleteUrl: 'User/Delete'
+                }).import(function () {
+
+                    this.afterAdd = function (data) {
+                        this.Id(data.Id)
+                    }
+
+                    this.afterDelete = function () {
+                        this.reset()
+                    }
+
+                    this.afterLoad = function (data) {
+
+                        $("#city-picker").citypicker({
+                            responsive: true,
+                            level: "city"
+                        });
+
+                        $("#city-picker").on("cp:updated", function () {
+                            var city = $('#city-picker').val()
+                            if (city !== undefined) {
+                                var address = city.split("/");
+                                var city = address[0] === undefined ? "" : address[0]
+                                var province = address[1] === undefined ? "" : address[1]
+                                form.City(city)
+                                form.Province(province)
+                            }
+                        })
+                    }
+
+                    this.Citys = ko.computed(function () {
+                        var array = [this.City(), this.Province()]
+                        return array.join("/")
+                    }, this)
+
+                }).bind("form");
+
+                if (id !== "") {
+                    form.load("User/FindByKey", { id: id });
+                } else {
+                    form.load({});
+                }
+            })
+    </script>
+}

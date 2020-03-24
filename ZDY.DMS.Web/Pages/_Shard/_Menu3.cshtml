@@ -1,0 +1,100 @@
+﻿@inject ZDY.DMS.Services.AdminService.ServiceContracts.IPageService PageService
+@inject AutoMapper.IMapper Mapper
+@using ZDY.DMS.DataTransferObjects
+@using ZDY.DMS.AspNetCore.Auth
+
+@{
+    var userIdentity = this.Context.GetUserIdentity();
+
+    var pages = userIdentity.IsAdministrator ? await PageService.GetMultiLevelPagesAsync() : await PageService.GetMultiLevelPagesAsync(userIdentity.Id, userIdentity.CompanyId);
+
+    Func<IEnumerable<MultiLevelPageDTO>, TagBuilder> RenderMenu = null;
+
+    RenderMenu = (items) =>
+    {
+        if (items.Count() > 0)
+        {
+            TagBuilder dropdownMenu = new TagBuilder("ul");
+
+            dropdownMenu.AddCssClass("dropdown-menu");
+
+            foreach (var item in items)
+            {
+
+                TagBuilder dropdownSubmenu = new TagBuilder("li");
+                dropdownSubmenu.Attributes.Add("aria-haspopup", "true");
+                if (item.ChildLevelPages.Count() > 0)
+                {
+                    dropdownSubmenu.AddCssClass("dropdown-submenu");
+                }
+                if (!item.IsInMenu)
+                {
+                    dropdownSubmenu.AddCssClass("hide");
+                }
+                if (item.PageCode == "P_DashBoard")
+                {
+                    dropdownSubmenu.AddCssClass("hide");
+                }
+
+                TagBuilder dropdownItem = new TagBuilder("a");
+                if (item.Type == "P")
+                {
+                    var data = new
+                    {
+                        PageId = item.Id,
+                        PageSrc = $"/{item.Src}",
+                        item.ParentId,
+                        item.PageCode,
+                        item.MenuName,
+                        item.PageName
+                    };
+
+                    dropdownItem.Attributes.Add("href", data.PageSrc);
+                    dropdownItem.Attributes.Add("data-json", JsonConvert.SerializeObject(data));
+                    dropdownItem.Attributes.Add("data-bind", "{click: $root.openPage}");
+                }
+                else
+                {
+                    dropdownItem.Attributes.Add("href", $"javascript:;");
+                }
+
+                dropdownItem.AddCssClass("nav-link");
+                if (item.ChildLevelPages.Count() > 0)
+                {
+                    dropdownItem.AddCssClass("nav-toggle");
+                }
+                if (!String.IsNullOrEmpty(item.Icon))
+                {
+                    TagBuilder icon = new TagBuilder("i");
+                    icon.AddCssClass(item.Icon);
+                    dropdownItem.InnerHtml.AppendHtml(icon);
+                    dropdownItem.InnerHtml.AppendHtml(" ");
+                }
+                dropdownItem.InnerHtml.AppendHtml(item.MenuName);
+                if (item.ChildLevelPages.Count() > 0)
+                {
+                    dropdownItem.InnerHtml.AppendHtml("<span class='arrow'></span>");
+                }
+
+                dropdownSubmenu.InnerHtml.AppendHtml(dropdownItem);
+
+                if (item.ChildLevelPages.Count() > 0)
+                {
+                    var childLevelMenu = RenderMenu.Invoke(item.ChildLevelPages);
+                    dropdownSubmenu.InnerHtml.AppendHtml(childLevelMenu);
+                }
+
+                dropdownMenu.InnerHtml.AppendHtml(dropdownSubmenu);
+
+            }
+
+            return dropdownMenu;
+        }
+
+        return null;
+    };
+
+    var menu = RenderMenu(pages);
+}
+
+@menu
