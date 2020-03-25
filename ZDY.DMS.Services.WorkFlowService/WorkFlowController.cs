@@ -38,9 +38,9 @@ namespace ZDY.DMS.Services.WorkFlowService
             original.FormId = entity.FormId;
             original.Name = entity.Name;
             original.Type = entity.Type;
-            original.Manager = entity.Manager;
-            original.InstanceManager = entity.InstanceManager;
-            original.IsRemoveCompleted = entity.IsRemoveCompleted;
+            original.ManagerId = entity.ManagerId;
+            original.InstanceManagerId = entity.InstanceManagerId;
+            original.IsRemoveCompletedInstance = entity.IsRemoveCompletedInstance;
             original.Note = entity.Note;
         }
 
@@ -104,7 +104,7 @@ namespace ZDY.DMS.Services.WorkFlowService
             else
             {
                 entity.DesignJson = designJson;
-                entity.RunJson = runJson;
+                entity.RuntimeJson = runJson;
                 entity.State = (int)WorkFlowState.Installed;
                 entity.InstallerId = this.UserIdentity.Id;
                 entity.InstallTime = DateTime.Now;
@@ -124,7 +124,7 @@ namespace ZDY.DMS.Services.WorkFlowService
         {
             var entity = await this.FindByKey(id);
 
-            entity.RunJson = null;
+            entity.RuntimeJson = null;
             entity.State = (int)WorkFlowState.Designing;
             entity.InstallerId = default(Guid);
             entity.InstallTime = null;

@@ -95,7 +95,7 @@
 
         </div>
 
-        @if (Model.CurrentStep.IsShowOpinion && Model.Opinions.Count > 0)
+        @if (Model.CurrentStep.IsShowComment && Model.Opinions.Count > 0)
         {
 
             <div class="row" data-model="flow-instance">
@@ -295,7 +295,7 @@
         var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Model.Dictionary)) ')
 
         var formData = @Html.Raw(Model.Instance.FormJson)
-        var data = @Html.Raw(Model.Instance.DataJson)
+        var data = @Html.Raw(Model.Instance.FormDataJson)
 
         var nextSteps = @Html.Raw(JsonConvert.SerializeObject(Model.NextSteps));
 

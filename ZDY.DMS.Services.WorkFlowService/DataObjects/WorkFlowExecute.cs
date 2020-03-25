@@ -34,7 +34,7 @@ namespace ZDY.DMS.Services.WorkFlowService.DataObjects
         /// <summary>
         /// 分组ID
         /// </summary>
-        public Guid GroupId { get; set; }
+        public Guid GroupId { get; set; } = default;
         /// <summary>
         /// 标题
         /// </summary>
@@ -44,13 +44,13 @@ namespace ZDY.DMS.Services.WorkFlowService.DataObjects
         /// </summary>
         public WorkFlowExecuteKinds ExecuteType { get; set; }
         /// <summary>
-        /// 发送人员
+        /// 发送人员ID
         /// </summary>
-        public User Sender { get; set; }
+        public WorkFlowUser Sender { get; set; }
         /// <summary>
         /// 接收的步骤和人员
         /// </summary>
-        public Dictionary<Guid, List<User>> Steps { get; set; } = new Dictionary<Guid, List<User>>();
+        public Dictionary<Guid, List<WorkFlowUser>> Steps { get; set; } = new Dictionary<Guid, List<WorkFlowUser>>();
         /// <summary>
         /// 处理意见
         /// </summary>
@@ -58,7 +58,7 @@ namespace ZDY.DMS.Services.WorkFlowService.DataObjects
         /// <summary>
         /// 是否签名
         /// </summary>
-        public bool IsSign { get; set; }
+        public bool IsNeedSign { get; set; }
         /// <summary>
         /// 签名密钥
         /// </summary>

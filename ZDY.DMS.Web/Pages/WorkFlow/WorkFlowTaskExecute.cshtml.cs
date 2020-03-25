@@ -57,7 +57,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
                 return;
             }
 
-            var workFlowInstanceEntity = await workFlowInstanceRepository.FindAsync(t => t.InstanceID == taskEntity.InstanceId);
+            var workFlowInstanceEntity = await workFlowInstanceRepository.FindAsync(t => t.Id == taskEntity.InstanceId);
             if (workFlowInstanceEntity == null)
             {
                 ViewData["ErrorMessage"] = "流程实例未找到或丢失";
@@ -81,7 +81,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             }
 
             //加载审批意见
-            if (CurrentStep.IsShowOpinion)
+            if (CurrentStep.IsShowComment)
             {
                 this.Opinions = await workFlowWorkingService.GetWorkFlowCommentsAsync(workFlowInstanceEntity);
             }

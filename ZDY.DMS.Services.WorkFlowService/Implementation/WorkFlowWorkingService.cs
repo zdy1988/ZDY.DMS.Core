@@ -80,7 +80,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         public async Task Execute(WorkFlowExecute execute)
         {
             //加载运行实例
-            var instance = await workFlowInstanceRepository.FindAsync(t => t.InstanceID == execute.InstanceId && t.IsDisabled == false);
+            var instance = await workFlowInstanceRepository.FindAsync(t => t.Id == execute.InstanceId && t.IsDisabled == false);
             if (instance == null)
             {
                 throw new InvalidOperationException("流程数据丢失");
@@ -106,11 +106,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                         throw new InvalidOperationException("密钥错误，签名失败");
                     }
                 }
-                execute.IsSign = true;
+                execute.IsNeedSign = true;
             }
             else
             {
-                execute.IsSign = false;
+                execute.IsNeedSign = false;
             }
 
             if (string.IsNullOrEmpty(execute.Title))
@@ -156,17 +156,17 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <returns></returns>
         private async Task<WorkFlowTask> StartWorkFlowInstance(WorkFlowInstance instance, Guid groupID)
         {
-            if (instance.FlowID.Equals(default))
+            if (instance.FlowId.Equals(default))
             {
                 throw new InvalidOperationException("流程数据未找到，发起流程失败");
             }
-            var workflowEntity = await workFlowRepository.FindAsync(t => t.Id == instance.FlowID && t.State == (int)WorkFlowState.Installed);
+            var workflowEntity = await workFlowRepository.FindAsync(t => t.Id == instance.FlowId && t.State == (int)WorkFlowState.Installed);
             if (workflowEntity == null)
             {
                 throw new InvalidOperationException("流程数据未找到或流程未安装");
             }
 
-            var workFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(workflowEntity.RunJson);
+            var workFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(workflowEntity.RuntimeJson);
 
             //设置开始节点和结束节点的一些默认规则
             foreach (var step in workFlowInstalled.Steps)
@@ -174,10 +174,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 if (step.IsStart() || step.IsEnd())
                 {
                     step.FlowControl = (int)WorkFlowControlKinds.System;  //系统控制流转
-                    step.IsAllowRunSelect = false; //不允许选择
+                    step.IsAllowRuntimeToSelect = false; //不允许选择
                     step.HandleTactic = (int)WorkFlowHandleTacticKinds.Independent;  //独立处理
                     step.HandlerType = (int)WorkFlowHandlerKinds.User;  //制定创建者为处理人
-                    step.Handler = instance.CreaterID.ToString();
+                    step.Handlers = instance.CreaterId.ToString();
                     step.BackTactic = (int)WorkFlowBackTacticKinds.AllowReturn; //允许退回上一步
                     step.BackType = (int)WorkFlowBackKinds.ToPrev;
                     step.CountersignatureTactic = (int)WorkFlowCountersignatureTacticKinds.NoCountersignature; // 不会签
@@ -186,10 +186,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
             var flowJson = JsonConvert.SerializeObject(workFlowInstalled);
 
-            instance.InstanceID = GuidHelper.NewGuid();
+            instance.Id = GuidHelper.NewGuid();
             instance.FlowName = workflowEntity.Name;
             instance.FlowJson = flowJson;
-            instance.DesignJson = workflowEntity.DesignJson;
+            instance.FlowDesignJson = workflowEntity.DesignJson;
 
             //创建实例
             await workFlowInstanceRepository.AddAsync(instance);
@@ -197,18 +197,22 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             //创建开始任务
             var firstTask = await CreateFirstTask(new WorkFlowExecute
             {
-                WorkFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(workflowEntity.RunJson),
+                WorkFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(workflowEntity.RuntimeJson),
                 Title = instance.Title,
-                FlowId = instance.FlowID,
+                FlowId = instance.FlowId,
                 FlowName = instance.FlowName,
-                InstanceId = instance.InstanceID,
+                InstanceId = instance.Id,
                 GroupId = groupID,
-                Sender = new User { Id = instance.CreaterID, NickName = instance.CreaterName },
-                CompanyId = instance.CompanyID
+                Sender = new WorkFlowUser
+                {
+                    Id = instance.CreaterId,
+                    Name = instance.CreaterName
+                },
+                CompanyId = instance.CompanyId
             });
 
             //更新实例中步骤信息
-            await FreshenWorkFlowInstance(instance.InstanceID, firstTask);
+            await FreshenWorkFlowInstance(instance.Id, firstTask);
 
             return firstTask;
         }
@@ -222,7 +226,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         private async Task RemoveWorkFlowInstance(Guid instanceID, Guid flowID, Guid groupID)
         {
             //删除实例
-            await workFlowInstanceRepository.UpdateAsync(t => t.InstanceID == instanceID && t.FlowID == flowID,
+            await workFlowInstanceRepository.UpdateAsync(t => t.Id == instanceID && t.FlowId == flowID,
                 query => new WorkFlowInstance
                 {
                     IsDisabled = true
@@ -245,8 +249,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <returns></returns>
         private async Task FinishWorkFlowInstance(WorkFlowTask endStepTask, WorkFlowInstanceState state)
         {
-            var instance = await workFlowInstanceRepository.FindAsync(t => t.InstanceID == endStepTask.InstanceId
-            && t.FlowID == endStepTask.FlowId
+            var instance = await workFlowInstanceRepository.FindAsync(t => t.Id == endStepTask.InstanceId
+            && t.FlowId == endStepTask.FlowId
             && t.State == (int)WorkFlowInstanceState.Approving
             && t.IsDisabled == false);
 
@@ -262,7 +266,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 await ExecuteSubFlowFinishedEvent(endStepTask, instance);
 
                 //发送消息
-                SendMessage(instance.Title, $"<b>{instance.Title}</b>审批结束！", instance.CreaterID);
+                SendMessage(instance.Title, $"<b>{instance.Title}</b>审批结束！", instance.CreaterId);
             }
         }
 
@@ -274,10 +278,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <returns></returns>
         private async Task FreshenWorkFlowInstance(Guid instanceID, WorkFlowTask task)
         {
-            await workFlowInstanceRepository.UpdateAsync(t => t.InstanceID == instanceID, query => new WorkFlowInstance
+            await workFlowInstanceRepository.UpdateAsync(t => t.Id == instanceID, query => new WorkFlowInstance
             {
-                LastExecuteTaskID = task.Id,
-                LastExecuteStepID = task.StepId,
+                LastExecuteTaskId = task.Id,
+                LastExecuteStepId = task.StepId,
                 LastExecuteStepName = task.StepName,
                 LastModifyTime = DateTime.Now
             });
@@ -323,10 +327,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <returns></returns>
         private async Task GetExecuteHandler(WorkFlowExecute execute)
         {
-            var stepBuild = new Dictionary<Guid, List<User>>();
+            var stepBuild = new Dictionary<Guid, List<WorkFlowUser>>();
             foreach (var item in execute.Steps)
             {
-                List<User> appointHandlers = null;
+                List<WorkFlowUser> appointHandlers = null;
 
                 //如果有特定人员或者加签人员，则加入
                 if (item.Value != null && item.Value.Count > 0)
@@ -336,7 +340,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
                 var step = execute.WorkFlowInstalled.GetStep(item.Key);
 
-                List<User> handlers = await GetStepHandler(step, execute, appointHandlers);
+                List<WorkFlowUser> handlers = await GetStepHandler(step, execute, appointHandlers);
 
                 //如果步骤没有处理人，则忽略
                 if (handlers.Count > 0)
@@ -354,13 +358,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <param name="execute"></param>
         /// <param name="appointHandlers"></param>
         /// <returns></returns>
-        private async Task<List<User>> GetStepHandler(WorkFlowStep step, WorkFlowExecute execute, List<User> appointHandlers = null)
+        private async Task<List<WorkFlowUser>> GetStepHandler(WorkFlowStep step, WorkFlowExecute execute, List<WorkFlowUser> appointHandlers = null)
         {
-            List<User> handlers = new List<User>();
+            List<WorkFlowUser> handlers = new List<WorkFlowUser>();
 
-            var handlerString = step.Handler;
-
-            var handlerArray = string.IsNullOrEmpty(handlerString) ? null : handlerString.Split(',').Select(t => Guid.Parse(t)).ToArray();
+            var handlerArray = string.IsNullOrEmpty(step.Handlers) ? null : step.Handlers.Split(',').Select(t => Guid.Parse(t)).ToArray();
 
             //如果处理人类型是 任意人员 ，则只选择 指定人员
             //如果不是，则根据规则 找到人员 ，将 指定人员 加签
@@ -382,10 +384,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     break;
                 case WorkFlowHandlerKinds.Department:
 
-                    if (handlerArray != null)
-                    {
-                        handlers = (await userRepository.FindAllAsync(t => handlerArray.Contains(t.DepartmentId) && t.IsDisabled == false && t.CompanyId == execute.CompanyId)).ToList();
-                    }
+                    handlerArray = (await userRepository.FindAllAsync(t => handlerArray.Contains(t.DepartmentId) && t.IsDisabled == false && t.CompanyId == execute.CompanyId)).Select(t => t.Id).ToArray();
+                    handlers.AddRange(await GetUser(execute.CompanyId, handlerArray));
 
                     break;
                 case WorkFlowHandlerKinds.UserGroup:
@@ -398,7 +398,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     break;
                 case WorkFlowHandlerKinds.Initiator:
 
-                    handlerArray = (await workFlowInstanceRepository.FindAllAsync(t => t.InstanceID == execute.InstanceId)).Select(t => t.CreaterID).ToArray();
+                    handlerArray = (await workFlowInstanceRepository.FindAllAsync(t => t.Id == execute.InstanceId)).Select(t => t.CreaterId).ToArray();
                     handlers.AddRange(await GetUser(execute.CompanyId, handlerArray));
 
                     break;
@@ -426,16 +426,21 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <param name="companyID"></param>
         /// <param name="userArray"></param>
         /// <returns></returns>
-        private async Task<List<User>> GetUser(Guid companyID, Guid[] userArray)
+        private async Task<List<WorkFlowUser>> GetUser(Guid companyID, Guid[] userArray)
         {
-            if (userArray != null && userArray.Count() <= 0)
+            if (userArray?.Count() <= 0)
             {
-                return new List<User>();
+                return new List<WorkFlowUser>();
             }
 
             var list = await userRepository.FindAllAsync(t => userArray.Contains(t.Id) && t.IsDisabled == false && t.CompanyId == companyID);
 
-            return list.ToList();
+            return list.Select(t => new WorkFlowUser
+            {
+                Id = t.Id,
+                Name = t.Name,
+                CompanyId = t.CompanyId
+            }).ToList();
         }
 
         /// <summary>
@@ -443,16 +448,16 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// </summary>
         /// <param name="step"></param>
         /// <returns></returns>
-        public async Task<List<User>> GetCopyToUsers(WorkFlowStep step, WorkFlowExecute execute)
+        public async Task<List<WorkFlowUser>> GetCopyToUsers(WorkFlowStep step, WorkFlowExecute execute)
         {
-            if (!string.IsNullOrEmpty(step.CopyTo))
+            if (step.CopyToUsers != default)
             {
-                var userArray = step.CopyTo.Split(',').Select(t => Guid.Parse(t)).ToArray();
+                var userArray = step.CopyToUsers.Split(',').Select(t => Guid.Parse(t)).ToArray();
                 return await GetUser(execute.CompanyId, userArray);
             }
             else
             {
-                return new List<User>();
+                return new List<WorkFlowUser>();
             }
         }
 
@@ -466,7 +471,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         private async Task UpdateTaskState(WorkFlowTask task, string comment, bool isSign, WorkFlowTaskState state, string note = "")
         {
             task.Comment = comment;
-            task.IsSign = isSign;
+            task.IsNeedSign = isSign;
             task.State = (int)state;
             task.Note = note;
             task.ExecutedTime = DateTime.Now;
@@ -551,7 +556,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 }
 
                 //发送信息
-                SendMessage(instance.Title, $"<b>{execute.Sender.NickName}</b>处理了<b>{execute.Title}</b>的<b>{currentStep.StepName}</b>.", instance.CreaterID);
+                SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>处理了<b>{execute.Title}</b>的<b>{currentStep.StepName}</b>.", instance.CreaterId);
 
                 transaction.Complete();
             }
@@ -608,7 +613,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 }
 
                 //发送信息
-                SendMessage(instance.Title, $"<b>{execute.Sender.NickName}</b>退回了<b>{execute.Title}</b>的<b>{currentStep.StepName}</b>.", instance.CreaterID);
+                SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>退回了<b>{execute.Title}</b>的<b>{currentStep.StepName}</b>.", instance.CreaterId);
 
                 transaction.Complete();
             }
@@ -663,7 +668,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                         CompanyId = currentTask.CompanyId,
 
                         ReceiverId = user.Id,
-                        ReceiverName = user.NickName,
+                        ReceiverName = user.Name,
                         State = (int)WorkFlowTaskState.Pending,
                         Type = (int)WorkFlowTaskKinds.Redirect,
                         Note = $"该任务由{currentTask.ReceiverName}转交"
@@ -677,17 +682,17 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     redirectTasks.Add(task);
                 }
 
-                await UpdateTaskState(currentTask, execute.Comment, execute.IsSign, WorkFlowTaskState.Handled, "已转交他人处理");
+                await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Handled, "已转交他人处理");
 
                 if (redirectTasks.Count > 0)
                 {
                     //发送消息
-                    SendMessage(instance.Title, $"<b>{execute.Sender.NickName}</b>将<b>{currentStep.StepName}</b>转交给您审批.", redirectTasks.Select(t => t.ReceiverId).Distinct().ToArray());
+                    SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>将<b>{currentStep.StepName}</b>转交给您审批.", redirectTasks.Select(t => t.ReceiverId).Distinct().ToArray());
 
                     string receiveNames = string.Join(",", redirectTasks.Select(t => t.ReceiverName).Distinct().ToArray());
 
                     //发送信息
-                    SendMessage(instance.Title, $"<b>{execute.Sender.NickName}</b>将<b>{currentStep.StepName}</b>转交给<b>{receiveNames}</b>处理.", instance.CreaterID);
+                    SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>将<b>{currentStep.StepName}</b>转交给<b>{receiveNames}</b>处理.", instance.CreaterId);
                 }
 
                 transaction.Complete();
@@ -739,7 +744,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     {
                         if (!execute.Steps.ContainsKey(currentNextStep.StepId))
                         {
-                            execute.Steps.Add(currentNextStep.StepId, new List<User>());
+                            execute.Steps.Add(currentNextStep.StepId, new List<WorkFlowUser>());
                         }
                     }
 
@@ -773,10 +778,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         private void ExecuteConditionsBetweenSteps(WorkFlowExecute execute, WorkFlowInstance instance, Tuple<WorkFlowTask, WorkFlowStep> current)
         {
             var formStep = current.Item2;
-            var steps = new Dictionary<Guid, List<User>>();
+            var steps = new Dictionary<Guid, List<WorkFlowUser>>();
 
             //获取数据
-            JObject data = JObject.Parse(instance.DataJson);
+            JObject data = JObject.Parse(instance.FormDataJson);
 
             foreach (var toStep in execute.Steps)
             {
@@ -848,7 +853,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             //第一步和最后一步只有发起者处理，不判断策略
             if (currentTask.IsStart() || currentTask.IsEnd())
             {
-                await UpdateTaskState(currentTask, execute.Comment, execute.IsSign, WorkFlowTaskState.Handled);
+                await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Handled);
             }
             else
             {
@@ -866,7 +871,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                                 isNeedWating = true;
                             }
                         }
-                        await UpdateTaskState(currentTask, execute.Comment, execute.IsSign, WorkFlowTaskState.Handled, isNeedWating ? $"步骤已处理，但还需等待其他人处理" : "");
+                        await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Handled, isNeedWating ? $"步骤已处理，但还需等待其他人处理" : "");
                         break;
                     case WorkFlowHandleTacticKinds.OneAgree://一人同意即可
                         foreach (var task in taskList)
@@ -875,12 +880,12 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                             {
                                 if (task.IsNotExecute())
                                 {
-                                    await UpdateTaskState(task, "", false, WorkFlowTaskState.HandledByOthers, $"步骤有一人同意即可抵达至下一步，{execute.Sender.NickName}已选择同意");
+                                    await UpdateTaskState(task, "", false, WorkFlowTaskState.HandledByOthers, $"步骤有一人同意即可抵达至下一步，{execute.Sender.Name}已选择同意");
                                 }
                             }
                             else
                             {
-                                await UpdateTaskState(task, execute.Comment, execute.IsSign, WorkFlowTaskState.Handled);
+                                await UpdateTaskState(task, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Handled);
                             }
                         }
                         break;
@@ -904,10 +909,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                                 }
                             }
                         }
-                        await UpdateTaskState(currentTask, execute.Comment, execute.IsSign, WorkFlowTaskState.Handled, isNeedWating ? "步骤已处理，但还需等待其他人处理" : "");
+                        await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Handled, isNeedWating ? "步骤已处理，但还需等待其他人处理" : "");
                         break;
                     case WorkFlowHandleTacticKinds.Independent://独立处理
-                        await UpdateTaskState(currentTask, execute.Comment, execute.IsSign, WorkFlowTaskState.Handled);
+                        await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Handled);
                         break;
                 }
             }
@@ -976,10 +981,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                         task.PrevTaskId = currentTask.Id;
                         task.PrevStepId = currentTask.StepId;
                         task.ReceiverId = user.Id;
-                        task.ReceiverName = user.NickName;
+                        task.ReceiverName = user.Name;
                         task.ReceiveTime = DateTime.Now;
                         task.SenderId = execute.Sender.Id;
-                        task.SenderName = execute.Sender.NickName;
+                        task.SenderName = execute.Sender.Name;
                         task.SendTime = task.ReceiveTime;
                         task.State = (int)WorkFlowTaskState.Pending;
                         task.StepId = nextStep.StepId;
@@ -1051,7 +1056,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             //第一步退回，不判断策略
             if (currentTask.IsStart())
             {
-                await UpdateTaskState(currentTask, execute.Comment, execute.IsSign, WorkFlowTaskState.Returned);
+                await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Returned);
             }
             else
             {
@@ -1070,12 +1075,12 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                                 {
                                     if (task.IsNotExecute())
                                     {
-                                        await UpdateTaskState(task, "", false, WorkFlowTaskState.ReturnedByOthers, $"{execute.Sender.NickName}已选择退回，步骤必须全员同意才可以抵达至下一步");
+                                        await UpdateTaskState(task, "", false, WorkFlowTaskState.ReturnedByOthers, $"{execute.Sender.Name}已选择退回，步骤必须全员同意才可以抵达至下一步");
                                     }
                                 }
                                 else
                                 {
-                                    await UpdateTaskState(task, execute.Comment, execute.IsSign, WorkFlowTaskState.Returned);
+                                    await UpdateTaskState(task, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Returned);
                                 }
                             }
                             break;
@@ -1088,7 +1093,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                                     isNeedWating = true;
                                 }
                             }
-                            await UpdateTaskState(currentTask, execute.Comment, execute.IsSign, WorkFlowTaskState.Returned, isNeedWating ? "步骤已退回，但还需等待其他人处理" : "");
+                            await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Returned, isNeedWating ? "步骤已退回，但还需等待其他人处理" : "");
                             break;
                         case WorkFlowHandleTacticKinds.PercentageAgree://依据人数比例，投票比例大于规定比例,则退回全部，如果小于则等待，其他人继续投票
                             if (taskList.Count > 1)
@@ -1110,10 +1115,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                                     }
                                 }
                             }
-                            await UpdateTaskState(currentTask, execute.Comment, execute.IsSign, WorkFlowTaskState.Returned, isNeedWating ? "步骤已退回，但还需等待其他人处理" : "");
+                            await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Returned, isNeedWating ? "步骤已退回，但还需等待其他人处理" : "");
                             break;
                         case WorkFlowHandleTacticKinds.Independent://独立处理
-                            await UpdateTaskState(currentTask, execute.Comment, execute.IsSign, WorkFlowTaskState.Returned);
+                            await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Returned);
                             break;
                     }
                 }
@@ -1128,11 +1133,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                         }
                         if (task.Id == currentTask.Id)
                         {
-                            await UpdateTaskState(task, execute.Comment, execute.IsSign, WorkFlowTaskState.Returned);
+                            await UpdateTaskState(task, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Returned);
                         }
                         else
                         {
-                            await UpdateTaskState(task, "", false, WorkFlowTaskState.Returned, $"当前步骤已被{execute.Sender.NickName}退回");
+                            await UpdateTaskState(task, "", false, WorkFlowTaskState.Returned, $"当前步骤已被{execute.Sender.Name}退回");
                         }
                     }
                 }
@@ -1142,7 +1147,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 {
                     if (!execute.Steps.ContainsKey(task.PrevStepId))
                     {
-                        execute.Steps.Add(task.PrevStepId, new List<User>());
+                        execute.Steps.Add(task.PrevStepId, new List<WorkFlowUser>());
                     }
                 }
                 //如果当前步骤是会签步骤，则退回重新会签
@@ -1153,7 +1158,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     {
                         if (!execute.Steps.ContainsKey(prevStep.StepId))
                         {
-                            execute.Steps.Add(prevStep.StepId, new List<User>());
+                            execute.Steps.Add(prevStep.StepId, new List<WorkFlowUser>());
                         }
                     }
                 }
@@ -1291,10 +1296,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             task.PrevTaskId = default;
             task.PrevStepId = default;
             task.ReceiverId = execute.Sender.Id;
-            task.ReceiverName = execute.Sender.NickName;
+            task.ReceiverName = execute.Sender.Name;
             task.ReceiveTime = DateTime.Now;
             task.SenderId = execute.Sender.Id;
-            task.SenderName = execute.Sender.NickName;
+            task.SenderName = execute.Sender.Name;
             task.SendTime = task.ReceiveTime;
             task.State = (int)WorkFlowTaskState.Pending;
             task.StepId = firstStep.StepId;
@@ -1320,17 +1325,17 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <param name="execute"></param>
         /// <param name="sender"></param>
         /// <returns></returns>
-        private async Task<WorkFlowTask> CreateSubFlowStepTask(WorkFlowTask subflowTask, WorkFlowStep subflowStep, User sender)
+        private async Task<WorkFlowTask> CreateSubFlowStepTask(WorkFlowTask subflowTask, WorkFlowStep subflowStep, WorkFlowUser sender)
         {
             //创建子实例
             WorkFlowInstance subflowInstance = new WorkFlowInstance
             {
                 FormJson = "",
-                DataJson = "",
+                FormDataJson = "",
                 Title = $"由【{subflowTask.Title}】分支的子流程审批",
-                FlowID = subflowStep.SubFlowId,
-                CreaterID = sender.Id,
-                CreaterName = sender.NickName
+                FlowId = subflowStep.SubFlowId,
+                CreaterId = sender.Id,
+                CreaterName = sender.Name
             };
 
             //执行子流程触发前事件，可影响子流程创建
@@ -1338,7 +1343,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
             subflowInstance = result.SubFlowInstance;
 
-            subflowInstance.CompanyID = subflowTask.CompanyId;
+            subflowInstance.CompanyId = subflowTask.CompanyId;
             subflowInstance.IsDisabled = false;
 
             var subflowFirstTask = await StartWorkFlowInstance(subflowInstance, subflowTask.GroupId);
@@ -1368,7 +1373,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 {
                     continue;
                 }
-                if (!string.IsNullOrEmpty(nextStep.CopyTo))
+                if (!string.IsNullOrEmpty(nextStep.CopyToUsers))
                 {
                     var users = await GetCopyToUsers(nextStep, execute);
                     foreach (var user in users)
@@ -1387,10 +1392,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                         task.PrevTaskId = currentTask.Id;
                         task.PrevStepId = currentTask.StepId;
                         task.ReceiverId = user.Id;
-                        task.ReceiverName = user.NickName;
+                        task.ReceiverName = user.Name;
                         task.ReceiveTime = DateTime.Now;
                         task.SenderId = execute.Sender.Id;
-                        task.SenderName = execute.Sender.NickName;
+                        task.SenderName = execute.Sender.Name;
                         task.SendTime = task.ReceiveTime;
                         task.State = (int)WorkFlowTaskState.Pending;
                         task.StepId = step.Key;
@@ -1442,10 +1447,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     task.PrevTaskId = currentTask.Id;
                     task.PrevStepId = currentTask.StepId;
                     task.ReceiverId = user.Id;
-                    task.ReceiverName = user.NickName;
+                    task.ReceiverName = user.Name;
                     task.ReceiveTime = DateTime.Now;
                     task.SenderId = execute.Sender.Id;
-                    task.SenderName = execute.Sender.NickName;
+                    task.SenderName = execute.Sender.Name;
                     task.SendTime = task.ReceiveTime;
                     task.State = (int)WorkFlowTaskState.Waiting;
                     task.StepId = step.Key;
@@ -1527,7 +1532,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             {
                 if (currentStep.SubFlowTactic != (int)WorkFlowSubFlowTacticKinds.SubFlowStarted)
                 {
-                    var wrokFlowInstance = await workFlowInstanceRepository.FindAsync(t => t.InstanceID == currentTask.SubFlowInstanceId && t.FlowID == currentStep.SubFlowId && t.IsDisabled == false);
+                    var wrokFlowInstance = await workFlowInstanceRepository.FindAsync(t => t.Id == currentTask.SubFlowInstanceId && t.FlowId == currentStep.SubFlowId && t.IsDisabled == false);
 
                     if (wrokFlowInstance == null)
                     {
@@ -1836,8 +1841,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <returns></returns>
         private async Task<List<WorkFlowTask>> GetAllTask(WorkFlowInstance instance)
         {
-            var list = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instance.InstanceID
-                           && t.FlowId == instance.FlowID
+            var list = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instance.Id
+                           && t.FlowId == instance.FlowId
                            && t.IsNot(WorkFlowTaskKinds.Copy)
                            && t.IsDisabled == false);
 
@@ -1963,7 +1968,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             // 执行子流程完成后事件
             if (parentTask != null)
             {
-                var subflowInstanceEntity = await workFlowInstanceRepository.FindAsync(t => t.InstanceID == parentTask.InstanceId && t.IsDisabled == false);
+                var subflowInstanceEntity = await workFlowInstanceRepository.FindAsync(t => t.Id == parentTask.InstanceId && t.IsDisabled == false);
                 if (subflowInstanceEntity == null)
                 {
                     throw new InvalidOperationException("子流程数据丢失");
@@ -2231,8 +2236,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
         public async Task<List<WorkFlowTask>> GetWorkFlowCommentsAsync(WorkFlowInstance instance)
         {
-            var taskList = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instance.InstanceID
-             && t.FlowId == instance.FlowID
+            var taskList = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instance.Id
+             && t.FlowId == instance.FlowId
              && t.IsNot(WorkFlowTaskState.Waiting)
              && t.CompanyId == t.CompanyId
              && !string.IsNullOrEmpty(t.Comment)
@@ -2243,8 +2248,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
         public async Task<List<WorkFlowTask>> GetWorkFlowProcessAsync(WorkFlowInstance instance)
         {
-            var taskList = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instance.InstanceID
-                && t.FlowId == instance.FlowID
+            var taskList = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instance.Id
+                && t.FlowId == instance.FlowId
                 && t.IsNot(WorkFlowTaskState.Waiting)
                 && t.CompanyId == t.CompanyId
                 && t.IsDisabled == false,
@@ -2274,11 +2279,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     {
                         int sort = workFlowAllTask.Where(t => t.StepId == step.StepId).Max(t => t.Sort);
 
-                        if (await IsStepPassed(step, instance.InstanceID, instance.FlowID, groupID, sort))
+                        if (await IsStepPassed(step, instance.Id, instance.FlowId, groupID, sort))
                         {
                             result[3].Add(step);
                         }
-                        else if (await IsStepBacked(step, instance.InstanceID, instance.FlowID, groupID, sort))
+                        else if (await IsStepBacked(step, instance.Id, instance.FlowId, groupID, sort))
                         {
                             result[2].Add(step);
                         }

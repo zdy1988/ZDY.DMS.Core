@@ -11,9 +11,9 @@ namespace ZDY.DMS.Services.WorkFlowService.DataObjects
         /// </summary>
         public int FlowControl { get; set; } = 0;
         /// <summary>
-        /// 是否允许运行时选择
+        /// 是否允许运行时选择处理者和类型
         /// </summary>
-        public bool IsAllowRunSelect { get; set; } = false;
+        public bool IsAllowRuntimeToSelect { get; set; } = false;
         /// <summary>
         /// 处理者类型 0任意人员 1指定人员 2部门 3工作组 15发起者 16发起者主管 17发起者分管领导 18当前处理者主管 19当前处理者分管领导
         /// </summary>
@@ -21,7 +21,7 @@ namespace ZDY.DMS.Services.WorkFlowService.DataObjects
         /// <summary>
         /// 处理者
         /// </summary>
-        public string Handler { get; set; }
+        public string Handlers { get; set; }
         /// <summary>
         /// 退回策略 0不能退回 1可以退回 2依据策略退回
         /// </summary>
@@ -53,6 +53,6 @@ namespace ZDY.DMS.Services.WorkFlowService.DataObjects
         /// <summary>
         /// 抄送人员
         /// </summary>
-        public string CopyTo { get; set; }
+        public string CopyToUsers { get; set; }
     }
 }

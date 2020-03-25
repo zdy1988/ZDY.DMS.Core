@@ -149,7 +149,7 @@ namespace ZDY.DMS.Services.WorkFlowService
                 }
 
                 //验证规则
-                var handlers = step.Handler.Split(',').ToArray();
+                var handlers = step.Handlers.Split(',').ToArray();
                 var handlerTypeName = step.GetHandleTypeName();
                 var len = handlers.Length;
 

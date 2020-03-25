@@ -30,7 +30,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
 
         public async Task OnGet(Guid id)
         {
-            var workFlowInstanceEntity = await workFlowInstanceRepository.FindAsync(t => t.InstanceID == id);
+            var workFlowInstanceEntity = await workFlowInstanceRepository.FindAsync(t => t.Id == id);
             if (workFlowInstanceEntity == null)
             {
                 ViewData["ErrorMessage"] = "流程实例未找到或丢失";

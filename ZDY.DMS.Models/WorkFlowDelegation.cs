@@ -7,9 +7,9 @@ namespace ZDY.DMS.Models
     public class WorkFlowDelegation : BaseEntity
     {
         /// <summary>
-        /// 委托人
+        /// 发布委托的人
         /// </summary>
-        public Guid UserId { get; set; }
+        public Guid PublisherId { get; set; } = default;
 
         /// <summary>
         /// 开始时间
@@ -24,17 +24,17 @@ namespace ZDY.DMS.Models
         /// <summary>
         /// 委托流程ID,为空表示所有流程
         /// </summary>
-        public Guid? FlowId { get; set; }
+        public Guid FlowId { get; set; } = default;
 
         /// <summary>
-        /// 被委托人
+        /// 接收委托人
         /// </summary>
-        public Guid ToUserId { get; set; }
+        public Guid DelegaterId { get; set; } = default;
 
         /// <summary>
         /// 设置时间
         /// </summary>
-        public DateTime SettingTime { get; set; }
+        public DateTime SetTime { get; set; }
 
         /// <summary>
         /// 备注说明

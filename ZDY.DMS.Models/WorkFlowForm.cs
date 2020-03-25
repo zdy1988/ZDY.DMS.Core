@@ -20,7 +20,7 @@ namespace ZDY.DMS.Models
         /// <summary>
         /// 创建人ID
         /// </summary>
-        public Guid CreaterId { get; set; }
+        public Guid CreaterId { get; set; } = default;
 
         /// <summary>
         /// 最后修改时间
@@ -40,7 +40,7 @@ namespace ZDY.DMS.Models
         /// <summary>
         /// 状态：0 设计中 1 已发布 2 已删除
         /// </summary>
-        public int State { get; set; }
+        public int State { get; set; } = 0;
 
         /// <summary>
         /// 备注
@@ -55,6 +55,6 @@ namespace ZDY.DMS.Models
         /// <summary>
         /// 公司ID
         /// </summary>
-        public Guid CompanyId { get; set; }
+        public Guid CompanyId { get; set; } = default;
     }
 }

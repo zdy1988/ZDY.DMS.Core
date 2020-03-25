@@ -29,8 +29,8 @@ namespace ZDY.DMS.Services.WorkFlowService
         {
             var userIdentity = this.UserIdentity;
 
-            instance.CompanyID = userIdentity.CompanyId;
-            instance.CreaterID = userIdentity.Id;
+            instance.CompanyId = userIdentity.CompanyId;
+            instance.CreaterId = userIdentity.Id;
             instance.CreaterName = userIdentity.Name;
 
             await workFlowWorkingService.StartUp(instance);
@@ -56,11 +56,10 @@ namespace ZDY.DMS.Services.WorkFlowService
             //获取当前用户信息
             var userIdentity = this.UserIdentity;
             execute.CompanyId = userIdentity.CompanyId;
-            execute.Sender = new User
+            execute.Sender = new WorkFlowUser
             {
                 Id = userIdentity.Id,
                 Name = userIdentity.Name,
-                NickName = userIdentity.Name,
                 CompanyId = userIdentity.CompanyId
             };
 

@@ -81,7 +81,7 @@ else
 
 @section Scripts{
     <script type="text/javascript">
-        var designData = @Html.Raw(Model.Instance.DesignJson)
+        var designData = @Html.Raw(Model.Instance.FlowDesignJson)
         var statusData = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Status))')
 
         require([

@@ -21,9 +21,9 @@ namespace ZDY.DMS.Services.WorkFlowService.DataObjects
         /// <summary>
         /// 意见显示 
         /// </summary>
-        public bool IsShowOpinion { get; set; }
+        public bool IsShowComment { get; set; }
         /// <summary>
-        /// 超期提示 
+        /// 是否超期提示 
         /// </summary>
         public bool IsTimeoutReminding { get; set; }
         /// <summary>

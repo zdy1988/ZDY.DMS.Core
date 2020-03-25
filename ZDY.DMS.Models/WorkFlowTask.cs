@@ -9,47 +9,47 @@ namespace ZDY.DMS.Models
         /// <summary>
         /// 上一任务ID
         /// </summary>
-        public Guid PrevTaskId { get; set; }
+        public Guid PrevTaskId { get; set; } = default;
 
         /// <summary>
         /// 上一步骤ID
         /// </summary>
-        public Guid PrevStepId { get; set; }
+        public Guid PrevStepId { get; set; } = default;
 
         /// <summary>
-        /// FlowID
+        /// 流程ID
         /// </summary>
-        public Guid FlowId { get; set; }
+        public Guid FlowId { get; set; } = default;
 
         /// <summary>
-        /// FlowID
+        /// 流程名称
         /// </summary>
         public string FlowName { get; set; }
 
         /// <summary>
-        /// StepID
+        /// 当前步骤ID
         /// </summary>
-        public Guid StepId { get; set; }
+        public Guid StepId { get; set; } = default;
 
         /// <summary>
-        /// StepName
+        /// 当前步骤名称
         /// </summary>
         public string StepName { get; set; }
 
         /// <summary>
-        /// InstanceID
+        /// 当前实例ID
         /// </summary>
-        public Guid InstanceId { get; set; }
+        public Guid InstanceId { get; set; } = default;
 
         /// <summary>
         /// GroupID
         /// </summary>
-        public Guid GroupId { get; set; }
+        public Guid GroupId { get; set; } = default;
 
         /// <summary>
         /// 任务类型 0正常 1指派 2委托 3转交 4退回 5抄送
         /// </summary>
-        public int Type { get; set; }
+        public int Type { get; set; } = 0;
 
         /// <summary>
         /// 标题
@@ -59,7 +59,7 @@ namespace ZDY.DMS.Models
         /// <summary>
         /// 发送人
         /// </summary>
-        public Guid SenderId { get; set; }
+        public Guid SenderId { get; set; } = default;
 
         /// <summary>
         /// 发送人姓名
@@ -74,7 +74,7 @@ namespace ZDY.DMS.Models
         /// <summary>
         /// 接收人员ID
         /// </summary>
-        public Guid ReceiverId { get; set; }
+        public Guid ReceiverId { get; set; } = default;
 
         /// <summary>
         /// 接收人员姓名
@@ -107,9 +107,9 @@ namespace ZDY.DMS.Models
         public string Comment { get; set; }
 
         /// <summary>
-        /// 是否签名
+        /// 是否需要签名
         /// </summary>
-        public bool IsSign { get; set; }
+        public bool IsNeedSign { get; set; }
 
         /// <summary>
         /// 状态 -1 等待中的任务 0 待处理 1打开 2完成 3退回 4他人已处理 5他人已退回
@@ -122,7 +122,7 @@ namespace ZDY.DMS.Models
         public string Note { get; set; }
 
         /// <summary>
-        /// 序号
+        /// 排序
         /// </summary>
         public int Sort { get; set; }
 
@@ -139,6 +139,6 @@ namespace ZDY.DMS.Models
         /// <summary>
         /// 公司ID
         /// </summary>
-        public Guid CompanyId { get; set; }
+        public Guid CompanyId { get; set; } = default;
     }
 }
