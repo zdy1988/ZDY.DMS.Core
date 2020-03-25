@@ -206,7 +206,7 @@ namespace ZDY.DMS.AspNetCore.Mvc
 
         protected virtual void BeforeDelete(TKey id) { }
 
-        protected virtual void BeforeDelete(TEntity entity) { }
+        protected virtual void BeforeDelete(TEntity original) { }
 
 
         /// <summary>

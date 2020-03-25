@@ -41,6 +41,6 @@ namespace ZDY.DMS.Services.WorkFlowService.DataObjects
         /// <summary>
         /// 子流程ID
         /// </summary>
-        public Guid SubFlowId { get; set; } = default;
+        public string SubFlowId { get; set; }
     }
 }

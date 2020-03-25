@@ -25,7 +25,7 @@ namespace ZDY.DMS.Models
         /// <summary>
         /// 最后修改时间
         /// </summary>
-        public DateTime LastModifyTime { get; set; }
+        public DateTime LastModifyTime { get; set; } = DateTime.Now;
 
         /// <summary>
         /// 设计数据

@@ -19,7 +19,7 @@ namespace ZDY.DMS.Services.WorkFlowService.DataObjects
         /// </summary>
         public int HandlerType { get; set; }
         /// <summary>
-        /// 处理者
+        /// 处理者(多个将以分隔符隔开)
         /// </summary>
         public string Handlers { get; set; }
         /// <summary>
@@ -51,7 +51,7 @@ namespace ZDY.DMS.Services.WorkFlowService.DataObjects
         /// </summary>
         public int SubFlowTactic { get; set; }
         /// <summary>
-        /// 抄送人员
+        /// 抄送人员(多个将以分隔符隔开)
         /// </summary>
         public string CopyToUsers { get; set; }
     }

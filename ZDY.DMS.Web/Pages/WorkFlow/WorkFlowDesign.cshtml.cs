@@ -38,8 +38,8 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
         public IEnumerable<KeyValuePair<string, string>> UserOptions { get; set; }
         public IEnumerable<KeyValuePair<string, string>> DepartmentOptions { get; set; }
         public IEnumerable<KeyValuePair<string, string>> UserGroupOptions { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowOptions { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowFormOptions { get; set; }
+        public IEnumerable<KeyValuePair<string, string>> WorkFlowInstalledFlowOptions { get; set; }
+        public IEnumerable<KeyValuePair<string, string>> WorkFlowPublishedFormOptions { get; set; }
 
         public async void OnGet()
         {
@@ -60,8 +60,8 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             UserOptions = await selectOptionsFactory.GetSelectUserOptions();
             DepartmentOptions = await selectOptionsFactory.GetSelectDepartmentOptions();
             UserGroupOptions = await selectOptionsFactory.GetSelectUserGroupOptions();
-            WorkFlowOptions = await selectOptionsFactory.GetInstalledWorkFlowOptions();
-            WorkFlowFormOptions = await selectOptionsFactory.GetPublishedWorkFlowFormOptions();
+            WorkFlowInstalledFlowOptions = await selectOptionsFactory.GetInstalledWorkFlowOptions();
+            WorkFlowPublishedFormOptions = await selectOptionsFactory.GetPublishedWorkFlowFormOptions();
         }
     }
 }

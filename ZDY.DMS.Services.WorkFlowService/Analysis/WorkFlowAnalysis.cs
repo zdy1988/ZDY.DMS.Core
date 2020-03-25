@@ -24,7 +24,7 @@ namespace ZDY.DMS.Services.WorkFlowService
             {
                 workFlowInstalled = JsonConvert.DeserializeObject<WorkFlowInstalled>(flowJson);
             }
-            catch
+            catch(System.Exception e)
             {
                 throw new AnalyzeMistakesException();
             }

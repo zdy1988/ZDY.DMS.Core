@@ -39,9 +39,9 @@ namespace ZDY.DMS.AspNetCore.Auth
 
             return new UserIdentity
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("10aaf527-351c-45a0-8fab-6c7318969b8b"),
                 Name = "zdy",
-                CompanyId = Guid.NewGuid(),
+                CompanyId = Guid.Parse("0387000f-cb65-4314-a488-dcb270575af4"),
                 IsAdministrator = true
             };
         }

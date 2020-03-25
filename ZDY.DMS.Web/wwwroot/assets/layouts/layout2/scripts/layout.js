@@ -2,7 +2,7 @@
 Core script to handle the entire theme and core functions
 **/
 
-define(["jquery", "app"], function (jQuery, App) {
+define(["jquery", "app", "cookie"], function (jQuery, App, Cookies) {
     var $ = jQuery
 
     var Layout = function () {

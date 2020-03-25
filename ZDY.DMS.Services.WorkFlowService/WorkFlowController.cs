@@ -35,65 +35,78 @@ namespace ZDY.DMS.Services.WorkFlowService
 
         protected override void BeforeUpdate(WorkFlow original, WorkFlow entity)
         {
+            if (original.State != (int)WorkFlowState.Designing)
+            {
+                throw new InvalidOperationException("只有设计中的流程才可以修改！");
+            }
+
             original.FormId = entity.FormId;
             original.Name = entity.Name;
             original.Type = entity.Type;
-            original.ManagerId = entity.ManagerId;
-            original.InstanceManagerId = entity.InstanceManagerId;
+            original.Managers = entity.Managers;
+            original.InstanceManagers = entity.InstanceManagers;
             original.IsRemoveCompletedInstance = entity.IsRemoveCompletedInstance;
             original.Note = entity.Note;
+            original.LastModifyTime = DateTime.Now;
         }
 
-        public async override Task Delete(Guid id)
+        protected override void BeforeDelete(WorkFlow original)
         {
-            var original = await this.Repository.FindByKeyAsync(id);
+            if (original.State != (int)WorkFlowState.Designing)
+            {
+                throw new InvalidOperationException("只有设计中的流程才可以删除！");
+            }
 
-            original.IsDisabled = true;
             original.State = (int)WorkFlowState.Deleted;
-
-            this.Repository.Update(original);
-            this.Repository.Context.Commit();
+            original.LastModifyTime = DateTime.Now;
         }
 
         [HttpPost]
         public async Task Save(Guid id, string designJson)
         {
-            var entity = await this.FindByKey(id);
+            var original = await this.FindByKey(id);
 
-            if (entity.State != (int)WorkFlowState.Designing)
+            if (original.State != (int)WorkFlowState.Designing)
             {
                 throw new InvalidOperationException("只有设计中的流程才可以保存！");
             }
 
-            entity.DesignJson = designJson;
-            entity.State = (int)WorkFlowState.Designing;
+            original.DesignJson = designJson;
+            original.LastModifyTime = DateTime.Now;
 
-            await this.Repository.UpdateAsync(entity);
+            await this.Repository.UpdateAsync(original);
             await this.Repository.Context.CommitAsync();
         }
 
         [HttpPost]
         public async Task<WorkFlow> SaveAs(Guid id, string name, string designJson)
         {
-            var entity = await this.FindByKey(id);
-            var newEntity = JsonConvert.DeserializeObject<WorkFlow>(JsonConvert.SerializeObject(entity));
-            newEntity.Id = this.KeyGenerator.Generate(newEntity);
-            newEntity.Name = name;
-            newEntity.DesignJson = designJson;
-            return await this.Add(newEntity);
+            var original = await this.FindByKey(id);
+            var entity = JsonConvert.DeserializeObject<WorkFlow>(JsonConvert.SerializeObject(original));
+
+            entity.Id = this.KeyGenerator.Generate(entity);
+            entity.Name = name;
+            entity.DesignJson = designJson;
+            entity.State = (int)WorkFlowState.Designing;
+            entity.LastModifyTime = DateTime.Now;
+
+            await this.Repository.AddAsync(entity);
+            await this.RepositoryContext.CommitAsync();
+
+            return new WorkFlow { Id = entity.Id };
         }
 
         [HttpPost]
-        public async Task<IActionResult> Installed(Guid id, string designJson, string runJson)
+        public async Task<IActionResult> Installed(Guid id, string designJson, string runtimeJson)
         {
-            var entity = await this.FindByKey(id);
+            var original = await this.FindByKey(id);
 
-            if (entity.State != (int)WorkFlowState.Designing)
+            if (original.State != (int)WorkFlowState.Designing)
             {
                 throw new InvalidOperationException("只有设计中的流程才可以安装！");
             }
 
-            var workFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(runJson);
+            var workFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(runtimeJson);
 
             var messages = WorkFlowAnalysis.CheckFlow(workFlowInstalled);
 
@@ -103,17 +116,18 @@ namespace ZDY.DMS.Services.WorkFlowService
             }
             else
             {
-                entity.DesignJson = designJson;
-                entity.RuntimeJson = runJson;
-                entity.State = (int)WorkFlowState.Installed;
-                entity.InstallerId = this.UserIdentity.Id;
-                entity.InstallTime = DateTime.Now;
+                original.DesignJson = designJson;
+                original.RuntimeJson = runtimeJson;
+                original.State = (int)WorkFlowState.Installed;
+                original.InstallerId = this.UserIdentity.Id;
+                original.InstallTime = DateTime.Now;
+                original.LastModifyTime = DateTime.Now;
 
-                await this.Repository.UpdateAsync(entity);
+                await this.Repository.UpdateAsync(original);
                 await this.Repository.Context.CommitAsync();
 
                 //安装流程
-                await entity.Install();
+                await original.Install();
 
                 return Ok(new { IsInstallSuccess = true, Messages = messages });
             }
@@ -122,18 +136,24 @@ namespace ZDY.DMS.Services.WorkFlowService
         [HttpPost]
         public async Task UnInstalled(Guid id)
         {
-            var entity = await this.FindByKey(id);
+            var original = await this.FindByKey(id);
 
-            entity.RuntimeJson = null;
-            entity.State = (int)WorkFlowState.Designing;
-            entity.InstallerId = default(Guid);
-            entity.InstallTime = null;
+            if (original.State != (int)WorkFlowState.Installed)
+            {
+                throw new InvalidOperationException("只有已安装的流程才可以卸载！");
+            }
 
-            await this.Repository.UpdateAsync(entity);
+            original.RuntimeJson = null;
+            original.State = (int)WorkFlowState.Designing;
+            original.InstallerId = default;
+            original.InstallTime = null;
+            original.LastModifyTime = DateTime.Now;
+
+            await this.Repository.UpdateAsync(original);
             await this.Repository.Context.CommitAsync();
 
             //卸载流程
-            await entity.UnInstall();
+            await original.UnInstall();
         }
     }
 }

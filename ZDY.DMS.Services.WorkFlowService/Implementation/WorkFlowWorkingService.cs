@@ -994,7 +994,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                         task.CompanyId = execute.CompanyId;
 
                         // 如果当前步骤是子流程步骤，则要发起子流程实例
-                        if (nextStep.IsSubFlowStep() && nextStep.SubFlowId != default)
+                        if (nextStep.IsSubFlowStep() && !string.IsNullOrEmpty(nextStep.SubFlowId))
                         {
                             var subflowTask = await CreateSubFlowStepTask(task, nextStep, user);
                             task.SubFlowInstanceId = subflowTask.InstanceId;
@@ -1208,9 +1208,9 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             }
 
             //当前步骤是子流程步骤，则要作废子流程实例
-            if (currentStep.IsSubFlowStep() && currentStep.SubFlowId != default)
+            if (currentStep.IsSubFlowStep() && !string.IsNullOrEmpty(currentStep.SubFlowId))
             {
-                await RemoveWorkFlowInstance(currentTask.SubFlowInstanceId, currentStep.SubFlowId, currentTask.GroupId);
+                await RemoveWorkFlowInstance(currentTask.SubFlowInstanceId, Guid.Parse(currentStep.SubFlowId), currentTask.GroupId);
             }
 
             var backStepTasks = new List<WorkFlowTask>();
@@ -1333,7 +1333,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 FormJson = "",
                 FormDataJson = "",
                 Title = $"由【{subflowTask.Title}】分支的子流程审批",
-                FlowId = subflowStep.SubFlowId,
+                FlowId = Guid.Parse(subflowStep.SubFlowId),
                 CreaterId = sender.Id,
                 CreaterName = sender.Name
             };
@@ -1527,12 +1527,12 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             bool isPass = true;
 
             if (currentStep.StepType == (int)WorkFlowStepKinds.SubFlow
-                && currentStep.SubFlowId != default
+                && !string.IsNullOrEmpty(currentStep.SubFlowId)
                 && currentTask.SubFlowInstanceId != default)
             {
                 if (currentStep.SubFlowTactic != (int)WorkFlowSubFlowTacticKinds.SubFlowStarted)
                 {
-                    var wrokFlowInstance = await workFlowInstanceRepository.FindAsync(t => t.Id == currentTask.SubFlowInstanceId && t.FlowId == currentStep.SubFlowId && t.IsDisabled == false);
+                    var wrokFlowInstance = await workFlowInstanceRepository.FindAsync(t => t.Id == currentTask.SubFlowInstanceId && t.FlowId == Guid.Parse(currentStep.SubFlowId) && t.IsDisabled == false);
 
                     if (wrokFlowInstance == null)
                     {

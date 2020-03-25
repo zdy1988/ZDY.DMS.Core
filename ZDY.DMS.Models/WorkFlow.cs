@@ -20,17 +20,21 @@ namespace ZDY.DMS.Models
         /// </summary>
         public int Type { get; set; }
         /// <summary>
-        /// 管理人员
+        /// 管理人员(多个将以分隔符隔开)
         /// </summary>
-        public Guid ManagerId { get; set; } = default;
+        public string Managers { get; set; }
         /// <summary>
-        /// 实例管理人员
+        /// 实例管理人员(多个将以分隔符隔开)
         /// </summary>
-        public Guid InstanceManagerId { get; set; } = default;
+        public string InstanceManagers { get; set; }
         /// <summary>
         /// 创建人
         /// </summary>
-        public Guid CreaterId { get; set; }
+        public Guid CreaterId { get; set; } = default;
+        /// <summary>
+        /// 最后修改时间
+        /// </summary>
+        public DateTime LastModifyTime { get; set; } = DateTime.Now;
         /// <summary>
         /// 设计时
         /// </summary>

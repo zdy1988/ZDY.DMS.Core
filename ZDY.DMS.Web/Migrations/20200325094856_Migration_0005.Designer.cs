@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZDY.DMS.Domain.Repositories.EntityFramework;
 
 namespace ZDY.DMS.Web.Migrations
 {
     [DbContext(typeof(JxcDbContext))]
-    partial class JxcDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200325094856_Migration_0005")]
+    partial class Migration_0005
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1035,8 +1037,8 @@ namespace ZDY.DMS.Web.Migrations
                     b.Property<Guid>("InstallerId")
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("InstanceManagers")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<Guid>("InstanceManagerId")
+                        .HasColumnType("char(36)");
 
                     b.Property<bool>("IsDisabled")
                         .HasColumnType("tinyint(1)");
@@ -1047,8 +1049,8 @@ namespace ZDY.DMS.Web.Migrations
                     b.Property<DateTime>("LastModifyTime")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("Managers")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                    b.Property<Guid>("ManagerId")
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("Name")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
