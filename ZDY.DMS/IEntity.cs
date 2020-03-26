@@ -8,7 +8,5 @@ namespace ZDY.DMS
         TKey Id { get; set; }
 
         DateTime TimeStamp { get; set; }
-
-        int Version { get; set; }
     }
 }

@@ -1,0 +1,25 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.999.0</Version>
+    <Authors>Sunny Chen (daxnet)</Authors>
+    <Description>Object serializer implementation based on Newtonsoft.Json.</Description>
+    <Copyright>Copyright (C) 2009-2019 by daxnet (Sunny Chen).</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/daxnet/ZDY.DMS-core</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/daxnet/ZDY.DMS-core</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>ZDY.DMS,cqrs,ddd,event store</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ZDY.DMS\ZDY.DMS.csproj" />
+  </ItemGroup>
+
+</Project>

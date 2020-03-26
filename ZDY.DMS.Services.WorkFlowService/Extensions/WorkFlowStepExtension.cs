@@ -11,22 +11,22 @@ namespace ZDY.DMS.Services.WorkFlowService
     {
         public static bool IsFirstStep(this WorkFlowStep step)
         {
-            return step.StepId == WorkFlowAnalysis.StartStepID;
+            return step.StepId == WorkFlowAnalysis.StartStepId;
         }
 
         public static bool IsLastStep(this WorkFlowStep step)
         {
-            return step.StepId == WorkFlowAnalysis.EndStepID;
+            return step.StepId == WorkFlowAnalysis.EndStepId;
         }
 
         public static bool IsStart(this WorkFlowStep step)
         {
-            return step.StepId == WorkFlowAnalysis.StartStepID;
+            return step.StepId == WorkFlowAnalysis.StartStepId;
         }
 
         public static bool IsEnd(this WorkFlowStep step)
         {
-            return step.StepId == WorkFlowAnalysis.EndStepID;
+            return step.StepId == WorkFlowAnalysis.EndStepId;
         }
 
         public static bool Is(this WorkFlowStep step, params WorkFlowStepKinds[] types)

@@ -42,9 +42,9 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         private readonly AsyncLock execute_lock = new AsyncLock();
 
         public WorkFlowWorkingService(IRepositoryContext repositoryContext,
-            IStringEncryption stringEncryption,
-            IEventBus eventBus,
-            IAdoNetDbCommand adoNetDbCommand)
+                                      IStringEncryption stringEncryption,
+                                      IEventBus eventBus,
+                                      IAdoNetDbCommand adoNetDbCommand)
         {
             this.eventBus = eventBus;
             this.adoNetDbCommand = adoNetDbCommand;
@@ -64,12 +64,9 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <param name="instance"></param>
         public async Task StartUp(WorkFlowInstance instance)
         {
-            using (var transaction = new TransactionScope())
-            {
-                await StartWorkFlowInstance(instance, GuidHelper.NewGuid());
+            await StartWorkFlowInstance(instance, GuidHelper.NewGuid());
 
-                transaction.Complete();
-            }
+            await this.repositoryContext.CommitAsync();
         }
 
         /// <summary>
@@ -85,7 +82,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             {
                 throw new InvalidOperationException("流程数据丢失");
             }
-            execute.WorkFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(instance.FlowJson);
+            execute.WorkFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(instance.FlowRuntimeJson);
 
             //获取当前步骤
             var current = await GetExecutingTaskAndStep(execute);
@@ -152,15 +149,16 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 开启流程实例
         /// </summary>
-        /// <param name="instance"></param>
         /// <returns></returns>
-        private async Task<WorkFlowTask> StartWorkFlowInstance(WorkFlowInstance instance, Guid groupID)
+        private async Task<WorkFlowTask> StartWorkFlowInstance(WorkFlowInstance instance, Guid instanceGroupId)
         {
             if (instance.FlowId.Equals(default))
             {
                 throw new InvalidOperationException("流程数据未找到，发起流程失败");
             }
+
             var workflowEntity = await workFlowRepository.FindAsync(t => t.Id == instance.FlowId && t.State == (int)WorkFlowState.Installed);
+
             if (workflowEntity == null)
             {
                 throw new InvalidOperationException("流程数据未找到或流程未安装");
@@ -184,32 +182,34 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 }
             }
 
-            var flowJson = JsonConvert.SerializeObject(workFlowInstalled);
+            var flowRuntimeJson = JsonConvert.SerializeObject(workFlowInstalled);
 
             instance.Id = GuidHelper.NewGuid();
             instance.FlowName = workflowEntity.Name;
-            instance.FlowJson = flowJson;
+            instance.FlowRuntimeJson = flowRuntimeJson;
             instance.FlowDesignJson = workflowEntity.DesignJson;
 
             //创建实例
             await workFlowInstanceRepository.AddAsync(instance);
 
             //创建开始任务
-            var firstTask = await CreateFirstTask(new WorkFlowExecute
+            var execute = new WorkFlowExecute
             {
-                WorkFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(workflowEntity.RuntimeJson),
+                WorkFlowInstalled = workFlowInstalled,
                 Title = instance.Title,
                 FlowId = instance.FlowId,
                 FlowName = instance.FlowName,
                 InstanceId = instance.Id,
-                GroupId = groupID,
+                GroupId = instanceGroupId,
                 Sender = new WorkFlowUser
                 {
                     Id = instance.CreaterId,
                     Name = instance.CreaterName
                 },
                 CompanyId = instance.CompanyId
-            });
+            };
+
+            var firstTask = await CreateFirstTask(execute);
 
             //更新实例中步骤信息
             await FreshenWorkFlowInstance(instance.Id, firstTask);
@@ -220,43 +220,55 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 删除流程实例
         /// </summary>
-        /// <param name="flowID"></param>
-        /// <param name="groupID"></param>
         /// <returns></returns>
-        private async Task RemoveWorkFlowInstance(Guid instanceID, Guid flowID, Guid groupID)
+        private async Task RemoveWorkFlowInstance(Guid instanceId, Guid flowId, Guid instanceGroupId)
         {
             //删除实例
-            await workFlowInstanceRepository.UpdateAsync(t => t.Id == instanceID && t.FlowId == flowID,
-                query => new WorkFlowInstance
+            var workFlowInstances = await workFlowInstanceRepository.FindAllAsync(t => t.Id == instanceId && t.FlowId == flowId);
+
+            if (workFlowInstances.Count() > 0)
+            {
+                foreach (var instance in workFlowInstances)
                 {
-                    IsDisabled = true
-                });
+                    instance.IsDisabled = true;
+
+                    await workFlowInstanceRepository.UpdateAsync(instance);
+                }
+            }
+
             //删除任务
-            await workFlowTaskRepository.UpdateAsync(t => t.InstanceId == instanceID && t.FlowId == flowID && t.GroupId == groupID,
-                query => new WorkFlowTask
+            var workFlowTasks = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instanceId && t.FlowId == flowId && t.GroupId == instanceGroupId);
+
+            if (workFlowTasks.Count() > 0)
+            {
+                foreach (var task in workFlowTasks)
                 {
-                    IsDisabled = true
-                });
+                    task.IsDisabled = true;
+
+                    await workFlowTaskRepository.UpdateAsync(task);
+                }
+            }
         }
 
         /// <summary>
         /// 结束流程实例
         /// </summary>
-        /// <param name="instanceID"></param>
-        /// <param name="flowID"></param>
-        /// <param name="groupID"></param>
+        /// <param name="instanceId"></param>
+        /// <param name="flowId"></param>
+        /// <param name="groupId"></param>
         /// <param name="state"></param>
         /// <returns></returns>
         private async Task FinishWorkFlowInstance(WorkFlowTask endStepTask, WorkFlowInstanceState state)
         {
             var instance = await workFlowInstanceRepository.FindAsync(t => t.Id == endStepTask.InstanceId
-            && t.FlowId == endStepTask.FlowId
-            && t.State == (int)WorkFlowInstanceState.Approving
-            && t.IsDisabled == false);
+                                                                        && t.FlowId == endStepTask.FlowId
+                                                                        && t.State == (int)WorkFlowInstanceState.Approving
+                                                                        && t.IsDisabled == false);
 
             if (instance != null)
             {
                 instance.State = (int)state;
+
                 await workFlowInstanceRepository.UpdateAsync(instance);
 
                 //如果有临时任务，直接删除掉
@@ -271,14 +283,32 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         }
 
         /// <summary>
+        /// 成功结束流程实例
+        /// </summary>
+        /// <returns></returns>
+        private async Task CompleteWorkFlowInstance(WorkFlowTask endStepTask)
+        {
+            await FinishWorkFlowInstance(endStepTask, WorkFlowInstanceState.Completed);
+        }
+
+        /// <summary>
+        /// 意外关闭流程实例
+        /// </summary>
+        /// <returns></returns>
+        private async Task CloseWorkFlowInstance(WorkFlowTask endStepTask)
+        {
+            await FinishWorkFlowInstance(endStepTask, WorkFlowInstanceState.Closed);
+        }
+
+        /// <summary>
         /// 更新流程进度信息
         /// </summary>
-        /// <param name="instanceID"></param>
+        /// <param name="instanceId"></param>
         /// <param name="task"></param>
         /// <returns></returns>
-        private async Task FreshenWorkFlowInstance(Guid instanceID, WorkFlowTask task)
+        private async Task FreshenWorkFlowInstance(Guid instanceId, WorkFlowTask task)
         {
-            await workFlowInstanceRepository.UpdateAsync(t => t.Id == instanceID, query => new WorkFlowInstance
+            await workFlowInstanceRepository.UpdateAsync(t => t.Id == instanceId, query => new WorkFlowInstance
             {
                 LastExecuteTaskId = task.Id,
                 LastExecuteStepId = task.StepId,
@@ -423,17 +453,17 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 获取用户
         /// </summary>
-        /// <param name="companyID"></param>
+        /// <param name="companyId"></param>
         /// <param name="userArray"></param>
         /// <returns></returns>
-        private async Task<List<WorkFlowUser>> GetUser(Guid companyID, Guid[] userArray)
+        private async Task<List<WorkFlowUser>> GetUser(Guid companyId, Guid[] userArray)
         {
             if (userArray?.Count() <= 0)
             {
                 return new List<WorkFlowUser>();
             }
 
-            var list = await userRepository.FindAllAsync(t => userArray.Contains(t.Id) && t.IsDisabled == false && t.CompanyId == companyID);
+            var list = await userRepository.FindAllAsync(t => userArray.Contains(t.Id) && t.IsDisabled == false && t.CompanyId == companyId);
 
             return list.Select(t => new WorkFlowUser
             {
@@ -550,7 +580,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                         if (isComplated)
                         {
                             //结束流程
-                            await FinishWorkFlowInstance(currentTask, WorkFlowInstanceState.Complete);
+                            await CompleteWorkFlowInstance(currentTask);
                         }
                     }
                 }
@@ -607,7 +637,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                         if (isBacked)
                         {
                             //结束流程,属于创建人自己退回，就关闭掉
-                            await FinishWorkFlowInstance(currentTask, WorkFlowInstanceState.Closed);
+                            await CloseWorkFlowInstance(currentTask);
                         }
                     }
                 }
@@ -763,7 +793,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 case WorkFlowControlKinds.MultiSelect:
 
                     //处理步骤如果不是最后一步的提交任务，则检查处理步骤的下一步是否存在
-                    if (!(execute.ExecuteType == WorkFlowExecuteKinds.Submit && execute.StepId == WorkFlowAnalysis.EndStepID) && (execute.Steps == null || execute.Steps.Count == 0))
+                    if (!(execute.ExecuteType == WorkFlowExecuteKinds.Submit && execute.StepId == WorkFlowAnalysis.EndStepId) && (execute.Steps == null || execute.Steps.Count == 0))
                     {
                         throw new InvalidOperationException("请选择步骤后提交");
                     }
@@ -842,10 +872,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 处理提交任务时的处理策略
         /// </summary>
-        /// <param name="currentTask"></param>
-        /// <param name="currentStep"></param>
-        /// <param name="execute"></param>
-        /// <returns>下一步任务的状态</returns>
+        /// <returns>下一步任务是否需要等待状态</returns>
         private async Task<bool> ExecuteSubmitHandleTactic(WorkFlowTask currentTask, WorkFlowStep currentStep, WorkFlowExecute execute)
         {
             bool isNeedWating = false;
@@ -923,9 +950,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 创建下一步任务，如果任务存在等待状态将执行激活
         /// </summary>
-        /// <param name="currentTask"></param>
-        /// <param name="currentStep"></param>
-        /// <param name="execute"></param>
         /// <returns></returns>
         private async Task<List<WorkFlowTask>> CreateNextStepTask(WorkFlowTask currentTask, WorkFlowStep currentStep, WorkFlowExecute execute)
         {
@@ -1016,11 +1040,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 //激活临时任务
                 var stepArray = nextStepTasks.Select(t => t.StepId).Distinct().ToArray();
                 var waitingTasks = await workFlowTaskRepository.FindAllAsync(t => t.FlowId == nextStepTasks[0].FlowId
-                && t.InstanceId == nextStepTasks[0].InstanceId
-                && stepArray.Contains(t.StepId)
-                && t.GroupId == nextStepTasks[0].GroupId
-                && t.Is(WorkFlowTaskState.Waiting)
-                && t.IsDisabled == false);
+                                                                                           && t.InstanceId == nextStepTasks[0].InstanceId
+                                                                                           && stepArray.Contains(t.StepId)
+                                                                                           && t.GroupId == nextStepTasks[0].GroupId
+                                                                                           && t.Is(WorkFlowTaskState.Waiting)
+                                                                                           && t.IsDisabled == false);
 
                 if (waitingTasks.Count() > 0)
                 {
@@ -1274,19 +1298,14 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 创建第一个任务
         /// </summary>
-        /// <param name="executeModel"></param>
-        /// <param name="isSubFlow">是否是创建子流程任务</param>
         /// <returns></returns>
         private async Task<WorkFlowTask> CreateFirstTask(WorkFlowExecute execute)
         {
             var firstStep = execute.WorkFlowInstalled.GetFirstStep();
 
-            WorkFlowTask task = new WorkFlowTask();
-            if (firstStep.TimeLimit > 0)
-            {
-                task.PlannedTime = DateTime.Now.AddHours((double)firstStep.TimeLimit);
-            }
+            var task = new WorkFlowTask();
 
+            task.Title = string.IsNullOrEmpty(execute.Title) ? "未命名任务(" + execute.WorkFlowInstalled.Name + ")" : execute.Title;
             task.FlowId = execute.FlowId;
             task.FlowName = execute.FlowName;
             task.GroupId = execute.GroupId;
@@ -1305,8 +1324,12 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             task.StepId = firstStep.StepId;
             task.StepName = firstStep.StepName;
             task.Sort = 1;
-            task.Title = string.IsNullOrEmpty(execute.Title) ? "未命名任务(" + execute.WorkFlowInstalled.Name + ")" : execute.Title;
             task.CompanyId = execute.CompanyId;
+
+            if (firstStep.TimeLimit > 0)
+            {
+                task.PlannedTime = DateTime.Now.AddHours((double)firstStep.TimeLimit);
+            }
 
             await workFlowTaskRepository.AddAsync(task);
 
@@ -1369,10 +1392,12 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             foreach (var step in execute.Steps)
             {
                 var nextStep = execute.WorkFlowInstalled.GetStep(step.Key);
+
                 if (nextStep == null)
                 {
                     continue;
                 }
+
                 if (!string.IsNullOrEmpty(nextStep.CopyToUsers))
                 {
                     var users = await GetCopyToUsers(nextStep, execute);
@@ -1475,22 +1500,35 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <param name="currentTask"></param>
         /// <param name="execute"></param>
         /// <returns></returns>
-        private async Task<int> RemoveTemporaryTask(WorkFlowTask currentTask, bool isRemoveAll = true)
+        private async Task RemoveTemporaryTask(WorkFlowTask currentTask, bool isRemoveAll = true)
         {
+            IEnumerable<WorkFlowTask> workFlowTasks;
+
             if (isRemoveAll)
             {
-                return await workFlowTaskRepository.RemoveAsync(t => t.InstanceId == currentTask.InstanceId
-                    && t.FlowId == currentTask.FlowId
-                    && t.GroupId == currentTask.GroupId
-                    && t.State == (int)WorkFlowTaskState.Waiting);
+                workFlowTasks = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == currentTask.InstanceId
+                                                                            && t.FlowId == currentTask.FlowId
+                                                                            && t.GroupId == currentTask.GroupId
+                                                                            && t.State == (int)WorkFlowTaskState.Waiting);
+
+
             }
             else
             {
-                return await workFlowTaskRepository.RemoveAsync(t => t.InstanceId == currentTask.InstanceId
-                    && t.FlowId == currentTask.FlowId
-                    && t.GroupId == currentTask.GroupId
-                    && t.PrevStepId == currentTask.StepId
-                    && t.State == (int)WorkFlowTaskState.Waiting);
+                workFlowTasks = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == currentTask.InstanceId
+                                                                            && t.FlowId == currentTask.FlowId
+                                                                            && t.GroupId == currentTask.GroupId
+                                                                            && t.PrevStepId == currentTask.StepId
+                                                                            && t.State == (int)WorkFlowTaskState.Waiting);
+
+            }
+
+            if (workFlowTasks.Count() > 0)
+            {
+                foreach (var task in workFlowTasks)
+                {
+                    await workFlowTaskRepository.RemoveAsync(task);
+                }
             }
         }
 
@@ -1501,16 +1539,16 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 查询一个用户在一个步骤是否有未处理任务
         /// </summary>
-        /// <param name="flowID"></param>
+        /// <param name="flowId"></param>
         /// <returns></returns>
-        private async Task<bool> IsHasNotExecuteTask(Guid flowID, Guid instanceID, Guid stepID, Guid groupID, Guid userID)
+        private async Task<bool> IsHasNotExecuteTask(Guid flowId, Guid instanceId, Guid stepId, Guid groupId, Guid userId)
         {
-            var count = await workFlowTaskRepository.CountAsync(t => t.FlowId == flowID
-            && t.InstanceId == instanceID
-            && t.StepId == stepID
-            && t.GroupId == groupID
-            && t.ReceiverId == userID
-            && t.IsNotExecute());
+            var count = await workFlowTaskRepository.CountAsync(t => t.FlowId == flowId
+                                                                  && t.InstanceId == instanceId
+                                                                  && t.StepId == stepId
+                                                                  && t.GroupId == groupId
+                                                                  && t.ReceiverId == userId
+                                                                  && t.IsNotExecute());
 
             return count > 0;
         }
@@ -1543,7 +1581,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     {
                         case WorkFlowSubFlowTacticKinds.SubFlowCompleted:
 
-                            isPass = wrokFlowInstance.State == (int)WorkFlowInstanceState.Complete;
+                            isPass = wrokFlowInstance.State == (int)WorkFlowInstanceState.Completed;
 
                             break;
                         case WorkFlowSubFlowTacticKinds.SubFlowFinished:
@@ -1554,10 +1592,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     }
                 }
 
-                //isPass = (await _workFlowTaskService.GetCountAsync(t => t.FlowID == currentStep.SubFlowID
+                //isPass = (await _workFlowTaskService.GetCountAsync(t => t.FlowId == currentStep.SubFlowId
                 //&& t.IsNotExecute()
-                //&& t.InstanceID == currentTask.SubFlowInstanceID
-                //&& t.GroupID == currentTask.GroupID)) == 0;
+                //&& t.InstanceId == currentTask.SubFlowInstanceId
+                //&& t.GroupId == currentTask.GroupId)) == 0;
 
                 return isPass;
             }
@@ -1623,14 +1661,14 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// 判断一个步骤是否已完成
         /// </summary>
         /// <param name="step"></param>
-        /// <param name="flowID"></param>
-        /// <param name="instanceID"></param>
-        /// <param name="groupID"></param>
+        /// <param name="flowId"></param>
+        /// <param name="instanceId"></param>
+        /// <param name="groupId"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        private async Task<bool> IsStepPassed(WorkFlowStep step, Guid instanceID, Guid flowID, Guid groupID, int sort)
+        private async Task<bool> IsStepPassed(WorkFlowStep step, Guid instanceId, Guid flowId, Guid groupId, int sort)
         {
-            var tasks = await GetDistributionTask(step.StepId, flowID, instanceID, groupID, sort);
+            var tasks = await GetDistributionTask(step.StepId, flowId, instanceId, groupId, sort);
 
             if (tasks.Count == 0)
             {
@@ -1713,11 +1751,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// 判断一个步骤是否退回
         /// </summary>
         /// <param name="step"></param>
-        /// <param name="groupID"></param>
+        /// <param name="groupId"></param>
         /// <returns></returns>
-        private async Task<bool> IsStepBacked(WorkFlowStep step, Guid instanceID, Guid flowID, Guid groupID, int sort)
+        private async Task<bool> IsStepBacked(WorkFlowStep step, Guid instanceId, Guid flowId, Guid groupId, int sort)
         {
-            var tasks = await GetDistributionTask(step.StepId, flowID, instanceID, groupID, sort);
+            var tasks = await GetDistributionTask(step.StepId, flowId, instanceId, groupId, sort);
             if (tasks.Count == 0)
             {
                 return false;
@@ -1756,17 +1794,17 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// 获取当前步骤分发的所有任务
         /// </summary>
         /// <param name="step"></param>
-        /// <param name="flowID"></param>
-        /// <param name="instanceID"></param>
-        /// <param name="groupID"></param>
+        /// <param name="flowId"></param>
+        /// <param name="instanceId"></param>
+        /// <param name="groupId"></param>
         /// <param name="sort"></param>
         /// <returns></returns>
-        private async Task<List<WorkFlowTask>> GetDistributionTask(Guid stepID, Guid flowID, Guid instanceID, Guid groupID, int sort)
+        private async Task<List<WorkFlowTask>> GetDistributionTask(Guid stepId, Guid flowId, Guid instanceId, Guid groupId, int sort)
         {
-            var taskList = (await workFlowTaskRepository.FindAllAsync(t => t.FlowId == flowID
-                            && t.InstanceId == instanceID
-                            && t.StepId == stepID
-                            && t.GroupId == groupID
+            var taskList = (await workFlowTaskRepository.FindAllAsync(t => t.FlowId == flowId
+                            && t.InstanceId == instanceId
+                            && t.StepId == stepId
+                            && t.GroupId == groupId
                             && t.Sort == sort
                             && t.IsNot(WorkFlowTaskKinds.Copy)
                             && t.IsDisabled == false)).ToList();
@@ -1776,17 +1814,17 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 获取当前步骤最新分发的步骤
         /// </summary>
-        /// <param name="stepID"></param>
-        /// <param name="flowID"></param>
-        /// <param name="instanceID"></param>
-        /// <param name="groupID"></param>
+        /// <param name="stepId"></param>
+        /// <param name="flowId"></param>
+        /// <param name="instanceId"></param>
+        /// <param name="groupId"></param>
         /// <returns></returns>
-        private async Task<List<WorkFlowTask>> GetNewestDistributionTask(Guid stepID, Guid flowID, Guid instanceID, Guid groupID)
+        private async Task<List<WorkFlowTask>> GetNewestDistributionTask(Guid stepId, Guid flowId, Guid instanceId, Guid groupId)
         {
-            var taskList = (await workFlowTaskRepository.FindAllAsync(t => t.FlowId == flowID
-               && t.InstanceId == instanceID
-               && t.StepId == stepID
-               && t.GroupId == groupID
+            var taskList = (await workFlowTaskRepository.FindAllAsync(t => t.FlowId == flowId
+               && t.InstanceId == instanceId
+               && t.StepId == stepId
+               && t.GroupId == groupId
                && t.IsNot(WorkFlowTaskKinds.Copy)
                && t.IsDisabled == false)).ToList();
 
@@ -1856,7 +1894,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 执行自定义方法
         /// </summary>
-        /// <param name="name"></param>
         /// <returns></returns>
         private TResult ExecuteCustomMethod<TArgs, TResult>(string name, TArgs args)
         {
@@ -1892,9 +1929,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 激活子流程前事件
         /// </summary>
-        /// <param name="parentTask"></param>
-        /// <param name="subflowStep"></param>
-        /// <param name="subflowInstance"></param>
         /// <returns></returns>
         private SubFlowActivationBeforeEventResults ExecuteSubFlowActivationBeforeEvent(WorkFlowTask subflowTask, WorkFlowStep subflowStep, WorkFlowInstance subflowInstance)
         {
@@ -1903,11 +1937,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 var eventName = subflowStep.SubFlowActivationBeforeEvent.Trim();
                 var eventArgs = new SubFlowActivationBeforeEventArgs()
                 {
-                    FlowID = subflowTask.FlowId,
-                    GroupID = subflowTask.GroupId,
-                    InstanceID = subflowTask.InstanceId,
-                    StepID = subflowTask.StepId,
-                    TaskID = subflowTask.Id,
+                    FlowId = subflowTask.FlowId,
+                    GroupId = subflowTask.GroupId,
+                    InstanceId = subflowTask.InstanceId,
+                    StepId = subflowTask.StepId,
+                    TaskId = subflowTask.Id,
                     SubFlowInstance = subflowInstance
                 };
                 var result = ExecuteCustomMethod<SubFlowActivationBeforeEventArgs, SubFlowActivationBeforeEventResults>(eventName, eventArgs);
@@ -1926,9 +1960,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 激活子流程后事件
         /// </summary>
-        /// <param name="parentTask"></param>
-        /// <param name="subflowStep"></param>
-        /// <param name="subflowInstance"></param>
         /// <returns></returns>
         private SubFlowActivationAfterEventResults ExecuteSubFlowActivationAfterEvent(WorkFlowTask subflowTask, WorkFlowStep subflowStep, WorkFlowInstance subflowInstance)
         {
@@ -1937,11 +1968,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 var eventName = subflowStep.SubFlowActivationAfterEvent.Trim();
                 var eventArgs = new SubFlowActivationAfterEventArgs()
                 {
-                    FlowID = subflowTask.FlowId,
-                    GroupID = subflowTask.GroupId,
-                    InstanceID = subflowTask.InstanceId,
-                    StepID = subflowTask.StepId,
-                    TaskID = subflowTask.Id,
+                    FlowId = subflowTask.FlowId,
+                    GroupId = subflowTask.GroupId,
+                    InstanceId = subflowTask.InstanceId,
+                    StepId = subflowTask.StepId,
+                    TaskId = subflowTask.Id,
                     SubFlowInstance = subflowInstance
                 };
                 var result = ExecuteCustomMethod<SubFlowActivationAfterEventArgs, SubFlowActivationAfterEventResults>(eventName, eventArgs);
@@ -1960,7 +1991,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 执行子流程完成后事件
         /// </summary>
-        /// <param name="subflowTask"></param>
         /// <returns></returns>
         private async Task<SubFlowFinishedEventResults> ExecuteSubFlowFinishedEvent(WorkFlowTask subflowTask, WorkFlowInstance subflowInstance)
         {
@@ -1973,7 +2003,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 {
                     throw new InvalidOperationException("子流程数据丢失");
                 }
-                var parentWorkFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(subflowInstanceEntity.FlowJson);
+                var parentWorkFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(subflowInstanceEntity.FlowRuntimeJson);
                 if (parentWorkFlowInstalled != null)
                 {
                     var parentStep = parentWorkFlowInstalled.GetStep(parentTask.StepId);
@@ -1982,11 +2012,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     {
                         var eventArgs = new SubFlowFinishedEventArgs
                         {
-                            FlowID = parentTask.FlowId,
-                            GroupID = parentTask.GroupId,
-                            InstanceID = parentTask.InstanceId,
-                            StepID = parentTask.StepId,
-                            TaskID = parentTask.Id,
+                            FlowId = parentTask.FlowId,
+                            GroupId = parentTask.GroupId,
+                            InstanceId = parentTask.InstanceId,
+                            StepId = parentTask.StepId,
+                            TaskId = parentTask.Id,
                             SubFlowInstance = subflowInstance
                         };
 
@@ -2010,8 +2040,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 执行提交操作之前
         /// </summary>
-        /// <param name="task"></param>
-        /// <param name="instance"></param>
         /// <returns></returns>
         private ExecuteSubmitBeforeEventResults ExecuteSubmitBeforeEvent(WorkFlowTask task, WorkFlowStep step)
         {
@@ -2020,11 +2048,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 var eventName = step.SubmitBeforeEvent.Trim();
                 var eventArgs = new ExecuteSubmitBeforeEventArgs()
                 {
-                    FlowID = task.FlowId,
-                    GroupID = task.GroupId,
-                    InstanceID = task.InstanceId,
-                    StepID = task.StepId,
-                    TaskID = task.Id
+                    FlowId = task.FlowId,
+                    GroupId = task.GroupId,
+                    InstanceId = task.InstanceId,
+                    StepId = task.StepId,
+                    TaskId = task.Id
                 };
                 var result = ExecuteCustomMethod<ExecuteSubmitBeforeEventArgs, ExecuteSubmitBeforeEventResults>(eventName, eventArgs);
 
@@ -2052,11 +2080,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 var eventName = step.SubmitAfterEvent.Trim();
                 var eventArgs = new ExecuteSubmitAfterEventArgs()
                 {
-                    FlowID = task.FlowId,
-                    GroupID = task.GroupId,
-                    InstanceID = task.InstanceId,
-                    StepID = task.StepId,
-                    TaskID = task.Id
+                    FlowId = task.FlowId,
+                    GroupId = task.GroupId,
+                    InstanceId = task.InstanceId,
+                    StepId = task.StepId,
+                    TaskId = task.Id
                 };
                 var result = ExecuteCustomMethod<ExecuteSubmitAfterEventArgs, ExecuteSubmitAfterEventResults>(eventName, eventArgs);
 
@@ -2074,8 +2102,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 执行提交操作之前
         /// </summary>
-        /// <param name="task"></param>
-        /// <param name="instance"></param>
         /// <returns></returns>
         private ExecuteBackBeforeEventResults ExecuteBackBeforeEvent(WorkFlowTask task, WorkFlowStep step)
         {
@@ -2084,11 +2110,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 var eventName = step.BackBeforeEvent.Trim();
                 var eventArgs = new ExecuteBackBeforeEventArgs()
                 {
-                    FlowID = task.FlowId,
-                    GroupID = task.GroupId,
-                    InstanceID = task.InstanceId,
-                    StepID = task.StepId,
-                    TaskID = task.Id
+                    FlowId = task.FlowId,
+                    GroupId = task.GroupId,
+                    InstanceId = task.InstanceId,
+                    StepId = task.StepId,
+                    TaskId = task.Id
                 };
                 var result = ExecuteCustomMethod<ExecuteBackBeforeEventArgs, ExecuteBackBeforeEventResults>(eventName, eventArgs);
 
@@ -2106,8 +2132,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 执行提交操作之后
         /// </summary>
-        /// <param name="task"></param>
-        /// <param name="instance"></param>
         /// <returns></returns>
         private ExecuteBackAfterEventResults ExecuteBackAfterEvent(WorkFlowTask task, WorkFlowStep step)
         {
@@ -2116,11 +2140,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 var eventName = step.BackAfterEvent.Trim();
                 var eventArgs = new ExecuteBackAfterEventArgs()
                 {
-                    FlowID = task.FlowId,
-                    GroupID = task.GroupId,
-                    InstanceID = task.InstanceId,
-                    StepID = task.StepId,
-                    TaskID = task.Id
+                    FlowId = task.FlowId,
+                    GroupId = task.GroupId,
+                    InstanceId = task.InstanceId,
+                    StepId = task.StepId,
+                    TaskId = task.Id
                 };
                 var result = ExecuteCustomMethod<ExecuteBackAfterEventArgs, ExecuteBackAfterEventResults>(eventName, eventArgs);
 
@@ -2270,8 +2294,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             var workFlowAllTask = await GetAllTask(instance);
             if (workFlowAllTask.Count > 0)
             {
-                var groupID = workFlowAllTask.Select(t => t.GroupId).First();
-                var workFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(instance.FlowJson);
+                var groupId = workFlowAllTask.Select(t => t.GroupId).First();
+                var workFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(instance.FlowRuntimeJson);
                 foreach (var step in workFlowInstalled.Steps)
                 {
                     var stepTasks = workFlowAllTask.Where(t => t.StepId == step.StepId);
@@ -2279,11 +2303,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     {
                         int sort = workFlowAllTask.Where(t => t.StepId == step.StepId).Max(t => t.Sort);
 
-                        if (await IsStepPassed(step, instance.Id, instance.FlowId, groupID, sort))
+                        if (await IsStepPassed(step, instance.Id, instance.FlowId, groupId, sort))
                         {
                             result[3].Add(step);
                         }
-                        else if (await IsStepBacked(step, instance.Id, instance.FlowId, groupID, sort))
+                        else if (await IsStepBacked(step, instance.Id, instance.FlowId, groupId, sort))
                         {
                             result[2].Add(step);
                         }

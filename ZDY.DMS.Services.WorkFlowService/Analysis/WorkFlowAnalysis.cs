@@ -13,23 +13,32 @@ namespace ZDY.DMS.Services.WorkFlowService
 {
     public static class WorkFlowAnalysis
     {
-        public static Guid StartStepID = new Guid("00000000-0000-0000-0000-000000000000");
-        public static Guid EndStepID = new Guid("00000000-0000-0000-0000-000000000001");
+        public static Guid StartStepId
+        {
+            get
+            {
+                return Guid.Parse("00000000-0000-0000-0000-000000000001");
+            }
+        }
+
+        public static Guid EndStepId
+        {
+            get
+            {
+                return Guid.Parse("00000000-0000-0000-0000-000000000002");
+            }
+        }
 
         public static WorkFlowInstalled AnalyticWorkFlowInstalledData(string flowJson)
         {
-            WorkFlowInstalled workFlowInstalled = null;
-
             try
             {
-                workFlowInstalled = JsonConvert.DeserializeObject<WorkFlowInstalled>(flowJson);
+                return JsonConvert.DeserializeObject<WorkFlowInstalled>(flowJson);
             }
-            catch(System.Exception e)
+            catch
             {
                 throw new AnalyzeMistakesException();
             }
-
-            return workFlowInstalled;
         }
 
         public static List<Tuple<Guid, string, string, string>> CheckFlow(this WorkFlowInstalled workFlowInstalled)
@@ -47,13 +56,13 @@ namespace ZDY.DMS.Services.WorkFlowService
             }
 
             //验证首尾存在
-            var start = workFlowInstalled.Steps.Find(t => t.StepId == StartStepID);
+            var start = workFlowInstalled.Steps.Find(t => t.StepId == StartStepId);
             if (start == null)
             {
                 throw new AnalyzeMistakesException();
             }
 
-            var end = workFlowInstalled.Steps.Find(t => t.StepId == EndStepID);
+            var end = workFlowInstalled.Steps.Find(t => t.StepId == EndStepId);
             if (end == null)
             {
                 throw new AnalyzeMistakesException();
@@ -70,20 +79,20 @@ namespace ZDY.DMS.Services.WorkFlowService
             var transitPointArray = fromTransitPointArray.Concat(toTransitPointArray).ToArray();
 
             //验证首尾已连接
-            if (!transitPointArray.Contains(StartStepID))
+            if (!transitPointArray.Contains(StartStepId))
             {
-                messages.Add(new Tuple<Guid, string, string, string>(StartStepID, "开始", "步骤", "开始步骤未连接"));
+                messages.Add(new Tuple<Guid, string, string, string>(StartStepId, "开始", "步骤", "开始步骤未连接"));
             }
 
-            if (!transitPointArray.Contains(EndStepID))
+            if (!transitPointArray.Contains(EndStepId))
             {
-                messages.Add(new Tuple<Guid, string, string, string>(EndStepID, "结束", "步骤", "结束步骤未连接"));
+                messages.Add(new Tuple<Guid, string, string, string>(EndStepId, "结束", "步骤", "结束步骤未连接"));
             }
 
             //验证结束节点不允许有下一出口
-            if (fromTransitPointArray.Contains(EndStepID))
+            if (fromTransitPointArray.Contains(EndStepId))
             {
-                messages.Add(new Tuple<Guid, string, string, string>(EndStepID, "结束", "步骤", "结束步骤不能再有下一出口"));
+                messages.Add(new Tuple<Guid, string, string, string>(EndStepId, "结束", "步骤", "结束步骤不能再有下一出口"));
             }
 
 
@@ -143,7 +152,7 @@ namespace ZDY.DMS.Services.WorkFlowService
                     messages.Add(new Tuple<Guid, string, string, string>(step.StepId, step.StepName, "步骤", "步骤入库没有被连接到"));
                 }
 
-                if (step.StepId == StartStepID || step.StepId == EndStepID)
+                if (step.StepId == StartStepId || step.StepId == EndStepId)
                 {
                     continue;
                 }

@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>0.999.0</Version>
+    <Authors>Sunny Chen (daxnet)</Authors>
+    <Description>Provides the base classes for implementing event stores based on ADO.NET.</Description>
+    <Copyright>Copyright (C) 2009-2019 by daxnet (Sunny Chen).</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/daxnet/ZDY.DMS-core</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/daxnet/ZDY.DMS-core</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageTags>ZDY.DMS,cqrs,ddd,event store</PackageTags>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ZDY.DMS\ZDY.DMS.csproj" />
+  </ItemGroup>
+
+</Project>

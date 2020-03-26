@@ -19,14 +19,14 @@ namespace ZDY.DMS.Domain.Enums
         /// </summary>
         [Description("已通过")]
         [Category("1")]
-        Complete = 1,
+        Completed = 1,
 
         /// <summary>
         /// 不通过
         /// </summary>
         [Description("不通过")]
         [Category("1")]
-        Reject = 2,
+        Rejected = 2,
 
         /// <summary>
         /// 已关闭

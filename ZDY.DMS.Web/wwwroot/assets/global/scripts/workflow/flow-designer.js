@@ -10,7 +10,7 @@
     function Guid(g) {
 
         var arr = new Array() //存放32位数值的数组
-        if (typeof (g) == "string") { //如果构造函数的参数为字符串
+        if (typeof (g) === "string") { //如果构造函数的参数为字符串
             InitByString(arr, g)
         }
         else {
@@ -19,7 +19,7 @@
         //返回一个值，该值指示 Guid 的两个实例是否表示同一个值。
         this.Equals = function (o) {
             if (o && o.IsGuid) {
-                return this.ToString() == o.ToString()
+                return this.ToString() === o.ToString()
             }
             else {
                 return false
@@ -30,8 +30,8 @@
         this.IsGuid = function () { }
         //返回 Guid 类的此实例值的 String 表示形式。
         this.ToString = function (format) {
-            if (typeof (format) == "string") {
-                if (format == "N" || format == "D" || format == "B" || format == "P") {
+            if (typeof (format) === "string") {
+                if (format === "N" || format === "D" || format === "B" || format === "P") {
                     return ToStringWithFormat(arr, format)
                 }
                 else {
@@ -47,7 +47,7 @@
         function InitByString(arr, g) {
             g = g.replace(/\{|\(|\)|\}|-/g, "")
             g = g.toLowerCase()
-            if (g.length != 32 || g.search(/[^0-9,a-f]/i) != -1) {
+            if (g.length !== 32 || g.search(/[^0-9,a-f]/i) !== -1) {
                 InitByOther(arr)
             }
             else {
@@ -73,19 +73,21 @@
         */
 
         function ToStringWithFormat(arr, format) {
+            var str;
+
             switch (format) {
                 case "N":
                     return arr.toString().replace(/,/g, "")
                 case "D":
-                    var str = arr.slice(0, 8) + "-" + arr.slice(8, 12) + "-" + arr.slice(12, 16) + "-" + arr.slice(16, 20) + "-" + arr.slice(20, 32)
+                    str = arr.slice(0, 8) + "-" + arr.slice(8, 12) + "-" + arr.slice(12, 16) + "-" + arr.slice(16, 20) + "-" + arr.slice(20, 32)
                     str = str.replace(/,/g, "")
                     return str
                 case "B":
-                    var str = ToStringWithFormat(arr, "D")
+                    str = ToStringWithFormat(arr, "D")
                     str = "{" + str + "}"
                     return str
                 case "P":
-                    var str = ToStringWithFormat(arr, "D")
+                    str = ToStringWithFormat(arr, "D")
                     str = "(" + str + ")"
                     return str
                 default:
@@ -116,7 +118,7 @@
         }
         this.newGuid = function () {
             var guid = NewGuid().ToString()
-            if (activities[guid] != undefined || transitions[guid] != undefined) {
+            if (activities[guid] !== undefined || transitions[guid] !== undefined) {
                 guid = graph.newGuid()
             }
             return guid
@@ -128,7 +130,7 @@
         this.removeActivity = function (activityId) {
             delete activities[activityId]
         }
-        this.getActivity = function (id) { return activities[id] == undefined ? undefined : activities[id] }
+        this.getActivity = function (id) { return activities[id] === undefined ? undefined : activities[id] }
         this.getActivities = function () {
             var array = []
             for (var activityId in activities) {
@@ -146,7 +148,7 @@
         this.removeTransition = function (transitionId) {
             delete transitions[transitionId]
         }
-        this.getTransition = function (id) { return transitions[id] == undefined ? undefined : transitions[id] }
+        this.getTransition = function (id) { return transitions[id] === undefined ? undefined : transitions[id] }
         this.getTransitions = function () {
             var array = []
             for (var transitionId in transitions) {
@@ -178,7 +180,7 @@
                 return this
             },
             done: function () {
-                if (this.activities.length == 2) {
+                if (this.activities.length === 2) {
                     var item = {
                         id: NewGuid().ToString(),
                         from: this.activities[0].id,
@@ -226,7 +228,7 @@
             var trans = []
             for (var key in transitions) {
                 var transition = transitions[key]
-                if (transition.from === activityId || transition.to == activityId) {
+                if (transition.from === activityId || transition.to === activityId) {
                     trans.push(transition)
                 }
             }
@@ -325,7 +327,7 @@
             var els = this.zrenderInstance().storage.getDisplayList(true, true);
             for (var i = 0; i < els.length; i++) {
                 var el = els[i];
-                if (el.tag != "tool") {
+                if (el.tag !== "tool") {
                     el.attr("scale", [this.scale, this.scale]);
                 }
             }
@@ -362,7 +364,7 @@
                         var els = zrenderInstance.storage.getDisplayList(true, true);
                         for (var i = 0; i < els.length; i++) {
                             var el = els[i];
-                            if (el.tag != "tool") {
+                            if (el.tag !== "tool") {
                                 el.position[0] = el.position[0] + xdiff;
                                 el.position[1] = el.position[1] + ydiff;
                                 el.dirty();
@@ -379,7 +381,7 @@
 
         // 初始化
         this.init = function (options) {
-            if (options != undefined) {
+            if (options !== undefined) {
                 this.offsetX = options.offsetX || canvasElement.offsetLeft
                 this.offsetY = options.offsetY || canvasElement.offsetTop
                 this.fontFamily = options.fontFamily || 'Microsoft YaHei'
@@ -443,8 +445,8 @@
                 var transition = transitions[key]
                 transition.refresh()
             }
-            for (var key in activities) {
-                var activitiy = activities[key]
+            for (var key2 in activities) {
+                var activitiy = activities[key2]
                 activitiy.refresh()
             }
             this.zrenderInstance().refresh()
@@ -462,7 +464,7 @@
         this.id = options.id
         this.title = options.title
         this.data = options.data
-        this.clickable = options.clickable == undefined ? true : options.clickable
+        this.clickable = options.clickable === undefined ? true : options.clickable
         this.graph = null
         this.element = null
         // 当前是否被选中
@@ -475,15 +477,15 @@
                     // 选中并高亮
                     if (unit.graph.designable) unit.graph.onUnitSelect(params, unit)
                     // 连接节点
-                    if (unit.type == 'Activity' && unit.graph.connectActivitys.isWaiting()) {
+                    if (unit.type === 'Activity' && unit.graph.connectActivitys.isWaiting()) {
                         unit.graph.connectActivitys.add(unit).done()
                     }
-                    if (typeof unit.graph.onUnitClick === 'function' && unit.clickable == true) {
+                    if (typeof unit.graph.onUnitClick === 'function' && unit.clickable === true) {
                         unit.graph.onUnitClick(params, unit)
                     }
                 },
                 ondblclick: function (params) {
-                    if (typeof unit.graph.onUnitDblclick === 'function' && unit.clickable == true) {
+                    if (typeof unit.graph.onUnitDblclick === 'function' && unit.clickable === true) {
                         unit.graph.onUnitDblclick(params, unit)
                     }
                 },
@@ -498,10 +500,10 @@
         this.addTo = function (graph) { }
         this.drawTo = function (graph) {
             this.graph = graph
-            if (this.type == 'Transition') {
+            if (this.type === 'Transition') {
                 graph.addTransition(this)
             }
-            else if (this.type == 'Activity') {
+            else if (this.type === 'Activity') {
                 graph.addActivity(this)
             }
             this.addTo(graph)
@@ -1030,7 +1032,7 @@
 
             var fromActivity = graph.getActivity(transition.from),
                 toActivity = graph.getActivity(transition.to),
-                fromPosition, toPosition;
+                fromPosition, toPosition, result;
             if (transition.fromAngle < 1 || transition.fromAngle > 8) {
                 if (transition.toAngle < 1 || transition.toAngle > 8) {
                     var results = findShortestAngle2(fromActivity, toActivity);
@@ -1040,14 +1042,14 @@
                     transition.toAngleRun = results[1].angleIndex;
                 } else {
                     toPosition = toActivity.getAnglePosition(transition.toAngle);
-                    var result = findShortestAngle(toPosition, fromActivity);
+                    result = findShortestAngle(toPosition, fromActivity);
                     fromPosition = result.position;
                     transition.fromAngleRun = result.angleIndex;
                 }
             } else {
                 if (transition.toAngle < 1 || transition.toAngle > 8) {
                     fromPosition = fromActivity.getAnglePosition(transition.fromAngle);
-                    var result = findShortestAngle(fromPosition, toActivity);
+                    result = findShortestAngle(fromPosition, toActivity);
                     toPosition = result.position;
                     transition.toAngleRun = result.angleIndex;
                 } else {
@@ -1353,7 +1355,7 @@
         Transition.apply(this, arguments)
 
         this.choosePolylineStyle = function () {
-            if (this.subtype == 0) {
+            if (this.subtype === 0) {
                 //实线
                 this.polylineStyleLineWidth = 3
                 this.polylineStyleLineDash = null
@@ -1447,13 +1449,13 @@
                     designer.appendActivity([activity])
                     break
                 case 'add2':
-                    var activity = {
+                    var activity2 = {
                         id: graph.newGuid(),
                         subtype: 1,
                         position: { x: graph.zrClickPosition.x + 45, y: graph.zrClickPosition.y + 40 },
                         title: '新子流程'
                     }
-                    designer.appendActivity([activity])
+                    designer.appendActivity([activity2])
                     break
                 case 'clear':
                     designer.clear()
@@ -1465,7 +1467,7 @@
                     this.unit.remove()
                     break
                 case 'setting':
-                    if (typeof graph.onUnitSetting == "function") {
+                    if (typeof graph.onUnitSetting === "function") {
                         graph.onUnitSetting(event, this.unit)
                     }
                     break
@@ -1478,7 +1480,7 @@
 
     function Start(options) {
         options = util.merge({
-            id: '00000000-0000-0000-0000-000000000000',
+            id: '00000000-0000-0000-0000-000000000001',
             subtype: 0,
             position: { x: 60, y: 60 },
             title: '开始',
@@ -1489,7 +1491,7 @@
 
     function End(options) {
         options = util.merge({
-            id: '00000000-0000-0000-0000-000000000001',
+            id: '00000000-0000-0000-0000-000000000002',
             subtype: 0,
             position: { x: 60, y: 60 },
             title: '结束',

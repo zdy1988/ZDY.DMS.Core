@@ -38,12 +38,12 @@ namespace ZDY.DMS.Services.WorkFlowService
 
         public static WorkFlowStep GetFirstStep(this WorkFlowInstalled workFlowInstalled)
         {
-            return workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowAnalysis.StartStepID);
+            return workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowAnalysis.StartStepId);
         }
 
         public static WorkFlowStep GetLastStep(this WorkFlowInstalled workFlowInstalled)
         {
-            return workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowAnalysis.EndStepID);
+            return workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowAnalysis.EndStepId);
         }
 
         public static WrokFlowTransit GetTransit(this WorkFlowInstalled workFlowInstalled, Guid transitId)

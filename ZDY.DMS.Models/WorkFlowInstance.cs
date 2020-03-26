@@ -25,7 +25,7 @@ namespace ZDY.DMS.Models
         /// <summary>
         /// 流程数据
         /// </summary>
-        public string FlowJson { get; set; }
+        public string FlowRuntimeJson { get; set; }
         /// <summary>
         /// 表单数据
         /// </summary>

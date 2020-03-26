@@ -6,14 +6,14 @@ namespace ZDY.DMS.Services.WorkFlowService.Events
 {
     public class WorkFlowCustomEventArgs : EventArgs
     {
-        public Guid FlowID { get; set; }
+        public Guid FlowId { get; set; }
 
-        public Guid TaskID { get; set; }
+        public Guid TaskId { get; set; }
 
-        public Guid StepID { get; set; }
+        public Guid StepId { get; set; }
 
-        public Guid GroupID { get; set; }
+        public Guid GroupId { get; set; }
 
-        public Guid InstanceID { get; set; }
+        public Guid InstanceId { get; set; }
     }
 }
