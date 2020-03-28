@@ -25,10 +25,10 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
         }
 
         public WorkFlowInstance Instance { get; set; }
-        public List<WorkFlowTask> WorkFlowProcess { get; set; } = new List<WorkFlowTask>();
-        public Dictionary<int, List<WorkFlowStep>> Status { get; set; } = new Dictionary<int, List<WorkFlowStep>>();
+        public List<WorkFlowTask> Process { get; set; } = new List<WorkFlowTask>();
+        public Dictionary<int, List<WorkFlowStep>> States { get; set; } = new Dictionary<int, List<WorkFlowStep>>();
 
-        public async Task OnGet(Guid id)
+        public async Task OnGetAsync(Guid id)
         {
             var workFlowInstanceEntity = await workFlowInstanceRepository.FindAsync(t => t.Id == id);
             if (workFlowInstanceEntity == null)
@@ -39,9 +39,9 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
 
             Instance = workFlowInstanceEntity;
 
-            WorkFlowProcess = await workFlowWorkingService.GetWorkFlowProcessAsync(Instance);
+            Process = await workFlowWorkingService.GetWorkFlowProcessAsync(Instance);
 
-            Status = await workFlowWorkingService.GetWorkFlowProcessStatusAsync(Instance);
+            States = await workFlowWorkingService.GetWorkFlowProcessStatesAsync(Instance);
         }
     }
 }

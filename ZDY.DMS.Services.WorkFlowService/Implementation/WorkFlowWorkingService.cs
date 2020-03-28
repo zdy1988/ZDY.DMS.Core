@@ -82,10 +82,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             {
                 throw new InvalidOperationException("流程数据丢失");
             }
-            execute.WorkFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(instance.FlowRuntimeJson);
+            execute.WorkFlowInstalled = WorkFlowAnalyzing.WorkFlowInstalledDeserialize(instance.FlowRuntimeJson);
 
             //获取当前步骤
-            var current = await GetExecutingTaskAndStep(execute);
+            var current = await GetTaskAndStepForExecuting(execute);
 
             //必须签名
             if (current.Item2.SignatureType == (int)WorkFlowSignatureKinds.CommentAndSignature)
@@ -164,7 +164,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 throw new InvalidOperationException("流程数据未找到或流程未安装");
             }
 
-            var workFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(workflowEntity.RuntimeJson);
+            var workFlowInstalled = WorkFlowAnalyzing.WorkFlowInstalledDeserialize(workflowEntity.RuntimeJson);
 
             //设置开始节点和结束节点的一些默认规则
             foreach (var step in workFlowInstalled.Steps)
@@ -326,7 +326,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// </summary>
         /// <param name="execute"></param>
         /// <returns></returns>
-        private async Task<Tuple<WorkFlowTask, WorkFlowStep>> GetExecutingTaskAndStep(WorkFlowExecute execute)
+        private async Task<Tuple<WorkFlowTask, WorkFlowStep>> GetTaskAndStepForExecuting(WorkFlowExecute execute)
         {
             WorkFlowTask currentTask = await workFlowTaskRepository.FindAsync(t => t.Id == execute.TaskId);
 
@@ -351,7 +351,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         }
 
         /// <summary>
-        /// 处理获取步骤处理人
+        /// 获取步骤处理人
         /// </summary>
         /// <param name="execute"></param>
         /// <returns></returns>
@@ -478,7 +478,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// </summary>
         /// <param name="step"></param>
         /// <returns></returns>
-        public async Task<List<WorkFlowUser>> GetCopyToUsers(WorkFlowStep step, WorkFlowExecute execute)
+        private async Task<List<WorkFlowUser>> GetCopyToUsers(WorkFlowStep step, WorkFlowExecute execute)
         {
             if (step.CopyToUsers != default)
             {
@@ -534,62 +534,60 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             //获取步骤处理人,在步骤中加入处理人
             await GetExecuteHandler(execute);
 
-            using (var transaction = new TransactionScope())
+            //处理策略判断，返回下一步是否需要等待
+            bool isNextStepTaskWating = await ExecuteSubmitHandleTactic(currentTask, currentStep, execute);
+
+            //如果存在下一步骤，如果不存在下一步，则盘算是否是最后一步
+            if (execute.Steps.Count > 0)
             {
-                //处理策略判断，返回下一步是否需要等待
-                bool isNextStepTaskWating = await ExecuteSubmitHandleTactic(currentTask, currentStep, execute);
-
-                //如果存在下一步骤，如果不存在下一步，则盘算是否是最后一步
-                if (execute.Steps.Count > 0)
+                if (isNextStepTaskWating)
                 {
-                    if (isNextStepTaskWating)
-                    {
-                        //如果需要等待，说明多人步骤中有人存在待处理任务，则为当前用户创建一个状态为等待中的后续任务，等条件满足后才修改状态，待办人员看不到。
-                        await CreateTemporaryTask(currentTask, execute);
-                    }
-                    else
-                    {
-                        //创建下一步任务，
-                        //如果存在会签任务，则需要判断会签，如果会签没有通过，则还需要继续等待
-                        //如果下一步任务创建成功，则之前创建的临时任务将执行激活
-                        var nextStepTasks = await CreateNextStepTask(currentTask, currentStep, execute);
-
-                        //下一步任务数大于 0，说明任务已经进行到下一步，则创建抄送任务
-                        if (nextStepTasks.Count > 0)
-                        {
-                            //发送消息
-                            SendMessage(instance.Title, $"您有一个新的审批需要处理，关于<b>{instance.Title}</b>.", nextStepTasks.Select(t => t.ReceiverId).Distinct().ToArray());
-
-                            await CreateDuplicateTask(currentTask, execute);
-                        }
-                        else
-                        {
-                            //下一步任务没有创建，说明还在等待会签中，则创建下一步的临时任务
-                            await CreateTemporaryTask(currentTask, execute);
-                        }
-                    }
+                    //如果需要等待，说明多人步骤中有人存在待处理任务，则为当前用户创建一个状态为等待中的后续任务，等条件满足后才修改状态，待办人员看不到。
+                    await CreateTemporaryTask(currentTask, execute);
                 }
                 else
                 {
-                    //如果是最后一步，则检查当前步骤是否全部完成，如果完成，将结束流程
-                    if (currentStep.IsEnd())
-                    {
-                        //如果结束步骤完成，则更新实例状态为已完成
-                        var isComplated = await IsStepPassed(currentStep, execute.InstanceId, execute.FlowId, execute.GroupId, currentTask.Sort);
+                    //创建下一步任务，
+                    //如果存在会签任务，则需要判断会签，如果会签没有通过，则还需要继续等待
+                    //如果下一步任务创建成功，则之前创建的临时任务将执行激活
+                    var nextStepTasks = await CreateNextStepTask(currentTask, currentStep, execute);
 
-                        if (isComplated)
-                        {
-                            //结束流程
-                            await CompleteWorkFlowInstance(currentTask);
-                        }
+                    //下一步任务数大于 0，说明任务已经进行到下一步，则创建抄送任务
+                    if (nextStepTasks.Count > 0)
+                    {
+                        //发送消息
+                        SendMessage(instance.Title, $"您有一个新的审批需要处理，关于<b>{instance.Title}</b>.", nextStepTasks.Select(t => t.ReceiverId).Distinct().ToArray());
+
+                        await CreateDuplicateTask(currentTask, execute);
+                    }
+                    else
+                    {
+                        //下一步任务没有创建，说明还在等待会签中，则创建下一步的临时任务
+                        await CreateTemporaryTask(currentTask, execute);
                     }
                 }
-
-                //发送信息
-                SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>处理了<b>{execute.Title}</b>的<b>{currentStep.StepName}</b>.", instance.CreaterId);
-
-                transaction.Complete();
             }
+            else
+            {
+                //如果是最后一步，则检查当前步骤是否全部完成，如果完成，将结束流程
+                if (currentStep.IsEnd())
+                {
+                    //如果结束步骤完成，则更新实例状态为已完成
+                    var isComplated = await IsStepPassed(currentStep, execute.InstanceId, execute.FlowId, execute.GroupId, currentTask.Sort);
+
+                    if (isComplated)
+                    {
+                        //结束流程
+                        await CompleteWorkFlowInstance(currentTask);
+                    }
+                }
+            }
+
+            // 提交之前所有数据库操作
+            await this.repositoryContext.CommitAsync();
+
+            //发送信息
+            SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>处理了<b>{execute.Title}</b>的<b>{currentStep.StepName}</b>.", instance.CreaterId);
         }
 
         /// <summary>
@@ -607,46 +605,46 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 throw new InvalidOperationException("当前步骤不能退回");
             }
 
-            using (var transaction = new TransactionScope())
+
+            //回退策略判断，返回下一步是否需要等待
+            bool isNextStepTaskWating = await ExecuteBackBackTactic(currentTask, currentStep, execute);
+
+            if (execute.Steps.Count > 0)
             {
-                //回退策略判断，返回下一步是否需要等待
-                bool isNextStepTaskWating = await ExecuteBackBackTactic(currentTask, currentStep, execute);
-
-                if (execute.Steps.Count > 0)
+                if (!isNextStepTaskWating)
                 {
-                    if (!isNextStepTaskWating)
-                    {
-                        //创建回退任务
-                        var backStepTasks = await CreateBackStepTask(currentTask, currentStep, execute);
+                    //创建回退任务
+                    var backStepTasks = await CreateBackStepTask(currentTask, currentStep, execute);
 
-                        if (backStepTasks.Count > 0)
-                        {
-                            //发送消息
-                            SendMessage(instance.Title, $"<b>{instance.Title}</b>的<b>{currentStep.StepName}</b>被退回，需要您重新处理.", backStepTasks.Select(t => t.ReceiverId).Distinct().ToArray());
-                        }
+                    if (backStepTasks.Count > 0)
+                    {
+                        //发送消息
+                        SendMessage(instance.Title, $"<b>{instance.Title}</b>的<b>{currentStep.StepName}</b>被退回，需要您重新处理.", backStepTasks.Select(t => t.ReceiverId).Distinct().ToArray());
                     }
                 }
-                else
-                {
-                    //如果是第一步，则检查当前步骤判断策略是退回，将结束流程
-                    if (currentStep.IsStart())
-                    {
-                        //如果结束步骤完成，则更新实例状态为已完成
-                        var isBacked = await IsStepBacked(currentStep, execute.InstanceId, execute.FlowId, execute.GroupId, currentTask.Sort);
-
-                        if (isBacked)
-                        {
-                            //结束流程,属于创建人自己退回，就关闭掉
-                            await CloseWorkFlowInstance(currentTask);
-                        }
-                    }
-                }
-
-                //发送信息
-                SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>退回了<b>{execute.Title}</b>的<b>{currentStep.StepName}</b>.", instance.CreaterId);
-
-                transaction.Complete();
             }
+            else
+            {
+                //如果是第一步，则检查当前步骤判断策略是退回，将结束流程
+                if (currentStep.IsStart())
+                {
+                    //如果结束步骤完成，则更新实例状态为已完成
+                    var isBacked = await IsStepBacked(currentStep, execute.InstanceId, execute.FlowId, execute.GroupId, currentTask.Sort);
+
+                    if (isBacked)
+                    {
+                        //结束流程,属于创建人自己退回，就关闭掉
+                        await CloseWorkFlowInstance(currentTask);
+                    }
+                }
+            }
+
+            // 提交之前所有数据库操作
+            await this.repositoryContext.CommitAsync();
+
+            //发送信息
+            SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>退回了<b>{execute.Title}</b>的<b>{currentStep.StepName}</b>.", instance.CreaterId);
+
         }
 
         /// <summary>
@@ -672,61 +670,61 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             execute.Steps.First().Value.Clear();
             execute.Steps.First().Value.AddRange(handlers);
 
-            using (var transaction = new TransactionScope())
+
+            var redirectTasks = new List<WorkFlowTask>();
+
+            foreach (var user in execute.Steps.First().Value)
             {
-                var redirectTasks = new List<WorkFlowTask>();
-
-                foreach (var user in execute.Steps.First().Value)
+                WorkFlowTask task = new WorkFlowTask
                 {
-                    WorkFlowTask task = new WorkFlowTask
-                    {
-                        PlannedTime = currentTask.PlannedTime,
-                        FlowId = currentTask.FlowId,
-                        FlowName = currentTask.FlowName,
-                        GroupId = currentTask.GroupId,
-                        InstanceId = currentTask.InstanceId,
-                        PrevTaskId = currentTask.PrevTaskId,
-                        PrevStepId = currentTask.PrevStepId,
-                        ReceiveTime = currentTask.ReceiveTime,
-                        SenderId = currentTask.SenderId,
-                        SenderName = currentTask.SenderName,
-                        SendTime = currentTask.SendTime,
-                        StepId = currentTask.StepId,
-                        StepName = currentTask.StepName,
-                        Sort = currentTask.Sort,
-                        Title = currentTask.Title,
-                        CompanyId = currentTask.CompanyId,
+                    PlannedTime = currentTask.PlannedTime,
+                    FlowId = currentTask.FlowId,
+                    FlowName = currentTask.FlowName,
+                    GroupId = currentTask.GroupId,
+                    InstanceId = currentTask.InstanceId,
+                    PrevTaskId = currentTask.PrevTaskId,
+                    PrevStepId = currentTask.PrevStepId,
+                    ReceiveTime = currentTask.ReceiveTime,
+                    SenderId = currentTask.SenderId,
+                    SenderName = currentTask.SenderName,
+                    SendTime = currentTask.SendTime,
+                    StepId = currentTask.StepId,
+                    StepName = currentTask.StepName,
+                    Sort = currentTask.Sort,
+                    Title = currentTask.Title,
+                    CompanyId = currentTask.CompanyId,
 
-                        ReceiverId = user.Id,
-                        ReceiverName = user.Name,
-                        State = (int)WorkFlowTaskState.Pending,
-                        Type = (int)WorkFlowTaskKinds.Redirect,
-                        Note = $"该任务由{currentTask.ReceiverName}转交"
-                    };
+                    ReceiverId = user.Id,
+                    ReceiverName = user.Name,
+                    State = (int)WorkFlowTaskState.Pending,
+                    Type = (int)WorkFlowTaskKinds.Redirect,
+                    Note = $"该任务由{currentTask.ReceiverName}转交"
+                };
 
-                    if (!await IsHasNotExecuteTask(currentTask.FlowId, execute.InstanceId, currentTask.StepId, currentTask.GroupId, user.Id))
-                    {
-                        await workFlowTaskRepository.AddAsync(task);
-                    }
-
-                    redirectTasks.Add(task);
+                if (!await IsHasNotExecuteTask(currentTask.FlowId, execute.InstanceId, currentTask.StepId, currentTask.GroupId, user.Id))
+                {
+                    await workFlowTaskRepository.AddAsync(task);
                 }
 
-                await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Handled, "已转交他人处理");
-
-                if (redirectTasks.Count > 0)
-                {
-                    //发送消息
-                    SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>将<b>{currentStep.StepName}</b>转交给您审批.", redirectTasks.Select(t => t.ReceiverId).Distinct().ToArray());
-
-                    string receiveNames = string.Join(",", redirectTasks.Select(t => t.ReceiverName).Distinct().ToArray());
-
-                    //发送信息
-                    SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>将<b>{currentStep.StepName}</b>转交给<b>{receiveNames}</b>处理.", instance.CreaterId);
-                }
-
-                transaction.Complete();
+                redirectTasks.Add(task);
             }
+
+            await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Handled, "已转交他人处理");
+
+            // 提交之前所有数据库操作
+            await this.repositoryContext.CommitAsync();
+
+            if (redirectTasks.Count > 0)
+            {
+                //发送消息
+                SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>将<b>{currentStep.StepName}</b>转交给您审批.", redirectTasks.Select(t => t.ReceiverId).Distinct().ToArray());
+
+                string receiveNames = string.Join(",", redirectTasks.Select(t => t.ReceiverName).Distinct().ToArray());
+
+                //发送信息
+                SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>将<b>{currentStep.StepName}</b>转交给<b>{receiveNames}</b>处理.", instance.CreaterId);
+            }
+
         }
 
         #endregion
@@ -793,7 +791,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 case WorkFlowControlKinds.MultiSelect:
 
                     //处理步骤如果不是最后一步的提交任务，则检查处理步骤的下一步是否存在
-                    if (!(execute.ExecuteType == WorkFlowExecuteKinds.Submit && execute.StepId == WorkFlowAnalysis.EndStepId) && (execute.Steps == null || execute.Steps.Count == 0))
+                    if (!(execute.ExecuteType == WorkFlowExecuteKinds.Submit && execute.StepId == WorkFlowConstant.EndStepId) && (execute.Steps == null || execute.Steps.Count == 0))
                     {
                         throw new InvalidOperationException("请选择步骤后提交");
                     }
@@ -1043,7 +1041,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                                                                                            && t.InstanceId == nextStepTasks[0].InstanceId
                                                                                            && stepArray.Contains(t.StepId)
                                                                                            && t.GroupId == nextStepTasks[0].GroupId
-                                                                                           && t.Is(WorkFlowTaskState.Waiting)
+                                                                                           && t.State == (int)WorkFlowTaskState.Waiting
                                                                                            && t.IsDisabled == false);
 
                 if (waitingTasks.Count() > 0)
@@ -1539,7 +1537,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 查询一个用户在一个步骤是否有未处理任务
         /// </summary>
-        /// <param name="flowId"></param>
         /// <returns></returns>
         private async Task<bool> IsHasNotExecuteTask(Guid flowId, Guid instanceId, Guid stepId, Guid groupId, Guid userId)
         {
@@ -1556,9 +1553,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 如果当前步骤是子流程步骤，并且策略是【子流程完成后才能提交】,则要判断子流程是否已完成
         /// </summary>
-        /// <param name="currentStep"></param>
-        /// <param name="currentTask"></param>
-        /// <param name="execute"></param>
         /// <returns></returns>
         private async Task<bool> IsSubFlowStepPassed(WorkFlowTask currentTask, WorkFlowStep currentStep, WorkFlowExecute execute)
         {
@@ -1606,9 +1600,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 会签步骤是否可以完成
         /// </summary>
-        /// <param name="countersignatureStep"></param>
-        /// <param name="currentTask"></param>
-        /// <param name="execute"></param>
         /// <returns></returns>
         private async Task<bool> IsCountersignatureStepPassed(WorkFlowTask currentTask, WorkFlowStep countersignatureStep, WorkFlowExecute execute)
         {
@@ -1660,11 +1651,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 判断一个步骤是否已完成
         /// </summary>
-        /// <param name="step"></param>
-        /// <param name="flowId"></param>
-        /// <param name="instanceId"></param>
-        /// <param name="groupId"></param>
-        /// <param name="sort"></param>
         /// <returns></returns>
         private async Task<bool> IsStepPassed(WorkFlowStep step, Guid instanceId, Guid flowId, Guid groupId, int sort)
         {
@@ -1697,9 +1683,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 检查会签步骤是否可以退回
         /// </summary>
-        /// <param name="currentTask"></param>
-        /// <param name="countersignatureStep"></param>
-        /// <param name="execute"></param>
         /// <returns></returns>
         private async Task<bool> IsCountersignatureStepBacked(WorkFlowTask currentTask, WorkFlowStep countersignatureStep, WorkFlowExecute execute)
         {
@@ -1750,8 +1733,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// <summary>
         /// 判断一个步骤是否退回
         /// </summary>
-        /// <param name="step"></param>
-        /// <param name="groupId"></param>
         /// <returns></returns>
         private async Task<bool> IsStepBacked(WorkFlowStep step, Guid instanceId, Guid flowId, Guid groupId, int sort)
         {
@@ -1784,107 +1765,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 isBack = tasks.Where(t => t.Is(WorkFlowTaskState.Returned, WorkFlowTaskState.ReturnedByOthers)).Count() > 0;
             }
             return isBack;
-        }
-
-        #endregion
-
-        #region 获取任务
-
-        /// <summary>
-        /// 获取当前步骤分发的所有任务
-        /// </summary>
-        /// <param name="step"></param>
-        /// <param name="flowId"></param>
-        /// <param name="instanceId"></param>
-        /// <param name="groupId"></param>
-        /// <param name="sort"></param>
-        /// <returns></returns>
-        private async Task<List<WorkFlowTask>> GetDistributionTask(Guid stepId, Guid flowId, Guid instanceId, Guid groupId, int sort)
-        {
-            var taskList = (await workFlowTaskRepository.FindAllAsync(t => t.FlowId == flowId
-                            && t.InstanceId == instanceId
-                            && t.StepId == stepId
-                            && t.GroupId == groupId
-                            && t.Sort == sort
-                            && t.IsNot(WorkFlowTaskKinds.Copy)
-                            && t.IsDisabled == false)).ToList();
-            return taskList;
-        }
-
-        /// <summary>
-        /// 获取当前步骤最新分发的步骤
-        /// </summary>
-        /// <param name="stepId"></param>
-        /// <param name="flowId"></param>
-        /// <param name="instanceId"></param>
-        /// <param name="groupId"></param>
-        /// <returns></returns>
-        private async Task<List<WorkFlowTask>> GetNewestDistributionTask(Guid stepId, Guid flowId, Guid instanceId, Guid groupId)
-        {
-            var taskList = (await workFlowTaskRepository.FindAllAsync(t => t.FlowId == flowId
-               && t.InstanceId == instanceId
-               && t.StepId == stepId
-               && t.GroupId == groupId
-               && t.IsNot(WorkFlowTaskKinds.Copy)
-               && t.IsDisabled == false)).ToList();
-
-            var maxSort = taskList.OrderByDescending(t => t.Sort).Select(t => t.Sort).Max();
-
-            return taskList.FindAll(t => t.Sort == maxSort);
-        }
-
-        /// <summary>
-        /// 获取当前任务的所有同级步骤没有处理过的任务
-        /// </summary>
-        /// <param name="currentTask"></param>
-        /// <returns></returns>
-        private async Task<List<WorkFlowTask>> GetSameLevelStepNotExecuteTask(WorkFlowTask currentTask, WorkFlowExecute execute)
-        {
-            //获取下一步，反向推倒出
-            var nextSteps = execute.WorkFlowInstalled.GetNextSteps(currentTask.StepId);
-            var stepArray = new List<Guid>();
-            foreach (var nextStep in nextSteps)
-            {
-                var nextStepPrevSteps = execute.WorkFlowInstalled.GetPrevSteps(nextSteps[0].StepId);
-                stepArray.AddRange(nextStepPrevSteps.Select(t => t.StepId).ToList());
-            }
-
-            var list = await workFlowTaskRepository.FindAllAsync(t => stepArray.Contains(t.StepId)
-                && t.InstanceId == currentTask.InstanceId
-                && t.GroupId == currentTask.GroupId
-                && t.FlowId == currentTask.FlowId
-                && t.IsNotExecute()
-                && t.IsNot(WorkFlowTaskKinds.Copy)
-                && t.IsDisabled == false);
-
-            return list.ToList();
-        }
-
-        /// <summary>
-        /// 获取发起子流程的主流程任务
-        /// </summary>
-        /// <param name="subflowTask"></param>
-        /// <returns></returns>
-        private async Task<WorkFlowTask> GetParentTask(WorkFlowTask subflowTask)
-        {
-            return await workFlowTaskRepository.FindAsync(t => t.GroupId == subflowTask.GroupId
-            && t.SubFlowInstanceId == subflowTask.InstanceId
-            && t.IsNot(WorkFlowTaskKinds.Copy)
-            && t.IsDisabled == false);
-        }
-
-        /// <summary>
-        /// 获取一个实例所有的任务
-        /// </summary>
-        /// <returns></returns>
-        private async Task<List<WorkFlowTask>> GetAllTask(WorkFlowInstance instance)
-        {
-            var list = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instance.Id
-                           && t.FlowId == instance.FlowId
-                           && t.IsNot(WorkFlowTaskKinds.Copy)
-                           && t.IsDisabled == false);
-
-            return list.ToList();
         }
 
         #endregion
@@ -2003,7 +1883,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 {
                     throw new InvalidOperationException("子流程数据丢失");
                 }
-                var parentWorkFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(subflowInstanceEntity.FlowRuntimeJson);
+                var parentWorkFlowInstalled = WorkFlowAnalyzing.WorkFlowInstalledDeserialize(subflowInstanceEntity.FlowRuntimeJson);
                 if (parentWorkFlowInstalled != null)
                 {
                     var parentStep = parentWorkFlowInstalled.GetStep(parentTask.StepId);
@@ -2258,30 +2138,141 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
         #endregion
 
+        #region 获取任务
+
+        /// <summary>
+        /// 获取当前步骤分发的所有任务
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<WorkFlowTask>> GetDistributionTask(Guid stepId, Guid flowId, Guid instanceId, Guid groupId, int sort)
+        {
+            var taskList = (await workFlowTaskRepository.FindAllAsync(t
+                => t.FlowId == flowId
+                && t.InstanceId == instanceId
+                && t.StepId == stepId
+                && t.GroupId == groupId
+                && t.Sort == sort
+                && t.State != (int)WorkFlowTaskKinds.Copy
+                && t.IsDisabled == false)).ToList();
+
+            return taskList;
+        }
+
+        /// <summary>
+        /// 获取当前步骤最新分发的步骤
+        /// </summary>
+        /// <param name="stepId"></param>
+        /// <param name="flowId"></param>
+        /// <param name="instanceId"></param>
+        /// <param name="groupId"></param>
+        /// <returns></returns>
+        private async Task<List<WorkFlowTask>> GetNewestDistributionTask(Guid stepId, Guid flowId, Guid instanceId, Guid groupId)
+        {
+            var taskList = (await workFlowTaskRepository.FindAllAsync(t
+                => t.FlowId == flowId
+                && t.InstanceId == instanceId
+                && t.StepId == stepId
+                && t.GroupId == groupId
+                && t.State != (int)WorkFlowTaskKinds.Copy
+                && t.IsDisabled == false)).ToList();
+
+            var maxSort = taskList.OrderByDescending(t => t.Sort).Select(t => t.Sort).Max();
+
+            return taskList.FindAll(t => t.Sort == maxSort);
+        }
+
+        /// <summary>
+        /// 获取当前任务的所有同级步骤没有处理过的任务
+        /// </summary>
+        /// <param name="currentTask"></param>
+        /// <returns></returns>
+        private async Task<List<WorkFlowTask>> GetSameLevelStepNotExecuteTask(WorkFlowTask currentTask, WorkFlowExecute execute)
+        {
+            //获取下一步，反向推倒出
+            var nextSteps = execute.WorkFlowInstalled.GetNextSteps(currentTask.StepId);
+
+            var stepArray = new List<Guid>();
+
+            foreach (var nextStep in nextSteps)
+            {
+                var nextStepPrevSteps = execute.WorkFlowInstalled.GetPrevSteps(nextSteps[0].StepId);
+                stepArray.AddRange(nextStepPrevSteps.Select(t => t.StepId).ToList());
+            }
+
+            var list = await workFlowTaskRepository.FindAllAsync(t
+                => stepArray.Contains(t.StepId)
+                && t.InstanceId == currentTask.InstanceId
+                && t.GroupId == currentTask.GroupId
+                && t.FlowId == currentTask.FlowId
+                && t.State != (int)WorkFlowTaskState.Handled
+                && t.State != (int)WorkFlowTaskState.Returned
+                && t.State != (int)WorkFlowTaskState.HandledByOthers
+                && t.State != (int)WorkFlowTaskState.ReturnedByOthers
+                && t.State != (int)WorkFlowTaskKinds.Copy
+                && t.IsDisabled == false);
+
+            return list.ToList();
+        }
+
+        /// <summary>
+        /// 获取发起子流程的主流程任务
+        /// </summary>
+        /// <param name="subflowTask"></param>
+        /// <returns></returns>
+        private async Task<WorkFlowTask> GetParentTask(WorkFlowTask subflowTask)
+        {
+            var parentTask = await workFlowTaskRepository.FindAsync(t
+                => t.GroupId == subflowTask.GroupId
+                && t.SubFlowInstanceId == subflowTask.InstanceId
+                && t.State != (int)WorkFlowTaskKinds.Copy
+                && t.IsDisabled == false);
+
+            return parentTask;
+        }
+
+        /// <summary>
+        /// 获取一个实例所有的任务
+        /// </summary>
+        /// <returns></returns>
+        private async Task<List<WorkFlowTask>> GetAllTask(WorkFlowInstance instance)
+        {
+            var list = await workFlowTaskRepository.FindAllAsync(t
+                => t.InstanceId == instance.Id
+                && t.FlowId == instance.FlowId
+                && t.State != (int)WorkFlowTaskKinds.Copy
+                && t.IsDisabled == false);
+
+            return list.ToList();
+        }
+
+        #endregion
+
         public async Task<List<WorkFlowTask>> GetWorkFlowCommentsAsync(WorkFlowInstance instance)
         {
-            var taskList = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instance.Id
-             && t.FlowId == instance.FlowId
-             && t.IsNot(WorkFlowTaskState.Waiting)
-             && t.CompanyId == t.CompanyId
-             && !string.IsNullOrEmpty(t.Comment)
-             && t.IsDisabled == false,
-            query => query.Desc(a => a.ExecutedTime));
+            var taskList = await workFlowTaskRepository.FindAllAsync(t 
+                => t.InstanceId == instance.Id
+                && t.FlowId == instance.FlowId
+                && t.State != (int)WorkFlowTaskState.Waiting
+                && t.CompanyId == instance.CompanyId
+                && t.IsDisabled == false 
+                && !string.IsNullOrEmpty(t.Comment),
+            query => query.Desc(o => o.ExecutedTime));
             return taskList.ToList();
         }
 
         public async Task<List<WorkFlowTask>> GetWorkFlowProcessAsync(WorkFlowInstance instance)
         {
-            var taskList = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instance.Id
+            var taskList = await workFlowTaskRepository.FindAllAsync(t 
+                => t.InstanceId == instance.Id
                 && t.FlowId == instance.FlowId
-                && t.IsNot(WorkFlowTaskState.Waiting)
+                && t.State != (int)WorkFlowTaskState.Waiting
                 && t.CompanyId == t.CompanyId
                 && t.IsDisabled == false,
             query => query.Desc(a => a.ExecutedTime));
             return taskList.ToList();
         }
 
-        public async Task<Dictionary<int, List<WorkFlowStep>>> GetWorkFlowProcessStatusAsync(WorkFlowInstance instance)
+        public async Task<Dictionary<int, List<WorkFlowStep>>> GetWorkFlowProcessStatesAsync(WorkFlowInstance instance)
         {
             Dictionary<int, List<WorkFlowStep>> result = new Dictionary<int, List<WorkFlowStep>>
             {
@@ -2292,13 +2283,17 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             };
 
             var workFlowAllTask = await GetAllTask(instance);
+
             if (workFlowAllTask.Count > 0)
             {
                 var groupId = workFlowAllTask.Select(t => t.GroupId).First();
-                var workFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(instance.FlowRuntimeJson);
+
+                var workFlowInstalled = WorkFlowAnalyzing.WorkFlowInstalledDeserialize(instance.FlowRuntimeJson);
+
                 foreach (var step in workFlowInstalled.Steps)
                 {
                     var stepTasks = workFlowAllTask.Where(t => t.StepId == step.StepId);
+
                     if (stepTasks.Count() > 0)
                     {
                         int sort = workFlowAllTask.Where(t => t.StepId == step.StepId).Max(t => t.Sort);

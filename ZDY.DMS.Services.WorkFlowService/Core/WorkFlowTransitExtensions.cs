@@ -7,7 +7,7 @@ using ZDY.DMS.Services.WorkFlowService.DataObjects;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
-    public static class WorkFlowTransitExtension
+    public static class WorkFlowTransitExtensions
     {
         public static bool ConditionIs(this WrokFlowTransit transit, params WorkFlowTransitConditionKinds[] types)
         {

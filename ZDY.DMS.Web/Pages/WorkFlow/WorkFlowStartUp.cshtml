@@ -50,8 +50,8 @@
 
     <script type="text/javascript">
         var formData = JSON.stringify( @Html.Raw(Model.Form.DesignJson) )
-        var flowId = @Model.Flow.Id
-        var title = '@Html.Raw(ViewData["Title"] == null ? "" : ViewData["Title"])'
+        var flowId = '@Model.Flow.Id'
+        var title = '@Html.Raw(Model.Title)'
 
         require([
             "jquery",
@@ -107,18 +107,18 @@
                                 }
 
                                 var formJson = formData
-                                var dataJson = JSON.stringify(json)
+                                var formDataJson = JSON.stringify(json)
                                 var title = flowInstance.Title()
 
-                                zdy.ajaxPost("WorkFlowRun/StartUp", {
+                                zdy.ajaxPost("WorkFlowWorking/StartUp", {
                                     FormJson: formJson,
-                                    DataJson: dataJson,
+                                    FormDataJson: formDataJson,
                                     Title: title,
                                     FlowID: flowId
                                 }).done(function (rst) {
 
                                     if (rst.IsSuccess) {
-                                        zdy.replacePage("/Admin/WorkflowManage/WorkFlowPendingTasks")
+                                        zdy.replacePage("/WorkFlow/WorkFlowPendingTasks")
                                         zdy.toastr.success("发起成功");
                                     }
 

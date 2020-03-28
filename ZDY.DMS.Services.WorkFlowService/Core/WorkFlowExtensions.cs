@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using ZDY.DMS;
 using ZDY.DMS.Extensions.DependencyInjection.Autofac;
 using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.ServiceContracts;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
-    public static class WorkFlowExtension
+    public static class WorkFlowExtensions
     {
         public static async Task Install(this WorkFlow workFlow)
         {
@@ -34,11 +30,12 @@ namespace ZDY.DMS.Services.WorkFlowService
                     MenuName = workFlow.Name,
                     Order = 0,
                     Type = "P",
-                    Src = $"WorkflowManage/WorkflowStartUp?id={workFlow.Id}",
+                    Src = $"WorkFlow/WorkFlowStartUp?id={workFlow.Id}",
                     IsDisabled = false
                 };
 
                 await pageRepository.AddAsync(flowPage);
+                await pageRepository.Context.CommitAsync();
             }
         }
 
@@ -46,7 +43,13 @@ namespace ZDY.DMS.Services.WorkFlowService
         {
             var pageRepository = ServiceLocator.GetService<IRepositoryContext>().GetRepository<Guid, Page>();
 
-            await pageRepository.RemoveAsync(t => t.PageCode == workFlow.Id.ToString());
+            var flowPage = await pageRepository.FindAsync(t => t.PageCode == workFlow.Id.ToString());
+
+            if (flowPage != null)
+            {
+                await pageRepository.RemoveAsync(flowPage);
+                await pageRepository.Context.CommitAsync();
+            }
         }
     }
 }

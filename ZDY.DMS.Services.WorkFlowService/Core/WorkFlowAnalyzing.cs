@@ -11,25 +11,9 @@ using ZDY.DMS.Extensions.DependencyInjection.Autofac;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
-    public static class WorkFlowAnalysis
+    public static class WorkFlowAnalyzing
     {
-        public static Guid StartStepId
-        {
-            get
-            {
-                return Guid.Parse("00000000-0000-0000-0000-000000000001");
-            }
-        }
-
-        public static Guid EndStepId
-        {
-            get
-            {
-                return Guid.Parse("00000000-0000-0000-0000-000000000002");
-            }
-        }
-
-        public static WorkFlowInstalled AnalyticWorkFlowInstalledData(string flowJson)
+        public static WorkFlowInstalled WorkFlowInstalledDeserialize(string flowJson)
         {
             try
             {
@@ -56,13 +40,13 @@ namespace ZDY.DMS.Services.WorkFlowService
             }
 
             //验证首尾存在
-            var start = workFlowInstalled.Steps.Find(t => t.StepId == StartStepId);
+            var start = workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowConstant.StartStepId);
             if (start == null)
             {
                 throw new AnalyzeMistakesException();
             }
 
-            var end = workFlowInstalled.Steps.Find(t => t.StepId == EndStepId);
+            var end = workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowConstant.EndStepId);
             if (end == null)
             {
                 throw new AnalyzeMistakesException();
@@ -79,20 +63,20 @@ namespace ZDY.DMS.Services.WorkFlowService
             var transitPointArray = fromTransitPointArray.Concat(toTransitPointArray).ToArray();
 
             //验证首尾已连接
-            if (!transitPointArray.Contains(StartStepId))
+            if (!transitPointArray.Contains(WorkFlowConstant.StartStepId))
             {
-                messages.Add(new Tuple<Guid, string, string, string>(StartStepId, "开始", "步骤", "开始步骤未连接"));
+                messages.Add(new Tuple<Guid, string, string, string>(WorkFlowConstant.StartStepId, "开始", "步骤", "开始步骤未连接"));
             }
 
-            if (!transitPointArray.Contains(EndStepId))
+            if (!transitPointArray.Contains(WorkFlowConstant.EndStepId))
             {
-                messages.Add(new Tuple<Guid, string, string, string>(EndStepId, "结束", "步骤", "结束步骤未连接"));
+                messages.Add(new Tuple<Guid, string, string, string>(WorkFlowConstant.EndStepId, "结束", "步骤", "结束步骤未连接"));
             }
 
             //验证结束节点不允许有下一出口
-            if (fromTransitPointArray.Contains(EndStepId))
+            if (fromTransitPointArray.Contains(WorkFlowConstant.EndStepId))
             {
-                messages.Add(new Tuple<Guid, string, string, string>(EndStepId, "结束", "步骤", "结束步骤不能再有下一出口"));
+                messages.Add(new Tuple<Guid, string, string, string>(WorkFlowConstant.EndStepId, "结束", "步骤", "结束步骤不能再有下一出口"));
             }
 
 
@@ -152,7 +136,7 @@ namespace ZDY.DMS.Services.WorkFlowService
                     messages.Add(new Tuple<Guid, string, string, string>(step.StepId, step.StepName, "步骤", "步骤入库没有被连接到"));
                 }
 
-                if (step.StepId == StartStepId || step.StepId == EndStepId)
+                if (step.StepId == WorkFlowConstant.StartStepId || step.StepId == WorkFlowConstant.EndStepId)
                 {
                     continue;
                 }

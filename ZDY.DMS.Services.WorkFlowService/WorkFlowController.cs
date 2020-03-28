@@ -13,7 +13,7 @@ using ZDY.DMS.Repositories;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
-    public class WorkFlowController : ApiDataServiceController<Guid, WorkFlow>
+    public class WorkFlowController : ApiDataServiceController<Guid, Models.WorkFlow>
     {
         public WorkFlowController(IRepositoryContext repositoryContext)
             : base(repositoryContext, new GuidKeyGenerator())
@@ -21,7 +21,7 @@ namespace ZDY.DMS.Services.WorkFlowService
 
         }
 
-        protected override void BeforeAdd(WorkFlow entity)
+        protected override void BeforeAdd(Models.WorkFlow entity)
         {
             if (this.Repository.Exists(t => t.CompanyId == this.UserIdentity.CompanyId && t.Name == entity.Name))
             {
@@ -33,7 +33,7 @@ namespace ZDY.DMS.Services.WorkFlowService
             entity.State = (int)WorkFlowState.Designing;
         }
 
-        protected override void BeforeUpdate(WorkFlow original, WorkFlow entity)
+        protected override void BeforeUpdate(Models.WorkFlow original, Models.WorkFlow entity)
         {
             if (original.State != (int)WorkFlowState.Designing)
             {
@@ -50,7 +50,7 @@ namespace ZDY.DMS.Services.WorkFlowService
             original.LastModifyTime = DateTime.Now;
         }
 
-        protected override void BeforeDelete(WorkFlow original)
+        protected override void BeforeDelete(Models.WorkFlow original)
         {
             if (original.State != (int)WorkFlowState.Designing)
             {
@@ -79,10 +79,10 @@ namespace ZDY.DMS.Services.WorkFlowService
         }
 
         [HttpPost]
-        public async Task<WorkFlow> SaveAs(Guid id, string name, string designJson)
+        public async Task<Models.WorkFlow> SaveAs(Guid id, string name, string designJson)
         {
             var original = await this.FindByKey(id);
-            var entity = JsonConvert.DeserializeObject<WorkFlow>(JsonConvert.SerializeObject(original));
+            var entity = JsonConvert.DeserializeObject<Models.WorkFlow>(JsonConvert.SerializeObject(original));
 
             entity.Id = this.KeyGenerator.Generate(entity);
             entity.Name = name;
@@ -93,7 +93,7 @@ namespace ZDY.DMS.Services.WorkFlowService
             await this.Repository.AddAsync(entity);
             await this.RepositoryContext.CommitAsync();
 
-            return new WorkFlow { Id = entity.Id };
+            return new Models.WorkFlow { Id = entity.Id };
         }
 
         [HttpPost]
@@ -106,9 +106,9 @@ namespace ZDY.DMS.Services.WorkFlowService
                 throw new InvalidOperationException("只有设计中的流程才可以安装！");
             }
 
-            var workFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(runtimeJson);
+            var workFlowInstalled = WorkFlowAnalyzing.WorkFlowInstalledDeserialize(runtimeJson);
 
-            var messages = WorkFlowAnalysis.CheckFlow(workFlowInstalled);
+            var messages = WorkFlowAnalyzing.CheckFlow(workFlowInstalled);
 
             if (messages.Count() > 0)
             {

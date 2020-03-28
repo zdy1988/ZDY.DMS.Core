@@ -17,6 +17,6 @@ namespace ZDY.DMS.Services.WorkFlowService.ServiceContracts
 
         Task<List<WorkFlowTask>> GetWorkFlowCommentsAsync(WorkFlowInstance instance);
 
-        Task<Dictionary<int, List<WorkFlowStep>>> GetWorkFlowProcessStatusAsync(WorkFlowInstance instance);
+        Task<Dictionary<int, List<WorkFlowStep>>> GetWorkFlowProcessStatesAsync(WorkFlowInstance instance);
     }
 }

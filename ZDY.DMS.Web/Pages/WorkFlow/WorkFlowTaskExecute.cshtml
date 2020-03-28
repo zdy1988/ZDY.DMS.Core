@@ -95,7 +95,7 @@
 
         </div>
 
-        @if (Model.CurrentStep.IsShowComment && Model.Opinions.Count > 0)
+        @if (Model.CurrentStep.IsShowComment && Model.HasCommentTasks.Count > 0)
         {
 
             <div class="row" data-model="flow-instance">
@@ -106,7 +106,7 @@
                             <div class="col-md-12">
                                 <div class="todo-tasklist scroller" style="height: 265px;">
 
-                                    @foreach (var opinion in Model.Opinions)
+                                    @foreach (var opinion in Model.HasCommentTasks)
                                     {
 
                                         <div class="todo-tasklist-item todo-tasklist-item-border-green">
@@ -147,9 +147,9 @@
                                         var inputType = @Model.CurrentStep.IsControlBy(WorkFlowControlKinds.SingleSelect) ? "radio" : "checkbox";
                                     }
                                     <h4 class="list-group-item-heading no-margin text-success">
-                                        <input type="@inputType" name="nextStep" style="margin-right: 5px;" data-bind="checked: IsChecked, enable: IsAllowRunSelect == true" />
+                                        <input type="@inputType" name="nextStep" style="margin-right: 5px;" data-bind="checked: IsChecked, enable: IsAllowRuntimeToSelect == true" />
                                         <!-- ko text:StepName --><!-- /ko -->
-                                        <badge data-bind="if: IsAllowRunSelect == false" theme="Danger" style="float: right; margin-top: 1px;">不能选择</badge>
+                                        <badge data-bind="if: IsAllowRuntimeToSelect == false" theme="Danger" style="float: right; margin-top: 1px;">不能选择</badge>
                                     </h4>
                                     <div data-bind="if:HandlerType==0">
                                         <select-box options="@Model.UserOptions" name="选择步骤处理者" is-use-place-holder="false" is-multiple="true" field="Handlers" style="margin-bottom: 0px; margin-top: 10px;"></select-box>
@@ -414,11 +414,11 @@
 
                         var execute = flowInstance.GetExecuteModel(steps)
 
-                        zdy.ajaxPost("WorkFlowRun/ExcuteSubmit", { execute: execute }).done(function (rst) {
+                        zdy.ajaxPost("WorkFlowWorking/ExcuteSubmit", { execute: execute }).done(function (rst) {
 
                             if (rst.IsSuccess) {
                                 zdy.toastr.success("操作成功");
-                                zdy.replacePage("/Admin/WorkflowManage/WorkFlowTaskManager")
+                                zdy.replacePage("/WorkFlow/WorkFlowTaskManager")
                             }
 
                         })
@@ -434,11 +434,11 @@
                         zdy.confirm("确认退回此次操作？").done(function () {
                             var execute = flowInstance.GetExecuteModel()
 
-                            zdy.ajaxPost("WorkFlowRun/ExcuteBack", { execute: execute }).done(function (rst) {
+                            zdy.ajaxPost("WorkFlowWorking/ExcuteBack", { execute: execute }).done(function (rst) {
 
                                 if (rst.IsSuccess) {
                                     zdy.toastr.success("操作成功");
-                                    zdy.replacePage("/Admin/WorkflowManage/WorkFlowTaskManager")
+                                    zdy.replacePage("/WorkFlow/WorkFlowTaskManager")
                                 }
 
                             })
@@ -462,11 +462,11 @@
 
                             var execute = flowInstance.GetExecuteModel(steps)
 
-                            zdy.ajaxPost("WorkFlowRun/ExcuteRedirect", { execute: execute }).done(function (rst) {
+                            zdy.ajaxPost("WorkFlowWorking/ExcuteRedirect", { execute: execute }).done(function (rst) {
 
                                 if (rst.IsSuccess) {
                                     zdy.toastr.success("操作成功");
-                                    zdy.replacePage("/Admin/WorkflowManage/WorkFlowTaskManager")
+                                    zdy.replacePage("/WorkFlow/WorkFlowTaskManager")
                                 }
 
                             })

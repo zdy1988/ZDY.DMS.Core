@@ -3,7 +3,6 @@
 @inject ZDY.DMS.ServiceContracts.IDictionaryService DictionaryService
 @inject SelectOptionsFactory SelectOptionsFactory
 @{
-    ViewData["Title"] = "LogManager";
     var Dictionary = DictionaryService.GetDictionary("LogKinds");
     var LogKinds = SelectOptionsFactory.GetSelectOptionsByDictionary("LogKinds");
 }

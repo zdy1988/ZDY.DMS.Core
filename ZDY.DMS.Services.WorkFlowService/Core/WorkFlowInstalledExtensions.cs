@@ -5,7 +5,7 @@ using ZDY.DMS.Services.WorkFlowService.DataObjects;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
-    public static class WorkFlowInstalledExtension
+    public static class WorkFlowInstalledExtensions
     {
         public static WorkFlowStep GetStep(this WorkFlowInstalled workFlowInstalled, Guid stepId)
         {
@@ -18,8 +18,8 @@ namespace ZDY.DMS.Services.WorkFlowService
             var transits = workFlowInstalled.Transits.FindAll(p => p.ToStepId == stepId);
             if (transits.Count() > 0)
             {
-                var fromStepIDArray = transits.Select(t => t.FromStepId).ToArray();
-                stepList = workFlowInstalled.Steps.Where(p => fromStepIDArray.Contains(p.StepId)).ToList();
+                var fromStepIdArray = transits.Select(t => t.FromStepId).ToArray();
+                stepList = workFlowInstalled.Steps.Where(p => fromStepIdArray.Contains(p.StepId)).ToList();
             }
             return stepList;
         }
@@ -30,20 +30,20 @@ namespace ZDY.DMS.Services.WorkFlowService
             var transits = workFlowInstalled.Transits.Where(p => p.FromStepId == stepId);
             if (transits.Count() > 0)
             {
-                var toStepIDArray = transits.Select(t => t.ToStepId).ToArray();
-                stepList = workFlowInstalled.Steps.Where(p => toStepIDArray.Contains(p.StepId)).ToList();
+                var toStepIdArray = transits.Select(t => t.ToStepId).ToArray();
+                stepList = workFlowInstalled.Steps.Where(p => toStepIdArray.Contains(p.StepId)).ToList();
             }
             return stepList;
         }
 
         public static WorkFlowStep GetFirstStep(this WorkFlowInstalled workFlowInstalled)
         {
-            return workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowAnalysis.StartStepId);
+            return workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowConstant.StartStepId);
         }
 
         public static WorkFlowStep GetLastStep(this WorkFlowInstalled workFlowInstalled)
         {
-            return workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowAnalysis.EndStepId);
+            return workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowConstant.EndStepId);
         }
 
         public static WrokFlowTransit GetTransit(this WorkFlowInstalled workFlowInstalled, Guid transitId)

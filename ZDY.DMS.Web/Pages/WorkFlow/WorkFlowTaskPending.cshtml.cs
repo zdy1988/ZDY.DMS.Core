@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.DataTransferObjects;
 using ZDY.DMS.ServiceContracts;
 
 namespace ZDY.DMS.Web.Pages.WorkFlow
 {
-    public class WorkFlowExecuteTasksModel : PageModel
+    public class WorkFlowTaskPendingModel : PageModel
     {
         private readonly IDictionaryService dictionaryService;
 
-        public WorkFlowExecuteTasksModel(IDictionaryService dictionaryService)
+        public WorkFlowTaskPendingModel(IDictionaryService dictionaryService)
         {
             this.dictionaryService = dictionaryService;
         }
@@ -23,7 +25,6 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
         public void OnGet()
         {
             Dictionary = this.dictionaryService.GetDictionary("WorkFlowTaskState");
-
             WorkFlowTaskState = Dictionary["WorkFlowTaskState"].Select(t => new KeyValuePair<string, string>(t.Value, t.Name));
         }
     }

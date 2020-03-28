@@ -3,7 +3,6 @@
 @inject ZDY.DMS.ServiceContracts.IDictionaryService DictionaryService
 @inject SelectOptionsFactory SelectOptionsFactory
 @{
-    ViewData["Title"] = "DashBoard";
     var Dictionary = DictionaryService.GetDictionary("WorkFlowTaskState");
     var WorkFlowTaskState = SelectOptionsFactory.GetSelectOptionsByDictionary("WorkFlowTaskState");
 }

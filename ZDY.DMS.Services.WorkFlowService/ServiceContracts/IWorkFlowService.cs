@@ -8,8 +8,8 @@ namespace ZDY.DMS.Services.WorkFlowService.ServiceContracts
 {
     public interface IWorkFlowService
     {
-        Task<IEnumerable<WorkFlow>> GetInstalledWorkFlows(Guid companyID);
+        Task<IEnumerable<Models.WorkFlow>> GetInstalledWorkFlows(Guid companyID);
 
-        Task<IEnumerable<WorkFlow>> GetDesigningWorkFlows(Guid companyID);
+        Task<IEnumerable<Models.WorkFlow>> GetDesigningWorkFlows(Guid companyID);
     }
 }

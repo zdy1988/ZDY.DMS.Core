@@ -7,7 +7,7 @@ using ZDY.DMS.ServiceContracts;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
-    public static class WorkFlowTaskExtension
+    public static class WorkFlowTaskExtensions
     {
         public static bool IsExecute(this WorkFlowTask task)
         {
@@ -21,22 +21,22 @@ namespace ZDY.DMS.Services.WorkFlowService
 
         public static bool IsFirstStep(this WorkFlowTask task)
         {
-            return task.StepId == WorkFlowAnalysis.StartStepId;
+            return task.StepId == WorkFlowConstant.StartStepId;
         }
 
         public static bool IsLastStep(this WorkFlowTask task)
         {
-            return task.StepId == WorkFlowAnalysis.EndStepId;
+            return task.StepId == WorkFlowConstant.EndStepId;
         }
 
         public static bool IsStart(this WorkFlowTask task)
         {
-            return task.StepId == WorkFlowAnalysis.StartStepId;
+            return task.StepId == WorkFlowConstant.StartStepId;
         }
 
         public static bool IsEnd(this WorkFlowTask task)
         {
-            return task.StepId == WorkFlowAnalysis.EndStepId;
+            return task.StepId == WorkFlowConstant.EndStepId;
         }
 
         public static bool Is(this WorkFlowTask task, params WorkFlowTaskKinds[] types)
@@ -59,12 +59,12 @@ namespace ZDY.DMS.Services.WorkFlowService
             return !state.Contains((WorkFlowTaskState)task.State);
         }
 
-        public static bool IsExecute(this WorkFlowTaskState state)
+        private static bool IsExecute(this WorkFlowTaskState state)
         {
             return state == WorkFlowTaskState.Handled || state == WorkFlowTaskState.Returned || state == WorkFlowTaskState.HandledByOthers || state == WorkFlowTaskState.ReturnedByOthers;
         }
 
-        public static bool IsNotExecute(this WorkFlowTaskState state)
+        private static bool IsNotExecute(this WorkFlowTaskState state)
         {
             return !state.IsExecute();
         }

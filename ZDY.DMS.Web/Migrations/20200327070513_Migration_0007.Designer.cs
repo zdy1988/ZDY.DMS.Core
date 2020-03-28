@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ZDY.DMS.Domain.Repositories.EntityFramework;
 
 namespace ZDY.DMS.Web.Migrations
 {
     [DbContext(typeof(JxcDbContext))]
-    partial class JxcDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200327070513_Migration_0007")]
+    partial class Migration_0007
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

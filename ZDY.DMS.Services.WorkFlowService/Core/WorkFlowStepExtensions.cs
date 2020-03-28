@@ -7,26 +7,26 @@ using ZDY.DMS.Extensions.DependencyInjection.Autofac;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
-    public static class WorkFlowStepExtension
+    public static class WorkFlowStepExtensions
     {
         public static bool IsFirstStep(this WorkFlowStep step)
         {
-            return step.StepId == WorkFlowAnalysis.StartStepId;
+            return step.StepId == WorkFlowConstant.StartStepId;
         }
 
         public static bool IsLastStep(this WorkFlowStep step)
         {
-            return step.StepId == WorkFlowAnalysis.EndStepId;
+            return step.StepId == WorkFlowConstant.EndStepId;
         }
 
         public static bool IsStart(this WorkFlowStep step)
         {
-            return step.StepId == WorkFlowAnalysis.StartStepId;
+            return step.StepId == WorkFlowConstant.StartStepId;
         }
 
         public static bool IsEnd(this WorkFlowStep step)
         {
-            return step.StepId == WorkFlowAnalysis.EndStepId;
+            return step.StepId == WorkFlowConstant.EndStepId;
         }
 
         public static bool Is(this WorkFlowStep step, params WorkFlowStepKinds[] types)

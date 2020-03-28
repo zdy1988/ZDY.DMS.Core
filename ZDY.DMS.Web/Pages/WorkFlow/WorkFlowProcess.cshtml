@@ -32,7 +32,7 @@ else
                     </thead>
                     <tbody>
 
-                        @foreach (var item in Model.WorkFlowProcess)
+                        @foreach (var item in Model.Process)
                         {
 
                             <tr>
@@ -82,7 +82,7 @@ else
 @section Scripts{
     <script type="text/javascript">
         var designData = @Html.Raw(Model.Instance.FlowDesignJson)
-        var statusData = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Status))')
+        var statusData = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.States))')
 
         require([
             "jquery",

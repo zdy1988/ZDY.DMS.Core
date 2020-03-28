@@ -1,8 +1,5 @@
 ﻿@page
 @model ZDY.DMS.Web.Pages.WorkFlow.WorkFlowInstanceManagerModel
-@{
-    ViewData["Title"] = "WorkFlowInstanceManager";
-}
 
 <div class="row">
     <div class="col-md-12">
@@ -39,13 +36,13 @@
                 <td data-bind="text:FlowName"></td>
                 <td data-bind="text:LastExecuteStepName"></td>
                 <td data-bind="text:CreaterName"></td>
-                <td data-bind="text:CreateTime"></td>
+                <td data-bind="text:TimeStamp"></td>
                 <td data-bind="text:LastModifyTime"></td>
                 <td>
                     <lable data-bind="state: $root.dic('WorkFlowInstanceState', State, true)"></lable>
                 </td>
                 <td>
-                    <button size="Xs" color="Dark" is-outline="true" icon="Search" data-bind="click:$root.HandleShowProcess">详情</button>
+                    <button size="Xs" color="Dark" icon="Search" data-bind="click:$root.HandleShowProcess">详情</button>
                 </td>
             </data-table>
             <pager></pager>
@@ -96,19 +93,19 @@
                         { text: '所属流程', field: 'FlowName' },
                         { text: '行进步骤', field: 'LastExecuteStepName' },
                         { text: '创建人员', field: 'CreaterName' },
-                        { text: '创建时间', field: 'CreateTime' },
+                        { text: '创建时间', field: 'TimeStamp' },
                         { text: '归档时间', field: 'LastModifyTime' },
                         { text: '实例状态', field: 'State' }
                     ],
-                    defaultOrderBy: "ID",
-                    dataQueryUrl: 'WorkFlowInstance/List2'
+                    defaultOrderBy: "TimeStamp",
+                    dataQueryUrl: 'WorkFlowInstance/Search'
                 }).import(function () {
 
                     this.dic(dictionary)
 
                     this.HandleShowProcess = function (item) {
                         $("#modal-work-process").modal("show")
-                        $("#modal-work-process iframe").attr("src", "WorkFlowProcess?id=" + item.InstanceID)
+                        $("#modal-work-process iframe").attr("src", "WorkFlowProcess?id=" + item.Id)
                     }
 
                 }).bind("list").load();

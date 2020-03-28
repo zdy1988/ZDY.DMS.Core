@@ -3,8 +3,6 @@
 @inject ZDY.DMS.ServiceContracts.IDictionaryService DictionaryService
 @inject SelectOptionsFactory SelectOptionsFactory 
 @{
-    ViewData["Title"] = "DictionaryManager";
-
     var Dictionary = DictionaryService.GetDictionary("DictionaryKinds");
 
     var DictionaryKinds = SelectOptionsFactory.GetSelectOptionsByDictionary("DictionaryKinds");

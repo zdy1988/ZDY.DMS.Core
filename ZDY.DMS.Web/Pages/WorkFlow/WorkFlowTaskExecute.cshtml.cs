@@ -40,15 +40,15 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
 
         public IEnumerable<KeyValuePair<string, string>> UserOptions { get; set; }
 
-        public WorkFlowTask CurrentTask { get; set; }
         public WorkFlowInstance Instance { get; set; }
+        public WorkFlowTask CurrentTask { get; set; }
         public WorkFlowStep CurrentStep { get; set; }
         public List<WorkFlowStep> NextSteps { get; set; } = new List<WorkFlowStep>();
-        public List<WorkFlowTask> Opinions { get; set; } = new List<WorkFlowTask>();
+        public List<WorkFlowTask> HasCommentTasks { get; set; } = new List<WorkFlowTask>();
 
         public bool CanExecute { get; set; }
 
-        public async Task OnGet(Guid id)
+        public async Task OnGetAsync(Guid id)
         {
             var taskEntity = await workFlowTaskServiceRepository.FindByKeyAsync(id);
             if (taskEntity == null)
@@ -67,7 +67,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             //获得当前步骤信息
             Instance = workFlowInstanceEntity;
             CurrentTask = taskEntity;
-            var workFlowInstalled = WorkFlowAnalysis.AnalyticWorkFlowInstalledData(Instance.FlowRuntimeJson);
+            var workFlowInstalled = Services.WorkFlowService.WorkFlowAnalyzing.WorkFlowInstalledDeserialize(Instance.FlowRuntimeJson);
             CurrentStep = workFlowInstalled.GetStep(CurrentTask.StepId);
 
 
@@ -83,7 +83,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             //加载审批意见
             if (CurrentStep.IsShowComment)
             {
-                this.Opinions = await workFlowWorkingService.GetWorkFlowCommentsAsync(workFlowInstanceEntity);
+                HasCommentTasks = await workFlowWorkingService.GetWorkFlowCommentsAsync(workFlowInstanceEntity);
             }
 
             //更新打开时间

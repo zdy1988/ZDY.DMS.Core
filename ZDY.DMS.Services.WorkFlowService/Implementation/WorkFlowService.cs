@@ -12,15 +12,15 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
     public class WorkFlowService : IWorkFlowService
     {
         private readonly IRepositoryContext repositoryContext;
-        private readonly IRepository<Guid, WorkFlow> workFlowRepository;
+        private readonly IRepository<Guid, Models.WorkFlow> workFlowRepository;
 
         public WorkFlowService(IRepositoryContext repositoryContext)
         {
             this.repositoryContext = repositoryContext;
-            this.workFlowRepository = this.repositoryContext.GetRepository<Guid, WorkFlow>();
+            this.workFlowRepository = this.repositoryContext.GetRepository<Guid, Models.WorkFlow>();
         }
 
-        private async Task<IEnumerable<WorkFlow>> GetWorkFlows(Guid companyID, WorkFlowState workFlowState)
+        private async Task<IEnumerable<Models.WorkFlow>> GetWorkFlows(Guid companyID, WorkFlowState workFlowState)
         {
             var list = await this.workFlowRepository
                 .FindAllAsync(t => t.CompanyId == companyID
@@ -29,12 +29,12 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             return list;
         }
 
-        public async Task<IEnumerable<WorkFlow>> GetInstalledWorkFlows(Guid companyID)
+        public async Task<IEnumerable<Models.WorkFlow>> GetInstalledWorkFlows(Guid companyID)
         {
             return await GetWorkFlows(companyID, WorkFlowState.Installed);
         }
 
-        public async Task<IEnumerable<WorkFlow>> GetDesigningWorkFlows(Guid companyID)
+        public async Task<IEnumerable<Models.WorkFlow>> GetDesigningWorkFlows(Guid companyID)
         {
             return await GetWorkFlows(companyID, WorkFlowState.Designing);
         }
