@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ZDY.DMS.Events\ZDY.DMS.Events.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.Extensions.DependencyInjection.Autofac\ZDY.DMS.Extensions.DependencyInjection.Autofac.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Extensions.DependencyInjection.Autofac\ZDY.DMS.ServiceProvider.Autofac.csproj" />
     <ProjectReference Include="..\ZDY.DMS.ServiceContracts\ZDY.DMS.ServiceContracts.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Tools\ZDY.DMS.Tools.csproj" />
     <ProjectReference Include="..\ZDY.DMS\ZDY.DMS.csproj" />

@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ZDY.DMS.DataPermission\ZDY.DMS.DataPermission.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.Extensions.DependencyInjection.Autofac\ZDY.DMS.Extensions.DependencyInjection.Autofac.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Extensions.DependencyInjection.Autofac\ZDY.DMS.ServiceProvider.Autofac.csproj" />
     <ProjectReference Include="..\ZDY.DMS\ZDY.DMS.csproj" />
   </ItemGroup>
 

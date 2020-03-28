@@ -3,7 +3,6 @@ using System.Linq;
 using ZDY.DMS.Services.WorkFlowService.DataObjects;
 using ZDY.DMS.Domain.Enums;
 using ZDY.DMS.ServiceContracts;
-using ZDY.DMS.Extensions.DependencyInjection.Autofac;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {

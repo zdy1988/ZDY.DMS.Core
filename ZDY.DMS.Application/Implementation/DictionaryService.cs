@@ -6,7 +6,6 @@ using System.Reflection;
 using ZDY.DMS.Caching;
 using ZDY.DMS.DataTransferObjects;
 using ZDY.DMS.Domain.Enums;
-using ZDY.DMS.Extensions.DependencyInjection.Autofac;
 using ZDY.DMS.Models;
 using ZDY.DMS.Querying.AdoNet;
 using ZDY.DMS.Repositories;

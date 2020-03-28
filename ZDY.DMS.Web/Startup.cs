@@ -148,7 +148,7 @@ namespace ZDY.DMS.Web
 
             app.UseRouting();
 
-            app.UseServiceLocator();
+            app.UseAutofacServiceLocator();
 
             //app.UseCookiesAuthentication();
 

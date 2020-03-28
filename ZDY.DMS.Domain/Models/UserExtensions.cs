@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ZDY.DMS.Extensions.DependencyInjection.Autofac;
 using ZDY.DMS.ServiceContracts;
 
 namespace ZDY.DMS.Domain.Models

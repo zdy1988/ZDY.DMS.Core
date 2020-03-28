@@ -141,7 +141,7 @@ namespace ZDY.DMS.API
 
             app.UseErrorHandle();
 
-            app.UseServiceLocator();
+            app.UseAutofacServiceLocator();
 
             app.UseStaticFiles();
 

@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace ZDY.DMS.Extensions.DependencyInjection.Autofac
+namespace ZDY.DMS
 {
     public class ServiceLocator
     {

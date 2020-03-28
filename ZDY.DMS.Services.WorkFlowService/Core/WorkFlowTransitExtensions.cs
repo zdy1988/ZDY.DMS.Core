@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using ZDY.DMS.Domain.Enums;
-using ZDY.DMS.Extensions.DependencyInjection.Autofac;
 using ZDY.DMS.ServiceContracts;
 using ZDY.DMS.Services.WorkFlowService.DataObjects;
 

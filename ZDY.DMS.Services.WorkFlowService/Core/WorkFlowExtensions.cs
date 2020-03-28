@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ZDY.DMS;
-using ZDY.DMS.Extensions.DependencyInjection.Autofac;
 using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
 
