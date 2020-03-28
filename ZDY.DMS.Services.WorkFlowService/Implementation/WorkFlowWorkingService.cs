@@ -1520,7 +1520,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
             }
 
-            if (workFlowTasks.Count() > 0)
+            if (workFlowTasks?.Count() > 0)
             {
                 foreach (var task in workFlowTasks)
                 {

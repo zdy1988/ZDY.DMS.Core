@@ -41,9 +41,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDY.DMS.Services.MessageSer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDY.DMS.Services.WorkFlowService", "ZDY.DMS.Services.WorkFlowService\ZDY.DMS.Services.WorkFlowService.csproj", "{AE4F3B4F-D1CA-46D9-B1EA-CA613E5B7242}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDY.DMS.Querying.DataTableGateway.SQLServer", "ZDY.DMS.Querying.SQLServer\ZDY.DMS.Querying.DataTableGateway.SQLServer.csproj", "{4A77811D-20A2-4500-B675-2F2FCB9DAB00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDY.DMS.Querying.DataTableGateway.SQLServer", "ZDY.DMS.Querying.DataTableGateway.SQLServer\ZDY.DMS.Querying.DataTableGateway.SQLServer.csproj", "{4A77811D-20A2-4500-B675-2F2FCB9DAB00}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDY.DMS.Querying.DataTableGateway.MySQL", "ZDY.DMS.Querying.MySql\ZDY.DMS.Querying.DataTableGateway.MySQL.csproj", "{5612818F-91C0-4FA0-AF11-0260967D9235}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDY.DMS.Querying.DataTableGateway.MySQL", "ZDY.DMS.Querying.DataTableGateway.MySQL\ZDY.DMS.Querying.DataTableGateway.MySQL.csproj", "{5612818F-91C0-4FA0-AF11-0260967D9235}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDY.DMS.DataTransferObjects", "ZDY.DMS.DataTransferObjects\ZDY.DMS.DataTransferObjects.csproj", "{B20A5485-885A-4F3D-B164-447EEAD300E4}"
 EndProject
