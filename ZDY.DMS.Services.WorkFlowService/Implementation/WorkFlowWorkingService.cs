@@ -19,15 +19,15 @@ using Zdy.Events;
 using ZDY.DMS.StringEncryption;
 using ZDY.DMS.Domain.Enums;
 using ZDY.DMS.Domain.Events;
-using ZDY.DMS.Querying.AdoNet;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
+using ZDY.DMS.Querying.DataTableGateway;
 
 namespace ZDY.DMS.Services.WorkFlowService.Implementation
 {
     public class WorkFlowWorkingService : IWorkFlowWorkingService
     {
         private readonly IEventBus eventBus;
-        private readonly IAdoNetDbCommand adoNetDbCommand;
+        private readonly IDataTableGateway adoNetDataTableGateway;
         private readonly IStringEncryption stringEncryption;
         private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, User> userRepository;
@@ -43,10 +43,10 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         public WorkFlowWorkingService(IRepositoryContext repositoryContext,
                                       IStringEncryption stringEncryption,
                                       IEventBus eventBus,
-                                      IAdoNetDbCommand adoNetDbCommand)
+                                      IDataTableGateway adoNetDataTableGateway)
         {
             this.eventBus = eventBus;
-            this.adoNetDbCommand = adoNetDbCommand;
+            this.adoNetDataTableGateway = adoNetDataTableGateway;
             this.stringEncryption = stringEncryption;
             this.repositoryContext = repositoryContext;
             this.userRepository = repositoryContext.GetRepository<Guid, User>();
@@ -2104,7 +2104,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                     }
                 }
 
-                isPassed = (Int64)adoNetDbCommand.ExecuteScalar(query) == 1;
+                isPassed = (Int64)adoNetDataTableGateway.ExecuteScalar(query) == 1;
             }
             catch (System.Exception e)
             {

@@ -7,7 +7,7 @@ using ZDY.DMS.Caching;
 using ZDY.DMS.DataTransferObjects;
 using ZDY.DMS.Domain.Enums;
 using ZDY.DMS.Models;
-using ZDY.DMS.Querying.AdoNet;
+using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.ServiceContracts;
 using ZDY.DMS.Tools;
@@ -19,15 +19,15 @@ namespace ZDY.DMS.Application.Implementation
         private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, DictionaryKey> dictionaryKeyRepository;
         private readonly IRepository<Guid, DictionaryValue> dictionaryValueRepository;
-        private readonly IAdoNetDbCommand adoNetDbCommand;
+        private readonly IDataTableGateway adoNetDataTableGateway;
 
         public DictionaryService(IRepositoryContext repositoryContext,
-            IAdoNetDbCommand adoNetDbCommand)
+            IDataTableGateway adoNetDataTableGateway)
         {
             this.repositoryContext = repositoryContext;
             this.dictionaryKeyRepository = repositoryContext.GetRepository<Guid, DictionaryKey>();
             this.dictionaryValueRepository = repositoryContext.GetRepository<Guid, DictionaryValue>();
-            this.adoNetDbCommand = adoNetDbCommand;
+            this.adoNetDataTableGateway = adoNetDataTableGateway;
         }
 
         public Dictionary<string, IEnumerable<DictionaryItemDTO>> GetDictionary(string keys)
@@ -129,7 +129,7 @@ namespace ZDY.DMS.Application.Implementation
         {
             string sqlQuery = dictionaryValues.FirstOrDefault().Value;
 
-            var dt = adoNetDbCommand.ExecuteDataTable(sqlQuery);
+            var dt = adoNetDataTableGateway.ExecuteDataTable(sqlQuery);
 
             if (!dt.Columns.Contains("Name"))
             {

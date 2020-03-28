@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlClient;
-using ZDY.DMS.Querying.AdoNet;
 
-namespace ZDY.DMS.Querying.SQLServer
+namespace ZDY.DMS.Querying.DataTableGateway.SQLServer
 {
-    public class SqlServerDbCommand : AdoNetDbCommand
+    public class SqlServerDataTableGateway : AdoNetDataTableGateway
     {
         protected override IDbConnection CreateDatabaseConnection(string connectionString)
         {

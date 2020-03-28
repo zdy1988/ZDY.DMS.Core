@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace ZDY.DMS.Querying.AdoNet
+namespace ZDY.DMS.Querying.DataTableGateway
 {
-    public interface IAdoNetDbCommand
+    public interface IDataTableGateway
     {
         #region ExecuteNonQuery
 

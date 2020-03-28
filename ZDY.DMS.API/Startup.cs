@@ -12,8 +12,6 @@ using Microsoft.OpenApi.Models;
 using Autofac;
 using ZDY.DMS.Caching.InMemory;
 using ZDY.DMS.Caching;
-using ZDY.DMS.Querying.AdoNet;
-using ZDY.DMS.Querying.MySql;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Repositories.EntityFramework;
 using ZDY.DMS.Domain.Repositories.EntityFramework;
@@ -28,6 +26,8 @@ using ZDY.DMS.ServiceContracts;
 using ZDY.DMS.Application.Implementation;
 using ZDY.DMS.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
+using ZDY.DMS.Querying.DataTableGateway;
+using ZDY.DMS.Querying.DataTableGateway.MySQL;
 
 namespace ZDY.DMS.API
 {
@@ -110,7 +110,7 @@ namespace ZDY.DMS.API
             builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
 
             //Ado
-            builder.RegisterType<MySqlDbCommand>().As<IAdoNetDbCommand>().SingleInstance();
+            builder.RegisterType<MySqlDataTableGateway>().As<IDataTableGateway>().SingleInstance();
 
             //²Ö´¢
             builder.Register<IRepositoryContext>(ctx => new EntityFrameworkRepositoryContext(ctx.Resolve<JxcDbContext>())).InstancePerLifetimeScope();

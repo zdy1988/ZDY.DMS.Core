@@ -19,8 +19,6 @@ using Autofac;
 using Zdy.Events;
 using ZDY.DMS.Caching.InMemory;
 using ZDY.DMS.Caching;
-using ZDY.DMS.Querying.AdoNet;
-using ZDY.DMS.Querying.MySql;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Repositories.EntityFramework;
 using ZDY.DMS.Domain.Repositories.EntityFramework;
@@ -38,6 +36,8 @@ using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.Services.OrganizationService.ServiceContracts;
 using ZDY.DMS.Services.AdminService.ServiceContracts;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
+using ZDY.DMS.Querying.DataTableGateway.MySQL;
+using ZDY.DMS.Querying.DataTableGateway;
 
 namespace ZDY.DMS.Web
 {
@@ -103,7 +103,7 @@ namespace ZDY.DMS.Web
             builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
 
             //Ado
-            builder.RegisterType<MySqlDbCommand>().As<IAdoNetDbCommand>().SingleInstance();
+            builder.RegisterType<MySqlDataTableGateway>().As<IDataTableGateway>().SingleInstance();
 
             //仓储
             builder.Register<IRepositoryContext>(ctx => new EntityFrameworkRepositoryContext(ctx.Resolve<JxcDbContext>())).InstancePerLifetimeScope();

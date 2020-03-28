@@ -30,7 +30,7 @@
     <ProjectReference Include="..\ZDY.DMS.Events\ZDY.DMS.Events.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Extensions.DependencyInjection.Autofac\ZDY.DMS.ServiceProvider.Autofac.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Models\ZDY.DMS.Models.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.Querying.MySql\ZDY.DMS.Querying.MySql.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Querying.MySql\ZDY.DMS.Querying.DataTableGateway.MySQL.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Repositories.EntityFramework\ZDY.DMS.Repositories.EntityFramework.csproj" />
     <ProjectReference Include="..\ZDY.DMS.ServiceContracts\ZDY.DMS.ServiceContracts.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.AdminService\ZDY.DMS.Services.AdminService.csproj" />

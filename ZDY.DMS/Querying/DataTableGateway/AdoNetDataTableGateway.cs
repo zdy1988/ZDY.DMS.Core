@@ -2,19 +2,20 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Text;
+using System.Data.Common;
 
-namespace ZDY.DMS.Querying.AdoNet
+namespace ZDY.DMS.Querying.DataTableGateway
 {
-    public abstract class AdoNetDbCommand : IAdoNetDbCommand
+    public abstract class AdoNetDataTableGateway : IDataTableGateway
     {
         private readonly string connectionString;
 
-        public AdoNetDbCommand()
+        public AdoNetDataTableGateway()
         { 
 
         }
 
-        public AdoNetDbCommand(string connectionString)
+        public AdoNetDataTableGateway(string connectionString)
         {
             this.connectionString = connectionString;
         }

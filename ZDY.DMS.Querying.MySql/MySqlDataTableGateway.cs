@@ -1,11 +1,10 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
 using System.Data;
-using ZDY.DMS.Querying.AdoNet;
 
-namespace ZDY.DMS.Querying.MySql
+namespace ZDY.DMS.Querying.DataTableGateway.MySQL
 {
-    public class MySqlDbCommand : AdoNetDbCommand
+    public class MySqlDataTableGateway : AdoNetDataTableGateway
     {
         protected override IDbConnection CreateDatabaseConnection(string connectionString)
         {
