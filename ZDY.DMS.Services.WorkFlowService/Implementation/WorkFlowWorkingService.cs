@@ -20,7 +20,6 @@ using ZDY.DMS.StringEncryption;
 using ZDY.DMS.Domain.Enums;
 using ZDY.DMS.Domain.Events;
 using ZDY.DMS.Querying.AdoNet;
-using System.Transactions;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 
 namespace ZDY.DMS.Services.WorkFlowService.Implementation
