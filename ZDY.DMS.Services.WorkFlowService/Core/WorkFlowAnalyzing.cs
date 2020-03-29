@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using ZDY.DMS.Services.WorkFlowService.Exception;
 using ZDY.DMS.Services.WorkFlowService.DataObjects;
-using ZDY.DMS.Domain.Enums;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Models;
+using ZDY.DMS.Services.WorkFlowService.Enums;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {

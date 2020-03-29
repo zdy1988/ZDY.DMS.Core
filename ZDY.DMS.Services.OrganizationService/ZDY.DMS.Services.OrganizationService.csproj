@@ -5,9 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ZDY.DMS.AspNetCore\ZDY.DMS.AspNetCore.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.Domain\ZDY.DMS.Domain.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.Models\ZDY.DMS.Models.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.Common\ZDY.DMS.Services.Common.csproj" />
   </ItemGroup>
 
 </Project>

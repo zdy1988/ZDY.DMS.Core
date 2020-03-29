@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
+using ZDY.DMS.Services.OrganizationService.Models;
 using ZDY.DMS.Services.OrganizationService.ServiceContracts;
 
 namespace ZDY.DMS.Services.OrganizationService.Implementation

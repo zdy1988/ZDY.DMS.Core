@@ -1,24 +1,24 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using ZDY.DMS;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.WorkFlowService.Events;
 using ZDY.DMS.Services.WorkFlowService.DataObjects;
-using ZDY.DMS.Models;
-using ZDY.DMS.Tools;
 using ZDY.DMS.StringEncryption;
-using ZDY.DMS.Domain.Enums;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 using ZDY.DMS.Querying.DataTableGateway;
+using ZDY.DMS.Services.WorkFlowService.Models;
+using ZDY.DMS.Tools;
+using ZDY.DMS.Services.WorkFlowService.Enums;
 
 namespace ZDY.DMS.Services.WorkFlowService.Implementation
 {
@@ -27,9 +27,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         private readonly IDataTableGateway adoNetDataTableGateway;
         private readonly IStringEncryption stringEncryption;
         private readonly IRepositoryContext repositoryContext;
-        private readonly IRepository<Guid, User> userRepository;
-        private readonly IRepository<Guid, UserGroup> userGroupRepository;
-        private readonly IRepository<Guid, UserGroupMember> userGroupMemberRepository;
         private readonly IRepository<Guid, WorkFlow> workFlowRepository;
         private readonly IRepository<Guid, WorkFlowTask> workFlowTaskRepository;
         private readonly IRepository<Guid, WorkFlowInstance> workFlowInstanceRepository;
@@ -44,9 +41,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             this.adoNetDataTableGateway = adoNetDataTableGateway;
             this.stringEncryption = stringEncryption;
             this.repositoryContext = repositoryContext;
-            this.userRepository = repositoryContext.GetRepository<Guid, User>();
-            this.userGroupRepository = repositoryContext.GetRepository<Guid, UserGroup>();
-            this.userGroupMemberRepository = repositoryContext.GetRepository<Guid, UserGroupMember>();
             this.workFlowRepository = repositoryContext.GetRepository<Guid, WorkFlow>();
             this.workFlowTaskRepository = repositoryContext.GetRepository<Guid, WorkFlowTask>();
             this.workFlowInstanceRepository = repositoryContext.GetRepository<Guid, WorkFlowInstance>();

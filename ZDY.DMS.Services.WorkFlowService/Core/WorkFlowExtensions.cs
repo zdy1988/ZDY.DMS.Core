@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using ZDY.DMS;
-using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
+using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
@@ -10,45 +9,45 @@ namespace ZDY.DMS.Services.WorkFlowService
     {
         public static async Task Install(this WorkFlow workFlow)
         {
-            var pageRepository = ServiceLocator.GetService<IRepositoryContext>().GetRepository<Guid, Page>();
+            //var pageRepository = ServiceLocator.GetService<IRepositoryContext>().GetRepository<Guid, Page>();
 
-            var parent = await pageRepository.FindAsync(t => t.PageCode == "N_WorkflowStartUp");
+            //var parent = await pageRepository.FindAsync(t => t.PageCode == "N_WorkflowStartUp");
 
-            if (parent != null)
-            {
-                var flowPage = new Page
-                {
-                    CompanyId = workFlow.CompanyId,
-                    PageName = workFlow.Name,
-                    PageCode = workFlow.Id.ToString(),
-                    ParentId = parent.Id,
-                    Icon = "icon-share",
-                    IsInMenu = true,
-                    IsPassed = true,
-                    Level = 0,
-                    MenuName = workFlow.Name,
-                    Order = 0,
-                    Type = "P",
-                    Src = $"WorkFlow/WorkFlowStartUp?id={workFlow.Id}",
-                    IsDisabled = false
-                };
+            //if (parent != null)
+            //{
+            //    var flowPage = new Page
+            //    {
+            //        CompanyId = workFlow.CompanyId,
+            //        PageName = workFlow.Name,
+            //        PageCode = workFlow.Id.ToString(),
+            //        ParentId = parent.Id,
+            //        Icon = "icon-share",
+            //        IsInMenu = true,
+            //        IsPassed = true,
+            //        Level = 0,
+            //        MenuName = workFlow.Name,
+            //        Order = 0,
+            //        Type = "P",
+            //        Src = $"WorkFlow/WorkFlowStartUp?id={workFlow.Id}",
+            //        IsDisabled = false
+            //    };
 
-                await pageRepository.AddAsync(flowPage);
-                await pageRepository.Context.CommitAsync();
-            }
+            //    await pageRepository.AddAsync(flowPage);
+            //    await pageRepository.Context.CommitAsync();
+            //}
         }
 
         public static async Task UnInstall(this WorkFlow workFlow)
         {
-            var pageRepository = ServiceLocator.GetService<IRepositoryContext>().GetRepository<Guid, Page>();
+            //var pageRepository = ServiceLocator.GetService<IRepositoryContext>().GetRepository<Guid, Page>();
 
-            var flowPage = await pageRepository.FindAsync(t => t.PageCode == workFlow.Id.ToString());
+            //var flowPage = await pageRepository.FindAsync(t => t.PageCode == workFlow.Id.ToString());
 
-            if (flowPage != null)
-            {
-                await pageRepository.RemoveAsync(flowPage);
-                await pageRepository.Context.CommitAsync();
-            }
+            //if (flowPage != null)
+            //{
+            //    await pageRepository.RemoveAsync(flowPage);
+            //    await pageRepository.Context.CommitAsync();
+            //}
         }
     }
 }

@@ -1,12 +1,24 @@
-﻿@inject ZDY.DMS.Services.AdminService.ServiceContracts.IPageService PageService
-@inject AutoMapper.IMapper Mapper
-@using ZDY.DMS.DataTransferObjects
+﻿@inject AutoMapper.IMapper Mapper
+@inject ZDY.DMS.Services.AdminService.ServiceContracts.IPageService PageService
+@inject ZDY.DMS.Services.PermissionService.ServiceContracts.IPagePermissionService PagePermissionService
+@using ZDY.DMS.Services.AdminService.DataTransferObjects
 @using ZDY.DMS.AspNetCore.Auth
 
 @{
     var userIdentity = this.Context.GetUserIdentity();
 
-    var pages = userIdentity.IsAdministrator ? await PageService.GetMultiLevelPagesAsync() : await PageService.GetMultiLevelPagesAsync(userIdentity.Id, userIdentity.CompanyId);
+    IEnumerable<MultiLevelPageDTO> pages = null;
+
+    if (userIdentity.IsAdministrator)
+    {
+        pages = await PageService.GetMultiLevelPagesAsync();
+    }
+    else
+    {
+        var pagePermissions = await PagePermissionService.GetUserPagePermissionAsync(userIdentity.Id);
+
+        pages = await PageService.GetMultiLevelPagesAsync(pagePermissions, userIdentity.CompanyId);
+    }
 
     Func<IEnumerable<MultiLevelPageDTO>, TagBuilder> RenderMenu = null;
 

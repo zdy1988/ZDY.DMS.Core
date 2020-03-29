@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.Domain.Enums;
-using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.WorkFlowService.DataObjects;
+using ZDY.DMS.Services.WorkFlowService.Enums;
+using ZDY.DMS.Services.WorkFlowService.Models;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 
 namespace ZDY.DMS.Services.WorkFlowService

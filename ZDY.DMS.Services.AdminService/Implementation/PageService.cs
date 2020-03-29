@@ -3,11 +3,10 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.EntityFrameworkCore;
-using ZDY.DMS.Models;
-using ZDY.DMS.DataTransferObjects;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.AdminService.ServiceContracts;
+using ZDY.DMS.Services.AdminService.Models;
+using ZDY.DMS.Services.AdminService.DataTransferObjects;
 
 namespace ZDY.DMS.Services.AdminService.Implementation
 {
@@ -24,23 +23,17 @@ namespace ZDY.DMS.Services.AdminService.Implementation
             this.pageRepository = repositoryContext.GetRepository<Guid, Page>();
         }
 
-        public async Task<IEnumerable<MultiLevelPageDTO>> GetMultiLevelPagesAsync(Guid userId, Guid companyId)
+        public async Task<IEnumerable<MultiLevelPageDTO>> GetMultiLevelPagesAsync(Guid[] pageIdRanges, Guid companyId)
         {
             var companies = new Guid[] { default, companyId };
 
-            var context = (DbContext)repositoryContext.Session;
+            var page1 = await pageRepository.FindAllAsync(t => t.IsDisabled == false && t.IsPassed == false && companies.Contains(t.CompanyId) && pageIdRanges.Contains(t.Id));
+            var page2 = await pageRepository.FindAllAsync(t => t.IsDisabled == false && t.IsPassed == true && companies.Contains(t.CompanyId));
 
-            var pages = await (from p in context.Set<Page>()
-                               join pp in context.Set<UserGroupPagePermission>() on p.Id equals pp.PageId
-                               join ug in context.Set<UserGroup>() on pp.GroupId equals ug.Id
-                               join gm in context.Set<UserGroupMember>() on ug.Id equals gm.GroupId
-                               join u in context.Set<User>() on gm.UserId equals u.Id
-                               where u.IsDisabled == false && u.Id == userId && p.IsPassed == false && companies.Contains(p.CompanyId)
-                               select p).ToListAsync();
+            var pages = new List<Page>();
 
-            var pages2 = await pageRepository.FindAllAsync(p => p.IsDisabled == false && p.IsPassed == true && companies.Contains(p.CompanyId), "Order", true);
-
-            pages.AddRange(pages2);
+            pages.AddRange(page1);
+            pages.AddRange(page2);
 
             var levelPages = this.mapper.Map<List<Page>, List<MultiLevelPageDTO>>(pages.Distinct().ToList());
 

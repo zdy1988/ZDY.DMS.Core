@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
-using ZDY.DMS.Domain.Enums;
-using ZDY.DMS.Models;
-using ZDY.DMS.ServiceContracts;
+using ZDY.DMS.Services.WorkFlowService.Enums;
+using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
@@ -70,8 +69,8 @@ namespace ZDY.DMS.Services.WorkFlowService
 
         public static string GetTaskStateName(this WorkFlowTask task)
         {
-            
-            return ServiceLocator.GetService<IDictionaryService>().GetDictionaryName("WorkFlowTaskState", task.State.ToString());
+            return "";
+            //return ServiceLocator.GetService<IDictionaryService>().GetDictionaryName("WorkFlowTaskState", task.State.ToString());
         }
     }
 }

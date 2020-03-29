@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.DataPermission;
 using ZDY.DMS.KeyGeneration;
-using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
+using ZDY.DMS.Services.AdminService.Models;
 
 namespace ZDY.DMS.Services.AdminService
 {

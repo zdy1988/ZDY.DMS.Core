@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ZDY.DMS.Domain.Enums;
-using ZDY.DMS.Models;
+using ZDY.DMS.Services.WorkFlowService.Enums;
 
 namespace ZDY.DMS.Services.WorkFlowService.DataObjects
 {

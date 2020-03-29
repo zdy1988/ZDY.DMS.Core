@@ -6,14 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.Domain.Enums;
 using ZDY.DMS.KeyGeneration;
-using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
+using ZDY.DMS.Services.WorkFlowService.Enums;
+using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
-    public class WorkFlowController : ApiDataServiceController<Guid, Models.WorkFlow>
+    public class WorkFlowController : ApiDataServiceController<Guid, WorkFlow>
     {
         public WorkFlowController(IRepositoryContext repositoryContext)
             : base(repositoryContext, new GuidKeyGenerator())
@@ -127,7 +127,7 @@ namespace ZDY.DMS.Services.WorkFlowService
                 await this.Repository.Context.CommitAsync();
 
                 //安装流程
-                await original.Install();
+                //await original.Install();
 
                 return Ok(new { IsInstallSuccess = true, Messages = messages });
             }
@@ -153,7 +153,7 @@ namespace ZDY.DMS.Services.WorkFlowService
             await this.Repository.Context.CommitAsync();
 
             //卸载流程
-            await original.UnInstall();
+            //await original.UnInstall();
         }
     }
 }

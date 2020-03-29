@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
-using ZDY.DMS.Domain.Enums;
-using ZDY.DMS.ServiceContracts;
 using ZDY.DMS.Services.WorkFlowService.DataObjects;
+using ZDY.DMS.Services.WorkFlowService.Enums;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
@@ -20,7 +19,8 @@ namespace ZDY.DMS.Services.WorkFlowService
 
         public static string GetConditionTypeName(this WrokFlowTransit transit)
         {
-            return ServiceLocator.GetService<IDictionaryService>().GetDictionaryName("WorkFlowTransitConditionKinds", transit.ConditionType.ToString());
+            return "";
+            //return ServiceLocator.GetService<IDictionaryService>().GetDictionaryName("WorkFlowTransitConditionKinds", transit.ConditionType.ToString());
         }
     }
 }

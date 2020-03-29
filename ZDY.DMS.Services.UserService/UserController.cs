@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.Domain.Models;
 using ZDY.DMS.KeyGeneration;
-using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
+using ZDY.DMS.Services.UserService.Models;
 using ZDY.DMS.StringEncryption;
 
 namespace ZDY.DMS.Services.UserService
@@ -67,15 +66,6 @@ namespace ZDY.DMS.Services.UserService
             original.City = entity.City;
             original.Country = entity.Country;
             original.Province = entity.Province;
-        }
-
-        public async override Task<User> FindByKey(Guid id)
-        {
-            var user = await base.FindByKey(id);
-
-            user.AvatarUrl = user.GetUserAvatarUrl();
-
-            return user;
         }
     }
 }

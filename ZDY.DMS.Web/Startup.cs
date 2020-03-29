@@ -35,6 +35,8 @@ using ZDY.DMS.Services.AdminService.ServiceContracts;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 using ZDY.DMS.Querying.DataTableGateway.MySQL;
 using ZDY.DMS.Querying.DataTableGateway;
+using ZDY.DMS.Services.PermissionService.ServiceContracts;
+using ZDY.DMS.Services.PermissionService.Implementation;
 
 namespace ZDY.DMS.Web
 {
@@ -118,6 +120,7 @@ namespace ZDY.DMS.Web
 
             builder.RegisterType<DepartmentService>().As<IDepartmentService>().SingleInstance();
             builder.RegisterType<PageService>().As<IPageService>().SingleInstance();
+            builder.RegisterType<PagePermissionService>().As<IPagePermissionService>().SingleInstance();
 
             builder.RegisterType<WorkFlowService>().As<IWorkFlowService>().SingleInstance();
             builder.RegisterType<WorkFlowFormService>().As<IWorkFlowFormService>().SingleInstance();

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ZDY.DMS.Models;
 using ZDY.DMS.Metronic.TagHelpers.TreeTable;
+using ZDY.DMS.Services.OrganizationService.Models;
 using ZDY.DMS.Services.OrganizationService.ServiceContracts;
 
 namespace ZDY.DMS.Web.Pages.Organization

@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ZDY.DMS.Services.WorkFlowService.DataObjects;
-using ZDY.DMS.Domain.Enums;
-using ZDY.DMS.ServiceContracts;
+using ZDY.DMS.Services.WorkFlowService.Enums;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
@@ -80,7 +79,8 @@ namespace ZDY.DMS.Services.WorkFlowService
 
         public static string GetHandleTypeName(this WorkFlowStep step)
         {
-            return ServiceLocator.GetService<IDictionaryService>().GetDictionaryName("WorkFlowHandlerKinds", step.HandlerType.ToString());
+            return "";
+            //return ServiceLocator.GetService<IDictionaryService>().GetDictionaryName("WorkFlowHandlerKinds", step.HandlerType.ToString());
         }
     }
 }
