@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace ZDY.DMS.Models
 {
     [Table("Work_Flow_Instance")]
-    public class WorkFlowInstance:BaseEntity 
+    public class WorkFlowInstance : BaseEntity
     {
         /// <summary>
         /// 标题

@@ -31,12 +31,10 @@
     <ProjectReference Include="..\ZDY.DMS.Caching.InMemory\ZDY.DMS.Caching.InMemory.csproj" />
     <ProjectReference Include="..\ZDY.DMS.DataTransferObjects\ZDY.DMS.DataTransferObjects.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Domain\ZDY.DMS.Domain.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.Events\ZDY.DMS.Events.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Extensions.DependencyInjection.Autofac\ZDY.DMS.ServiceProvider.Autofac.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Metronic.TagHelpers\ZDY.DMS.Metronic.TagHelpers.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Models\ZDY.DMS.Models.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Querying.DataTableGateway.MySQL\ZDY.DMS.Querying.DataTableGateway.MySQL.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.Querying.MySql\ZDY.DMS.Querying.DataTableGateway.MySQL.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Repositories.EntityFramework\ZDY.DMS.Repositories.EntityFramework.csproj" />
     <ProjectReference Include="..\ZDY.DMS.ServiceContracts\ZDY.DMS.ServiceContracts.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.AdminService\ZDY.DMS.Services.AdminService.csproj" />

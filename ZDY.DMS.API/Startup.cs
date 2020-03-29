@@ -16,9 +16,6 @@ using ZDY.DMS.Repositories;
 using ZDY.DMS.Repositories.EntityFramework;
 using ZDY.DMS.Domain.Repositories.EntityFramework;
 using Microsoft.EntityFrameworkCore;
-using Zdy.Events;
-using ZDY.DMS.Domain.EventHandlers;
-using ZDY.DMS.Domain.Events;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.API.Swagger;
 using ZDY.DMS.StringEncryption;
@@ -115,16 +112,8 @@ namespace ZDY.DMS.API
             //仓储
             builder.Register<IRepositoryContext>(ctx => new EntityFrameworkRepositoryContext(ctx.Resolve<JxcDbContext>())).InstancePerLifetimeScope();
 
-            builder.RegisterType<EventAggregator>().As<IEventAggregator>().SingleInstance();
-            builder.RegisterType<EventBus>().As<IEventBus>();
-
             //加密
             builder.RegisterType<MD5StringEncryption>().As<IStringEncryption>();
-
-            //事件
-            builder.RegisterType<LoggingEventHandler>().As<IEventHandler<LoggingEvent>>();
-            builder.RegisterType<SendEmailEventHandler>().As<IEventHandler<SendEmailEvent>>();
-            builder.RegisterType<SendMessageEventHandler>().As<IEventHandler<SendMessageEvent>>();
 
             //服务
             builder.RegisterType<AppSettingService>().As<IAppSettingService>();

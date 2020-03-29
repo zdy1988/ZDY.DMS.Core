@@ -15,10 +15,8 @@ using ZDY.DMS.Services.WorkFlowService.Events;
 using ZDY.DMS.Services.WorkFlowService.DataObjects;
 using ZDY.DMS.Models;
 using ZDY.DMS.Tools;
-using Zdy.Events;
 using ZDY.DMS.StringEncryption;
 using ZDY.DMS.Domain.Enums;
-using ZDY.DMS.Domain.Events;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 using ZDY.DMS.Querying.DataTableGateway;
 
@@ -26,7 +24,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 {
     public class WorkFlowWorkingService : IWorkFlowWorkingService
     {
-        private readonly IEventBus eventBus;
         private readonly IDataTableGateway adoNetDataTableGateway;
         private readonly IStringEncryption stringEncryption;
         private readonly IRepositoryContext repositoryContext;
@@ -42,10 +39,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
         public WorkFlowWorkingService(IRepositoryContext repositoryContext,
                                       IStringEncryption stringEncryption,
-                                      IEventBus eventBus,
                                       IDataTableGateway adoNetDataTableGateway)
         {
-            this.eventBus = eventBus;
             this.adoNetDataTableGateway = adoNetDataTableGateway;
             this.stringEncryption = stringEncryption;
             this.repositoryContext = repositoryContext;
@@ -135,9 +130,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                         throw new InvalidOperationException("流程处理方式出现错误");
                 }
             }
-
-            //提交事件
-            eventBus.Commit();
 
             //更新实例中步骤信息
             await FreshenWorkFlowInstance(execute.InstanceId, current.Item1);
@@ -2120,19 +2112,19 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
         public void SendMessage(string title, string message, params Guid[] users)
         {
-            if (users.Count() > 0)
-            {
-                eventBus.Publish<SendMessageEvent>(new SendMessageEvent
-                {
-                    Message = new Message
-                    {
-                        Title = $"【审批】{title}",
-                        Content = $"【审批】{message}",
-                        Level = 0
-                    },
-                    To = users
-                });
-            }
+            //if (users.Count() > 0)
+            //{
+            //    eventBus.Publish<SendMessageEvent>(new SendMessageEvent
+            //    {
+            //        Message = new Message
+            //        {
+            //            Title = $"【审批】{title}",
+            //            Content = $"【审批】{message}",
+            //            Level = 0
+            //        },
+            //        To = users
+            //    });
+            //}
         }
 
         #endregion
