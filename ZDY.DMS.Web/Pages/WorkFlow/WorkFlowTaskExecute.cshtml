@@ -1,6 +1,6 @@
 ﻿@page
 @model ZDY.DMS.Web.Pages.WorkFlow.WorkFlowTaskExecuteModel
-@using ZDY.DMS.Domain.Enums
+@using ZDY.DMS.Services.WorkFlowService.Enums
 @using ZDY.DMS.Services.WorkFlowService
 
 @{
@@ -414,7 +414,7 @@
 
                         var execute = flowInstance.GetExecuteModel(steps)
 
-                        zdy.ajaxPost("WorkFlowWorking/ExcuteSubmit", { execute: execute }).done(function (rst) {
+                        zdy.ajaxPost("WorkFlowHost/ExcuteSubmit", { execute: execute }).done(function (rst) {
 
                             if (rst.IsSuccess) {
                                 zdy.toastr.success("操作成功");
@@ -434,7 +434,7 @@
                         zdy.confirm("确认退回此次操作？").done(function () {
                             var execute = flowInstance.GetExecuteModel()
 
-                            zdy.ajaxPost("WorkFlowWorking/ExcuteBack", { execute: execute }).done(function (rst) {
+                            zdy.ajaxPost("WorkFlowHost/ExcuteBack", { execute: execute }).done(function (rst) {
 
                                 if (rst.IsSuccess) {
                                     zdy.toastr.success("操作成功");
@@ -462,7 +462,7 @@
 
                             var execute = flowInstance.GetExecuteModel(steps)
 
-                            zdy.ajaxPost("WorkFlowWorking/ExcuteRedirect", { execute: execute }).done(function (rst) {
+                            zdy.ajaxPost("WorkFlowHost/ExcuteRedirect", { execute: execute }).done(function (rst) {
 
                                 if (rst.IsSuccess) {
                                     zdy.toastr.success("操作成功");

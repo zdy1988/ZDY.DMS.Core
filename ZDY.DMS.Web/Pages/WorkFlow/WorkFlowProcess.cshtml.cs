@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.WorkFlowService.DataObjects;
+using ZDY.DMS.Services.WorkFlowService.Models;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 
 namespace ZDY.DMS.Web.Pages.WorkFlow
@@ -14,14 +14,14 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
     {
         private readonly IRepositoryContext  repositoryContext;
         private readonly IRepository<Guid, WorkFlowInstance> workFlowInstanceRepository;
-        private readonly IWorkFlowWorkingService  workFlowWorkingService;
+        private readonly IWorkFlowHostService  workFlowHostService;
 
         public WorkFlowProcessModel(IRepositoryContext repositoryContext,
-            IWorkFlowWorkingService workFlowWorkingService)
+            IWorkFlowHostService workFlowHostService)
         {
             this.repositoryContext = repositoryContext;
             this.workFlowInstanceRepository = repositoryContext.GetRepository<Guid, WorkFlowInstance>();
-            this.workFlowWorkingService = workFlowWorkingService;
+            this.workFlowHostService = workFlowHostService;
         }
 
         public WorkFlowInstance Instance { get; set; }
@@ -39,9 +39,9 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
 
             Instance = workFlowInstanceEntity;
 
-            Process = await workFlowWorkingService.GetWorkFlowProcessAsync(Instance);
+            Process = await workFlowHostService.GetWorkFlowProcessAsync(Instance);
 
-            States = await workFlowWorkingService.GetWorkFlowProcessStatesAsync(Instance);
+            States = await workFlowHostService.GetWorkFlowProcessStatesAsync(Instance);
         }
     }
 }

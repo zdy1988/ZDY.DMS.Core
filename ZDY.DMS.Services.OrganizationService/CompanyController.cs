@@ -5,7 +5,7 @@ using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.DataPermission;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Services.OrganizationService.Models;
+using ZDY.DMS.Services.Common.Models;
 
 namespace ZDY.DMS.Services.OrganizationService
 {

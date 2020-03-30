@@ -11,12 +11,12 @@ namespace ZDY.DMS.Web.Pages.Admin
     public class PageTreeModel : PageModel
     {
         private readonly IRepositoryContext repositoryContext;
-        private readonly IRepository<Guid, Models.Page> pageRepository;
+        private readonly IRepository<Guid, Services.Common.Models.Page> pageRepository;
 
         public PageTreeModel(IRepositoryContext repositoryContext)
         {
             this.repositoryContext = repositoryContext;
-            this.pageRepository = repositoryContext.GetRepository<Guid, Models.Page>();
+            this.pageRepository = repositoryContext.GetRepository<Guid, Services.Common.Models.Page>();
         }
 
         public List<TreeNode> TreeData { get; set; }

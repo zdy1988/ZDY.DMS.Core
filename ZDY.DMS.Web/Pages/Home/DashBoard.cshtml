@@ -1,11 +1,5 @@
 ﻿@page
 @model ZDY.DMS.Web.Pages.Home.DashBoardModel
-@inject ZDY.DMS.ServiceContracts.IDictionaryService DictionaryService
-@inject SelectOptionsFactory SelectOptionsFactory
-@{
-    var Dictionary = DictionaryService.GetDictionary("WorkFlowTaskState");
-    var WorkFlowTaskState = SelectOptionsFactory.GetSelectOptionsByDictionary("WorkFlowTaskState");
-}
 
 <div class="row">
     <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
@@ -261,7 +255,7 @@
 
 @section Scripts{
     <script type="text/javascript">
-        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Dictionary)) ')
+        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Model.Dictionary)) ')
 
         require([
             "jquery",

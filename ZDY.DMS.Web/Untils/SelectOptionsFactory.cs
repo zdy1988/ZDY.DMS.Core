@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using ZDY.DMS.ServiceContracts;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Models;
 using ZDY.DMS.DataPermission;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
-using System.Linq.Expressions;
+using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.DMS.Services.Common.Models;
+using ZDY.DMS.Services.PermissionService.Models;
 
 namespace ZDY.DMS.Web
 {
@@ -124,25 +124,25 @@ namespace ZDY.DMS.Web
             return options;
         }
 
-        public async Task<List<KeyValuePair<string, string>>> GetSelectCustomerOptions()
-        {
-            var customers = await repositoryContext.GetRepository<Guid, Customer>().FindAllAsync(t => t.IsDisabled == false && t.CompanyId == UserIdentity.CompanyId, t => t.Desc(a => a.TimeStamp).Desc(b => b.Order));
+        //public async Task<List<KeyValuePair<string, string>>> GetSelectCustomerOptions()
+        //{
+        //    var customers = await repositoryContext.GetRepository<Guid, Customer>().FindAllAsync(t => t.IsDisabled == false && t.CompanyId == UserIdentity.CompanyId, t => t.Desc(a => a.TimeStamp).Desc(b => b.Order));
 
-            return customers.Select(t => new KeyValuePair<string, string>(t.Id.ToString(), t.CustomerName)).ToList();
-        }
+        //    return customers.Select(t => new KeyValuePair<string, string>(t.Id.ToString(), t.CustomerName)).ToList();
+        //}
 
-        public async Task<List<KeyValuePair<string, string>>> GetSelectSupplierOptions()
-        {
-            var suppliers = await repositoryContext.GetRepository<Guid, Supplier>().FindAllAsync(t => t.IsDisabled == false && t.CompanyId == UserIdentity.CompanyId, t => t.Desc(a => a.TimeStamp).Desc(b => b.Order));
+        //public async Task<List<KeyValuePair<string, string>>> GetSelectSupplierOptions()
+        //{
+        //    var suppliers = await repositoryContext.GetRepository<Guid, Supplier>().FindAllAsync(t => t.IsDisabled == false && t.CompanyId == UserIdentity.CompanyId, t => t.Desc(a => a.TimeStamp).Desc(b => b.Order));
 
-            return suppliers.Select(t => new KeyValuePair<string, string>(t.Id.ToString(), t.SupplierName)).ToList();
-        }
+        //    return suppliers.Select(t => new KeyValuePair<string, string>(t.Id.ToString(), t.SupplierName)).ToList();
+        //}
 
-        public async Task<List<KeyValuePair<string, string>>> GetSelectWarehouseOptions()
-        {
-            var warehouses = await repositoryContext.GetRepository<Guid, Warehouse>().FindAllAsync(t => t.IsDisabled == false && t.CompanyId == UserIdentity.CompanyId, t => t.Desc(a => a.TimeStamp).Desc(b => b.Order));
+        //public async Task<List<KeyValuePair<string, string>>> GetSelectWarehouseOptions()
+        //{
+        //    var warehouses = await repositoryContext.GetRepository<Guid, Warehouse>().FindAllAsync(t => t.IsDisabled == false && t.CompanyId == UserIdentity.CompanyId, t => t.Desc(a => a.TimeStamp).Desc(b => b.Order));
 
-            return warehouses.Select(t => new KeyValuePair<string, string>(t.Id.ToString(), t.WarehouseName)).ToList();
-        }
+        //    return warehouses.Select(t => new KeyValuePair<string, string>(t.Id.ToString(), t.WarehouseName)).ToList();
+        //}
     }
 }

@@ -14,17 +14,18 @@ using ZDY.DMS.Caching.InMemory;
 using ZDY.DMS.Caching;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Repositories.EntityFramework;
-using ZDY.DMS.Domain.Repositories.EntityFramework;
 using Microsoft.EntityFrameworkCore;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.API.Swagger;
 using ZDY.DMS.StringEncryption;
-using ZDY.DMS.ServiceContracts;
-using ZDY.DMS.Application.Implementation;
 using ZDY.DMS.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Querying.DataTableGateway.MySQL;
+using ZDY.DMS.Services.Common.Implementation;
+using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.DMS.Services.AdminService.Implementation;
+using ZDY.DMS.API.Repositories.EntityFramework;
 
 namespace ZDY.DMS.API
 {
@@ -43,7 +44,7 @@ namespace ZDY.DMS.API
         {
             services.AddControllersWithViews().AddControllersAsServices();
 
-            services.AddDbContext<JxcDbContext>(options => options.UseMySql(@"server=localhost;userid=root;pwd=1234;port=3306;database=test;sslmode=none;"));
+            services.AddDbContext<ApiDbContext>(options => options.UseMySql(@"server=localhost;userid=root;pwd=1234;port=3306;database=test;sslmode=none;"));
 
             services.AddMvc(options =>
             {
@@ -110,7 +111,7 @@ namespace ZDY.DMS.API
             builder.RegisterType<MySqlDataTableGateway>().As<IDataTableGateway>().SingleInstance();
 
             //≤÷¥¢
-            builder.Register<IRepositoryContext>(ctx => new EntityFrameworkRepositoryContext(ctx.Resolve<JxcDbContext>())).InstancePerLifetimeScope();
+            builder.Register<IRepositoryContext>(ctx => new EntityFrameworkRepositoryContext(ctx.Resolve<ApiDbContext>())).InstancePerLifetimeScope();
 
             //º”√‹
             builder.RegisterType<MD5StringEncryption>().As<IStringEncryption>();

@@ -20,11 +20,8 @@ using ZDY.DMS.Caching.InMemory;
 using ZDY.DMS.Caching;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Repositories.EntityFramework;
-using ZDY.DMS.Domain.Repositories.EntityFramework;
 using ZDY.DMS.AspNetCore.Mvc.Filters;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.Application.Implementation;
-using ZDY.DMS.ServiceContracts;
 using ZDY.DMS.StringEncryption;
 using ZDY.DMS.Services.OrganizationService.Implementation;
 using ZDY.DMS.Services.AdminService.Implementation;
@@ -37,6 +34,9 @@ using ZDY.DMS.Querying.DataTableGateway.MySQL;
 using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Services.PermissionService.ServiceContracts;
 using ZDY.DMS.Services.PermissionService.Implementation;
+using ZDY.DMS.Services.Common.Implementation;
+using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.DMS.Web.Repositories.EntityFramework;
 
 namespace ZDY.DMS.Web
 {
@@ -71,7 +71,7 @@ namespace ZDY.DMS.Web
 
             //services.AddDataPermission();
 
-            services.AddDbContext<JxcDbContext>(options => options.UseMySql(@"server=localhost;userid=root;pwd=1234;port=3306;database=test;sslmode=none;", b => b.MigrationsAssembly("ZDY.DMS.Web")));
+            services.AddDbContext<DMSDbContext>(options => options.UseMySql(@"server=localhost;userid=root;pwd=1234;port=3306;database=test;sslmode=none;", b => b.MigrationsAssembly("ZDY.DMS.Web")));
 
             services.AddMvc(options =>
             {
@@ -105,7 +105,7 @@ namespace ZDY.DMS.Web
             builder.RegisterType<MySqlDataTableGateway>().As<IDataTableGateway>().SingleInstance();
 
             //仓储
-            builder.Register<IRepositoryContext>(ctx => new EntityFrameworkRepositoryContext(ctx.Resolve<JxcDbContext>())).InstancePerLifetimeScope();
+            builder.Register<IRepositoryContext>(ctx => new EntityFrameworkRepositoryContext(ctx.Resolve<DMSDbContext>())).InstancePerLifetimeScope();
 
             //加密
             //builder.RegisterType<MD5StringEncryption>().As<IStringEncryption>();
@@ -124,7 +124,7 @@ namespace ZDY.DMS.Web
 
             builder.RegisterType<WorkFlowService>().As<IWorkFlowService>().SingleInstance();
             builder.RegisterType<WorkFlowFormService>().As<IWorkFlowFormService>().SingleInstance();
-            builder.RegisterType<WorkFlowWorkingService>().As<IWorkFlowWorkingService>().SingleInstance();
+            builder.RegisterType<WorkFlowHostService>().As<IWorkFlowHostService>().SingleInstance();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

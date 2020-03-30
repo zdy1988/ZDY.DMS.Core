@@ -3,8 +3,8 @@ using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Services.UserService.Models;
 using ZDY.DMS.StringEncryption;
+using ZDY.DMS.Services.Common.Models;
 
 namespace ZDY.DMS.Services.UserService
 {

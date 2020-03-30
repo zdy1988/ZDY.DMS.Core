@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ZDY.DMS.DataTransferObjects;
-using ZDY.DMS.Domain.Enums;
-using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.ServiceContracts;
+using ZDY.DMS.Services.Common.DataTransferObjects;
+using ZDY.DMS.Services.Common.ServiceContracts;
 using ZDY.DMS.Services.WorkFlowService;
 using ZDY.DMS.Services.WorkFlowService.DataObjects;
+using ZDY.DMS.Services.WorkFlowService.Enums;
+using ZDY.DMS.Services.WorkFlowService.Models;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 
 namespace ZDY.DMS.Web.Pages.WorkFlow
@@ -21,19 +21,19 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
         private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, WorkFlowTask> workFlowTaskServiceRepository;
         private readonly IRepository<Guid, WorkFlowInstance> workFlowInstanceRepository;
-        private readonly IWorkFlowWorkingService workFlowWorkingService;
+        private readonly IWorkFlowHostService workFlowHostService;
 
         public WorkFlowTaskExecuteModel(IRepositoryContext repositoryContext,
             IDictionaryService dictionaryService,
              SelectOptionsFactory selectOptionsFactory,
-            IWorkFlowWorkingService workFlowWorkingService)
+            IWorkFlowHostService workFlowHostService)
         {
             this.repositoryContext = repositoryContext;
             this.dictionaryService = dictionaryService;
             this.selectOptionsFactory = selectOptionsFactory;
             this.workFlowTaskServiceRepository = repositoryContext.GetRepository<Guid, WorkFlowTask>();
             this.workFlowInstanceRepository = repositoryContext.GetRepository<Guid, WorkFlowInstance>();
-            this.workFlowWorkingService = workFlowWorkingService;
+            this.workFlowHostService = workFlowHostService;
         }
 
         public Dictionary<string, IEnumerable<DictionaryItemDTO>> Dictionary { get; set; }
@@ -83,7 +83,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             //加载审批意见
             if (CurrentStep.IsShowComment)
             {
-                HasCommentTasks = await workFlowWorkingService.GetWorkFlowCommentsAsync(workFlowInstanceEntity);
+                HasCommentTasks = await workFlowHostService.GetWorkFlowCommentsAsync(workFlowInstanceEntity);
             }
 
             //更新打开时间

@@ -1,12 +1,5 @@
 ﻿@page
 @model ZDY.DMS.Web.Pages.Admin.DictionaryManagerModel
-@inject ZDY.DMS.ServiceContracts.IDictionaryService DictionaryService
-@inject SelectOptionsFactory SelectOptionsFactory 
-@{
-    var Dictionary = DictionaryService.GetDictionary("DictionaryKinds");
-
-    var DictionaryKinds = SelectOptionsFactory.GetSelectOptionsByDictionary("DictionaryKinds");
-}
 
 <div class="row">
     <div class="col-md-12">
@@ -85,7 +78,7 @@
                         <text-box field="Order" is-required="true" name="排序" text-box-type="Number"></text-box>
                     </div>
                     <div class="col-md-6">
-                        <select-box field="Type" is-required="true" name="类型" options="@DictionaryKinds"></select-box>
+                        <select-box field="Type" is-required="true" name="类型" options="@Model.DictionaryKinds"></select-box>
                     </div>
                 </div>
             </modal-body>
@@ -134,7 +127,7 @@
 
 @section Scripts{
     <script type="text/javascript">
-        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Dictionary)) ')
+        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Model.Dictionary)) ')
 
         require([
             "jquery",

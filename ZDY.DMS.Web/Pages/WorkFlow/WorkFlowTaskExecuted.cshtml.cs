@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ZDY.DMS.DataTransferObjects;
-using ZDY.DMS.ServiceContracts;
+using ZDY.DMS.Services.Common.DataTransferObjects;
+using ZDY.DMS.Services.Common.ServiceContracts;
 
 namespace ZDY.DMS.Web.Pages.WorkFlow
 {

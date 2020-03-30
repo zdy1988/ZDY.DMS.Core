@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.AspNetCore.Auth;
-using ZDY.DMS.Domain.Enums;
-using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
+using ZDY.DMS.Services.WorkFlowService.Enums;
+using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Web.Pages.WorkFlow
 {
@@ -12,18 +12,18 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
     {
         private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, WorkFlowForm> workFlowFormRepository;
-        private readonly IRepository<Guid, Models.WorkFlow> workFlowRepository;
+        private readonly IRepository<Guid, Services.WorkFlowService.Models.WorkFlow> workFlowRepository;
 
         public WorkFlowStartUpModel(IRepositoryContext repositoryContext)
         {
             this.repositoryContext = repositoryContext;
             this.workFlowFormRepository = repositoryContext.GetRepository<Guid, WorkFlowForm>();
-            this.workFlowRepository = repositoryContext.GetRepository<Guid, Models.WorkFlow>();
+            this.workFlowRepository = repositoryContext.GetRepository<Guid, Services.WorkFlowService.Models.WorkFlow>();
         }
 
         public string Title { get; set; }
 
-        public Models.WorkFlow Flow { get; set; }
+        public Services.WorkFlowService.Models.WorkFlow Flow { get; set; }
 
         public WorkFlowForm Form { get; set; }
 

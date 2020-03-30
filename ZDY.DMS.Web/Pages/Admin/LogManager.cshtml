@@ -1,11 +1,5 @@
 ﻿@page
 @model ZDY.DMS.Web.Pages.Admin.LogManagerModel
-@inject ZDY.DMS.ServiceContracts.IDictionaryService DictionaryService
-@inject SelectOptionsFactory SelectOptionsFactory
-@{
-    var Dictionary = DictionaryService.GetDictionary("LogKinds");
-    var LogKinds = SelectOptionsFactory.GetSelectOptionsByDictionary("LogKinds");
-}
 
 <div class="row">
     <div class="col-md-12">
@@ -16,7 +10,7 @@
                         <text-box field="Message" name="关键字"></text-box>
                     </div>
                     <div class="col-md-3">
-                        <select-box field="Type" name="类型" options="@LogKinds"></select-box>
+                        <select-box field="Type" name="类型" options="@Model.LogKinds"></select-box>
                     </div>
                     <div class="col-md-3">
                         <text-box field="TimeStamp_Start" is-date-time-picker="true" name="时间范围(开始)"></text-box>
@@ -68,7 +62,7 @@
 
 @section Scripts{
     <script type="text/javascript">
-        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Dictionary)) ')
+        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Model.Dictionary)) ')
 
         require([
             "jquery",

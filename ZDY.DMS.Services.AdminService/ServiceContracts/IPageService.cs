@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ZDY.DMS.Services.AdminService.DataTransferObjects;
+using ZDY.DMS.Services.Common.DataTransferObjects;
 
 namespace ZDY.DMS.Services.AdminService.ServiceContracts
 {

@@ -2,15 +2,14 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.Domain.Models;
-using ZDY.DMS.Models;
 using ZDY.DMS.Repositories;
+using ZDY.DMS.Services.Common.Extensions;
+using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.StringEncryption;
 
 namespace ZDY.DMS.Services.AuthService

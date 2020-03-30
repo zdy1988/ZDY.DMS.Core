@@ -8,9 +8,9 @@ Add-Migration Migration
 
 Update-Database Migration
 
-Add-Migration Migration_0007 -Context JxcDbContext
+Add-Migration Migration_0001 -Context DMSDbContext
 
-Update-Database Migration_0007 -Context JxcDbContext
+Update-Database Migration_0001 -Context DMSDbContext
 
 //ªÒ»°Ω≈±æ
 Script-Migration -From Migration_0001 -To Migration_0001 -Context JxcDbContext

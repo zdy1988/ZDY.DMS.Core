@@ -9,11 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200325072937_Migration_0003.cs" />
-    <Compile Remove="Migrations\20200325072937_Migration_0003.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Autofac" Version="5.1.2" />
     <PackageReference Include="BuildBundlerMinifier" Version="3.2.435" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.2" />
@@ -26,19 +21,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ZDY.DMS.Application\ZDY.DMS.Application.csproj" />
     <ProjectReference Include="..\ZDY.DMS.AspNetCore\ZDY.DMS.AspNetCore.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Caching.InMemory\ZDY.DMS.Caching.InMemory.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.DataTransferObjects\ZDY.DMS.DataTransferObjects.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.Domain\ZDY.DMS.Domain.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Extensions.DependencyInjection.Autofac\ZDY.DMS.ServiceProvider.Autofac.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Metronic.TagHelpers\ZDY.DMS.Metronic.TagHelpers.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.Models\ZDY.DMS.Models.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Querying.DataTableGateway.MySQL\ZDY.DMS.Querying.DataTableGateway.MySQL.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Repositories.EntityFramework\ZDY.DMS.Repositories.EntityFramework.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.ServiceContracts\ZDY.DMS.ServiceContracts.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.AdminService\ZDY.DMS.Services.AdminService.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.AuthService\ZDY.DMS.Services.AuthService.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.MessageService\ZDY.DMS.Services.MessageService.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.OrganizationService\ZDY.DMS.Services.OrganizationService.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.PermissionService\ZDY.DMS.Services.PermissionService.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.UserService\ZDY.DMS.Services.UserService.csproj" />

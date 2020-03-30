@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.AdminService.ServiceContracts;
-using ZDY.DMS.Services.AdminService.Models;
-using ZDY.DMS.Services.AdminService.DataTransferObjects;
+using ZDY.DMS.Services.Common.Models;
+using ZDY.DMS.Services.Common.DataTransferObjects;
 
 namespace ZDY.DMS.Services.AdminService.Implementation
 {
