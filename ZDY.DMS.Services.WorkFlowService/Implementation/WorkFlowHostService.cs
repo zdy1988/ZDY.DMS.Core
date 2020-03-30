@@ -5,7 +5,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -1226,7 +1225,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             var backStepTasks = new List<WorkFlowTask>();
             if (isBack)
             {
-                sourceBackStepTasks = sourceBackStepTasks.Distinct((WorkFlowTask x, WorkFlowTask y) => x.ReceiverId == y.ReceiverId && x.StepId == y.StepId && x.FlowId == y.FlowId && x.InstanceId == y.InstanceId).ToList();
+                sourceBackStepTasks = sourceBackStepTasks.Distinct(new WorkFlowReceiverTaskComparer()).ToList();
 
                 if (sourceBackStepTasks.Count > 0)
                 {
