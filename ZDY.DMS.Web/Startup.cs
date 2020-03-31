@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -16,27 +9,30 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Autofac;
-using ZDY.DMS.Caching.InMemory;
-using ZDY.DMS.Caching;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Repositories.EntityFramework;
 using ZDY.DMS.AspNetCore.Mvc.Filters;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.StringEncryption;
 using ZDY.DMS.Services.OrganizationService.Implementation;
 using ZDY.DMS.Services.AdminService.Implementation;
 using ZDY.DMS.Services.WorkFlowService.Implementation;
-using ZDY.DMS.AspNetCore.Auth;
+using ZDY.DMS.AspNetCore;
 using ZDY.DMS.Services.OrganizationService.ServiceContracts;
 using ZDY.DMS.Services.AdminService.ServiceContracts;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
-using ZDY.DMS.Querying.DataTableGateway.MySQL;
-using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Services.PermissionService.ServiceContracts;
 using ZDY.DMS.Services.PermissionService.Implementation;
 using ZDY.DMS.Services.Common.Implementation;
 using ZDY.DMS.Services.Common.ServiceContracts;
 using ZDY.DMS.Web.Repositories.EntityFramework;
+using ZDY.DMS.Services.AdminService;
+using ZDY.DMS.AspNetCore.Auth;
+using ZDY.DMS.Services.AuthService;
+using ZDY.DMS.Services.MessageService;
+using ZDY.DMS.Services.OrganizationService;
+using ZDY.DMS.Services.PermissionService;
+using ZDY.DMS.Services.UserService;
+using ZDY.DMS.Services.WorkFlowService;
 
 namespace ZDY.DMS.Web
 {
@@ -56,23 +52,27 @@ namespace ZDY.DMS.Web
 
             services.AddRazorPages();
 
-            //services.AddAuthorization(auth => auth.DefaultPolicy = new AuthorizationPolicyBuilder().AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​).RequireAuthenticatedUser().Build());
+            //注册验证
+            services.AddAuthorization(auth =>
+            {
+                auth.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
 
-            //services.AddAuthentication(options => options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
-            //        .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
-            //        {
-            //            IssuerSigningKey = SecurityTokenOptions.Key,
-            //            ValidAudience = SecurityTokenOptions.Audience,
-            //            ValidIssuer = SecurityTokenOptions.Issuer,
-            //            ValidateIssuerSigningKey = true,
-            //            ValidateLifetime = true,
-            //            ClockSkew = TimeSpan.FromMinutes(0)
-            //        });
+            services.AddAuthentication(options => options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = SecurityTokenOptions.Key,
+                        ValidAudience = SecurityTokenOptions.Audience,
+                        ValidIssuer = SecurityTokenOptions.Issuer,
+                        ValidateIssuerSigningKey = true,
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromMinutes(0)
+                    });
 
-            //services.AddDataPermission();
-
-            services.AddDbContext<DMSDbContext>(options => options.UseMySql(@"server=localhost;userid=root;pwd=1234;port=3306;database=test;sslmode=none;", b => b.MigrationsAssembly("ZDY.DMS.Web")));
-
+            //注册MVC
             services.AddMvc(options =>
             {
                 options.Filters.Add(typeof(ApiValidationFilter));
@@ -85,9 +85,21 @@ namespace ZDY.DMS.Web
                 options.SerializerSettings.ContractResolver = new NullToEmptyStringResolver();
             });
 
-            services.Configure<ApiBehaviorOptions>(options =>
-            {
-                options.SuppressModelStateInvalidFilter = true;
+
+            services.AddDbContext<DMSDbContext>(options => options.UseMySql(@"server=localhost;userid=root;pwd=1234;port=3306;database=test;sslmode=none;", b => b.MigrationsAssembly("ZDY.DMS.Web")));
+
+            //仓储
+            services.AddScoped<IRepositoryContext>(sp => new EntityFrameworkRepositoryContext(sp.GetService<DMSDbContext>()));
+
+            //DMS
+            services.AddDMS(options => {
+                options.AddService<AdminServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                options.AddService<AuthServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                options.AddService<MessageServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                options.AddService<OrganizationServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                options.AddService<PermissionServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                options.AddService<UserServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                options.AddService<WorkFlowServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
             });
 
             services.AddAutoMapper();
@@ -95,22 +107,6 @@ namespace ZDY.DMS.Web
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            //Http
-            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().SingleInstance();
-
-            //缓存
-            builder.RegisterType<MemoryCacheManager>().As<ICacheManager>().SingleInstance();
-
-            //Ado
-            builder.RegisterType<MySqlDataTableGateway>().As<IDataTableGateway>().SingleInstance();
-
-            //仓储
-            builder.Register<IRepositoryContext>(ctx => new EntityFrameworkRepositoryContext(ctx.Resolve<DMSDbContext>())).InstancePerLifetimeScope();
-
-            //加密
-            //builder.RegisterType<MD5StringEncryption>().As<IStringEncryption>();
-            builder.RegisterType<NoStringEncryption>().As<IStringEncryption>();
-
             //服务
             builder.RegisterType<AppSettingService>().As<IAppSettingService>();
             builder.RegisterType<DictionaryService>().As<IDictionaryService>();
@@ -134,21 +130,17 @@ namespace ZDY.DMS.Web
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseErrorHandle();
-
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseAutofacServiceLocator();
+            app.UseCookiesAuthentication();
 
-            //app.UseCookiesAuthentication();
+            app.UseAuthorization();
 
-            //app.UseAuthentication();
+            app.UseAuthentication();
 
-            //app.UseAuthorization();
-
-            //app.UseDataPermission();
+            app.UseDMS();
 
             app.UseEndpoints(endpoints =>
             {

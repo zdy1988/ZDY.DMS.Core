@@ -7,7 +7,7 @@ using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.Models;
 
-namespace ZDY.DMS.Services.OrganizationService
+namespace ZDY.DMS.Services.OrganizationService.Controllers
 {
     public class DepartmentController : ApiDataServiceController<Guid, Department>
     {

@@ -83,7 +83,7 @@ namespace ZDY.DMS.Web
 
             foreach (var type in formKinds)
             {
-                options.Add(new KeyValuePair<string, string>("@" + type.Value, type.Name));
+                options.Add(new KeyValuePair<string, string>("@" + type.Value, type.Value));
                 options.AddRange(forms.Where(t => t.Type == int.Parse(type.Value)).Select(t => new KeyValuePair<string, string>(t.Id.ToString(), t.Name)).ToList());
             }
 

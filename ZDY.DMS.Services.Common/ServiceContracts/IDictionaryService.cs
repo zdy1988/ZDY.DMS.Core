@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-using ZDY.DMS.Services.Common.DataTransferObjects;
+using ZDY.DMS.AspNetCore.Dictionary;
 
 namespace ZDY.DMS.Services.Common.ServiceContracts
 {
@@ -13,7 +11,7 @@ namespace ZDY.DMS.Services.Common.ServiceContracts
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
-        Dictionary<string, IEnumerable<DictionaryItemDTO>> GetDictionary(string keys);
+        Dictionary<string, IEnumerable<KeyValuePaired>> GetDictionary(string keys);
 
         /// <summary>
         /// 获取某个Key下字典中Value的名称，支持多个Value，用逗号隔开

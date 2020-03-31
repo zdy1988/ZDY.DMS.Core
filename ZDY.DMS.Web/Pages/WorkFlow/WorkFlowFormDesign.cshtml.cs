@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.Services.Common.DataTransferObjects;
 using ZDY.DMS.Services.Common.ServiceContracts;
 
@@ -12,13 +13,16 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
     public class WorkFlowFormDesign : PageModel
     {
         private readonly IDictionaryService dictionaryService;
+        private readonly SelectOptionsFactory selectOptionsFactory;
 
-        public WorkFlowFormDesign(IDictionaryService dictionaryService)
+        public WorkFlowFormDesign(IDictionaryService dictionaryService,
+             SelectOptionsFactory selectOptionsFactory)
         {
             this.dictionaryService = dictionaryService;
+            this.selectOptionsFactory = selectOptionsFactory;
         }
 
-        public Dictionary<string, IEnumerable<DictionaryItemDTO>> Dictionary { get; set; }
+        public Dictionary<string, IEnumerable<KeyValuePaired>> Dictionary { get; set; }
 
         public IEnumerable<KeyValuePair<string, string>> WorkFlowFormKinds { get; set; }
         public IEnumerable<KeyValuePair<string, string>> WorkFlowFormState { get; set; }
@@ -27,8 +31,8 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
         {
             Dictionary = dictionaryService.GetDictionary("WorkFlowFormKinds,WorkFlowFormState");
 
-            WorkFlowFormKinds = Dictionary["WorkFlowFormKinds"].Select(t => new KeyValuePair<string, string>(t.Value, t.Name));
-            WorkFlowFormState = Dictionary["WorkFlowFormState"].Select(t => new KeyValuePair<string, string>(t.Value, t.Name));
+            WorkFlowFormKinds = this.selectOptionsFactory.GetSelectOptionsByDictionary("WorkFlowFormKinds");
+            WorkFlowFormState = this.selectOptionsFactory.GetSelectOptionsByDictionary("WorkFlowFormState");
         }
     }
 }

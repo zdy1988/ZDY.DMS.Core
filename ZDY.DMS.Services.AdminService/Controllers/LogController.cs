@@ -9,7 +9,7 @@ using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.Models;
 
-namespace ZDY.DMS.Services.AdminService
+namespace ZDY.DMS.Services.AdminService.Controllers
 {
     //[Authorize(Roles = "Administrator")]
     public class LogController : ApiDataServiceController<Guid, Log>

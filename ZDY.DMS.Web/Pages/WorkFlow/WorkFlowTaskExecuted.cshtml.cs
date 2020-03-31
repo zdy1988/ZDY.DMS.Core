@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.Services.Common.DataTransferObjects;
 using ZDY.DMS.Services.Common.ServiceContracts;
 
@@ -10,13 +11,16 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
     public class WorkFlowTaskExecutedModel : PageModel
     {
         private readonly IDictionaryService dictionaryService;
+        private readonly SelectOptionsFactory selectOptionsFactory;
 
-        public WorkFlowTaskExecutedModel(IDictionaryService dictionaryService)
+        public WorkFlowTaskExecutedModel(IDictionaryService dictionaryService,
+            SelectOptionsFactory selectOptionsFactory)
         {
             this.dictionaryService = dictionaryService;
+            this.selectOptionsFactory = selectOptionsFactory;
         }
 
-        public Dictionary<string, IEnumerable<DictionaryItemDTO>> Dictionary { get; set; }
+        public Dictionary<string, IEnumerable<KeyValuePaired>> Dictionary { get; set; }
 
         public IEnumerable<KeyValuePair<string, string>> WorkFlowTaskState { get; set; }
 
@@ -24,7 +28,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
         {
             Dictionary = this.dictionaryService.GetDictionary("WorkFlowTaskState");
 
-            WorkFlowTaskState = Dictionary["WorkFlowTaskState"].Select(t => new KeyValuePair<string, string>(t.Value, t.Name));
+            WorkFlowTaskState = this.selectOptionsFactory.GetSelectOptionsByDictionary("WorkFlowTaskState");
         }
     }
 }

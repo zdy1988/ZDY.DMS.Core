@@ -6,7 +6,7 @@ using ZDY.DMS.Repositories;
 using ZDY.DMS.StringEncryption;
 using ZDY.DMS.Services.Common.Models;
 
-namespace ZDY.DMS.Services.UserService
+namespace ZDY.DMS.Services.UserService.Controllers
 {
     public class UserController : ApiDataServiceController<Guid, User>
     {

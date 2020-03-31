@@ -12,7 +12,7 @@ using ZDY.DMS.Services.Common.Extensions;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.StringEncryption;
 
-namespace ZDY.DMS.Services.AuthService
+namespace ZDY.DMS.Services.AuthService.Controllers
 {
 
     public class AuthController : ApiController

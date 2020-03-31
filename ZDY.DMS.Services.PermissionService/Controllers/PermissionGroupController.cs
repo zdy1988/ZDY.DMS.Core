@@ -7,7 +7,7 @@ using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.PermissionService.Models;
 
-namespace ZDY.DMS.Services.PermissionService
+namespace ZDY.DMS.Services.PermissionService.Controllers
 {
     public class PermissionGroupController : ApiDataServiceController<Guid, UserGroup>
     {

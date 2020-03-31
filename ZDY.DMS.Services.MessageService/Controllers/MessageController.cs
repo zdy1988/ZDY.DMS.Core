@@ -3,7 +3,7 @@ using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.MessageService.Models;
 
-namespace ZDY.DMS.Services.MessageService
+namespace ZDY.DMS.Services.MessageService.Controllers
 {
     public class MessageController: ApiController
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.DataTransferObjects;
 using ZDY.DMS.Services.Common.ServiceContracts;
@@ -36,7 +37,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             this.workFlowHostService = workFlowHostService;
         }
 
-        public Dictionary<string, IEnumerable<DictionaryItemDTO>> Dictionary { get; set; }
+        public Dictionary<string, IEnumerable<KeyValuePaired>> Dictionary { get; set; }
 
         public IEnumerable<KeyValuePair<string, string>> UserOptions { get; set; }
 
@@ -95,7 +96,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             }
 
 
-            Dictionary = dictionaryService.GetDictionary("WorkFlowTaskState");
+            Dictionary = dictionaryService.GetDictionary("WorkFlowTaskState"); 
 
             UserOptions = await this.selectOptionsFactory.GetSelectUserOptions();
 

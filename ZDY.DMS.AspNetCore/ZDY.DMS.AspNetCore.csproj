@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -13,8 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ZDY.DMS.Caching.InMemory\ZDY.DMS.Caching.InMemory.csproj" />
     <ProjectReference Include="..\ZDY.DMS.DataPermission\ZDY.DMS.DataPermission.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Extensions.DependencyInjection.Autofac\ZDY.DMS.ServiceProvider.Autofac.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Querying.DataTableGateway.MySQL\ZDY.DMS.Querying.DataTableGateway.MySQL.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Tools\ZDY.DMS.Tools.csproj" />
     <ProjectReference Include="..\ZDY.DMS\ZDY.DMS.csproj" />
   </ItemGroup>
 

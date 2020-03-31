@@ -39,7 +39,7 @@ namespace ZDY.DMS.AspNetCore.Mvc
         {
             get
             {
-                return ConfigurationManager.GetAppSetting<int>("DefaultPageSize");
+                return 20;
             }
         }
 

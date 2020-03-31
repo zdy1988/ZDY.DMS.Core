@@ -7,11 +7,11 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static void AddAutoMapper(this IServiceCollection services)
         {
-            services.AddSingleton<IMapper>(sp => (new MapperConfiguration(cfg =>
+            services.AddSingleton<IMapper>(sp => new MapperConfiguration(cfg =>
             {
                 //cfg.AddProfile(new AutoMapProfileConfiguration());
                 cfg.AddProfile(new AutoMapperProfileConfiguration());
-            }).CreateMapper()));
+            }).CreateMapper());
         }
     }
 }

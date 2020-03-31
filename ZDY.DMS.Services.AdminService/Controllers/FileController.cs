@@ -8,7 +8,7 @@ using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.Services.Common.ServiceContracts;
 
-namespace ZDY.DMS.Services.AdminService
+namespace ZDY.DMS.Services.AdminService.Controllers
 {
     public class FileController : ApiDataServiceController<Guid, File>
     {

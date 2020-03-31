@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.Services.Common.DataTransferObjects;
 using ZDY.DMS.Services.Common.ServiceContracts;
 
@@ -21,7 +22,7 @@ namespace ZDY.DMS.Web.Pages.Home
             this.selectOptionsFactory = selectOptionsFactory;
         }
 
-        public Dictionary<string, IEnumerable<DictionaryItemDTO>> Dictionary { get; set; }
+        public Dictionary<string, IEnumerable<KeyValuePaired>> Dictionary { get; set; }
 
         public IEnumerable<KeyValuePair<string, string>> WorkFlowTaskStates { get; set; }
 
