@@ -12,23 +12,22 @@ using ZDY.DMS.Services.Common.DataTransferObjects;
 using ZDY.DMS.Services.Common.ServiceContracts;
 using ZDY.DMS.Tools;
 using ZDY.DMS.AspNetCore.Dictionary;
+using ZDY.DMS.AspNetCore;
 
 namespace ZDY.DMS.Services.AdminService.Implementation
 {
-    public class DictionaryService : IDictionaryService
+    public class DictionaryService : ServiceBase<AdminServiceModule>, IDictionaryService
     {
-        private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, DictionaryKey> dictionaryKeyRepository;
         private readonly IRepository<Guid, DictionaryValue> dictionaryValueRepository;
         private readonly IDictionaryProvider dictionaryProvider;
 
-        public DictionaryService(IRepositoryContext repositoryContext,
-            IDictionaryProvider dictionaryProvider)
+        public DictionaryService(Func<Type, IRepositoryContext> repositoryContextFactory,
+            IDictionaryProvider dictionaryProvider) : base(repositoryContextFactory)
         {
-            this.repositoryContext = repositoryContext;
             this.dictionaryProvider = dictionaryProvider;
-            this.dictionaryKeyRepository = repositoryContext.GetRepository<Guid, DictionaryKey>();
-            this.dictionaryValueRepository = repositoryContext.GetRepository<Guid, DictionaryValue>();
+            this.dictionaryKeyRepository = this.GetRepository<Guid, DictionaryKey>();
+            this.dictionaryValueRepository = this.GetRepository<Guid, DictionaryValue>();
         }
 
         public Dictionary<string, IEnumerable<KeyValuePaired>> GetDictionary(string keys)

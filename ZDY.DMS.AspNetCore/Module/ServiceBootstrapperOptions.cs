@@ -9,29 +9,29 @@ namespace ZDY.DMS.AspNetCore
 {
     public class ServiceBootstrapperOptions
     {
-        private readonly ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>> serviceRegistrations;
+        private readonly ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>> serviceModuleRegistrations;
 
         public ServiceBootstrapperOptions()
         {
-            serviceRegistrations = new ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>>();
+            serviceModuleRegistrations = new ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>>();
         }
 
-        public ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>> Services
+        public ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>> ServiceModules
         {
             get
             {
-                return this.serviceRegistrations;
+                return this.serviceModuleRegistrations;
             }
         }
 
         public ServiceRepositoryBootstrapperOptions AddService(Type serviceModuleType)
         {
-            if (!serviceRegistrations.TryGetValue(serviceModuleType, out Func<IServiceProvider, IRepositoryContext> registryItem))
+            if (!serviceModuleRegistrations.TryGetValue(serviceModuleType, out Func<IServiceProvider, IRepositoryContext> registryItem))
             {
-                serviceRegistrations.TryAdd(serviceModuleType, null);
+                serviceModuleRegistrations.TryAdd(serviceModuleType, null);
             }
 
-            return new ServiceRepositoryBootstrapperOptions(serviceModuleType, serviceRegistrations);
+            return new ServiceRepositoryBootstrapperOptions(serviceModuleType, serviceModuleRegistrations);
         }
 
         public ServiceRepositoryBootstrapperOptions AddService<TService>() where TService : IServiceModule

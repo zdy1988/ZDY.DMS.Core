@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ZDY.DMS.AspNetCore;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.Services.OrganizationService.ServiceContracts;
 
 namespace ZDY.DMS.Services.OrganizationService.Implementation
 {
-    public class DepartmentService: IDepartmentService
+    public class DepartmentService: ServiceBase<OrganizationServiceModule>, IDepartmentService
     {
-        private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, Department> departmentFlowRepository;
 
-        public DepartmentService(IRepositoryContext repositoryContext)
+        public DepartmentService(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory)
         {
-            this.repositoryContext = repositoryContext;
-            this.departmentFlowRepository = this.repositoryContext.GetRepository<Guid, Department>();
+            this.departmentFlowRepository = this.GetRepository<Guid, Department>();
         }
 
         public async Task<IEnumerable<Department>> GetAllDepartmentAsync(Guid companyID)

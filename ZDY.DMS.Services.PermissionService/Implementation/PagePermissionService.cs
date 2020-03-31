@@ -2,24 +2,24 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ZDY.DMS.AspNetCore;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.PermissionService.Models;
 using ZDY.DMS.Services.PermissionService.ServiceContracts;
 
 namespace ZDY.DMS.Services.PermissionService.Implementation
 {
-    public class PagePermissionService : IPagePermissionService
+    public class PagePermissionService : ServiceBase<PermissionServiceModule>, IPagePermissionService
     {
-        private readonly IRepositoryContext repositoryContext;
-
-        public PagePermissionService(IRepositoryContext repositoryContext)
+        public PagePermissionService(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory)
         {
-            this.repositoryContext = repositoryContext;
+
         }
 
         public async Task<Guid[]> GetUserPagePermissionAsync(Guid userId)
         {
-            var context = (DbContext)repositoryContext.Session;
+            var context = (DbContext)this.RepositoryContext.Session;
 
             var pages = from pp in context.Set<UserGroupPagePermission>()
                         join ug in context.Set<UserGroup>()

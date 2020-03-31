@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using ZDY.DMS.AspNetCore;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
@@ -9,15 +10,14 @@ using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 
 namespace ZDY.DMS.Services.WorkFlowService.Implementation
 {
-    public class WorkFlowFormService : IWorkFlowFormService
+    public class WorkFlowFormService : ServiceBase<WorkFlowServiceModule>, IWorkFlowFormService
     {
-        private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, WorkFlowForm> workFlowFormRepository;
 
-        public WorkFlowFormService(IRepositoryContext repositoryContext)
+        public WorkFlowFormService(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory)
         {
-            this.repositoryContext = repositoryContext;
-            this.workFlowFormRepository = this.repositoryContext.GetRepository<Guid, WorkFlowForm>();
+            this.workFlowFormRepository = this.GetRepository<Guid, WorkFlowForm>();
         }
 
         private async Task<IEnumerable<WorkFlowForm>> GetWorkFlowForms(Guid companyID, WorkFlowFormState workFlowFormState)

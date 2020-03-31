@@ -19,14 +19,14 @@ using ZDY.DMS.Services.WorkFlowService.Models;
 using ZDY.DMS.Tools;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.Common.Models;
+using ZDY.DMS.AspNetCore;
 
 namespace ZDY.DMS.Services.WorkFlowService.Implementation
 {
-    public class WorkFlowHostService : IWorkFlowHostService
+    public class WorkFlowHostService : ServiceBase<WorkFlowServiceModule>, IWorkFlowHostService
     {
         private readonly IDataTableGateway dataTableGateway;
         private readonly IStringEncryption stringEncryption;
-        private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, User> userRepository;
         private readonly IRepository<Guid, WorkFlow> workFlowRepository;
         private readonly IRepository<Guid, WorkFlowTask> workFlowTaskRepository;
@@ -35,17 +35,17 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
         private readonly AsyncLock execute_lock = new AsyncLock();
 
-        public WorkFlowHostService(IRepositoryContext repositoryContext,
-                                      IStringEncryption stringEncryption,
-                                      IDataTableGateway dataTableGateway)
+        public WorkFlowHostService(Func<Type, IRepositoryContext> repositoryContextFactory,
+                                   IStringEncryption stringEncryption,
+                                   IDataTableGateway dataTableGateway)
+            : base(repositoryContextFactory)
         {
             this.dataTableGateway = dataTableGateway;
             this.stringEncryption = stringEncryption;
-            this.repositoryContext = repositoryContext;
-            this.userRepository = repositoryContext.GetRepository<Guid, User>();
-            this.workFlowRepository = repositoryContext.GetRepository<Guid, WorkFlow>();
-            this.workFlowTaskRepository = repositoryContext.GetRepository<Guid, WorkFlowTask>();
-            this.workFlowInstanceRepository = repositoryContext.GetRepository<Guid, WorkFlowInstance>();
+            this.userRepository = this.GetRepository<Guid, User>();
+            this.workFlowRepository = this.GetRepository<Guid, WorkFlow>();
+            this.workFlowTaskRepository = this.GetRepository<Guid, WorkFlowTask>();
+            this.workFlowInstanceRepository = this.GetRepository<Guid, WorkFlowInstance>();
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         {
             await StartWorkFlowInstance(instance, GuidHelper.NewGuid());
 
-            await this.repositoryContext.CommitAsync();
+            await this.RepositoryContext.CommitAsync();
         }
 
         /// <summary>
@@ -571,7 +571,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             }
 
             // 提交之前所有数据库操作
-            await this.repositoryContext.CommitAsync();
+            await this.RepositoryContext.CommitAsync();
 
             //发送信息
             SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>处理了<b>{execute.Title}</b>的<b>{currentStep.StepName}</b>.", instance.CreaterId);
@@ -627,7 +627,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             }
 
             // 提交之前所有数据库操作
-            await this.repositoryContext.CommitAsync();
+            await this.RepositoryContext.CommitAsync();
 
             //发送信息
             SendMessage(instance.Title, $"<b>{execute.Sender.Name}</b>退回了<b>{execute.Title}</b>的<b>{currentStep.StepName}</b>.", instance.CreaterId);
@@ -699,7 +699,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             await UpdateTaskState(currentTask, execute.Comment, execute.IsNeedSign, WorkFlowTaskState.Handled, "已转交他人处理");
 
             // 提交之前所有数据库操作
-            await this.repositoryContext.CommitAsync();
+            await this.RepositoryContext.CommitAsync();
 
             if (redirectTasks.Count > 0)
             {

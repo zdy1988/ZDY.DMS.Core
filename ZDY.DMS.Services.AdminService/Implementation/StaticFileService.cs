@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using ZDY.DMS.AspNetCore;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.Services.Common.ServiceContracts;
@@ -7,16 +8,15 @@ using ZDY.DMS.Tools;
 
 namespace ZDY.DMS.Services.AdminService.Implementation
 {
-    public class StaticFileService : IStaticFileService
+    public class StaticFileService : ServiceBase<AdminServiceModule>, IStaticFileService
     {
-        private IRepositoryContext repositoryContext;
         private IRepository<Guid, File> fileRepository;
         private IAppSettingService appSettingService;
 
-        public StaticFileService(IRepositoryContext repositoryContext,IAppSettingService appSettingService)
+        public StaticFileService(Func<Type, IRepositoryContext> repositoryContextFactory,
+            IAppSettingService appSettingService) : base(repositoryContextFactory)
         {
-            this.repositoryContext = repositoryContext;
-            this.fileRepository = repositoryContext.GetRepository<Guid, File>();
+            this.fileRepository = this.GetRepository<Guid, File>();
             this.appSettingService = appSettingService;
         }
 

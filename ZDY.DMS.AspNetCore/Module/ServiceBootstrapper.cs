@@ -21,42 +21,41 @@ namespace ZDY.DMS.AspNetCore
         {
             configure?.Invoke(options);
 
-            if (options.Services.Count > 0)
+            if (options.ServiceModules.Count > 0)
             {
-                // Register Services
-                foreach (var service in options.Services)
+                // Register Modules
+                foreach (var module in options.ServiceModules)
                 {
-                    services.AddSingleton(service.Key);
+                    services.AddSingleton(module.Key);
                 }
 
-
-                // Register RepositoryContext Owner Of The Service
+                // Register RepositoryContext Owner Of The Module
                 services.AddScoped(implementationFactory =>
                 {
-                    Func<Type, IRepositoryContext> func = serviceModuleType =>
+                    IRepositoryContext factory(Type serviceModuleType)
                     {
-                        if (options.Services.TryGetValue(serviceModuleType, out Func<IServiceProvider, IRepositoryContext> registryRepositoryContextFactory))
+                        if (options.ServiceModules.TryGetValue(serviceModuleType, out Func<IServiceProvider, IRepositoryContext> registryRepositoryContextFactory))
                         {
                             return registryRepositoryContextFactory.Invoke(implementationFactory);
                         }
 
-                        throw new InvalidOperationException($"Unable to resolve service for type '{typeof(IRepositoryContext)}'");
-                    };
+                        throw new InvalidOperationException($"Unable to resolve repository context for module '{serviceModuleType}'");
+                    }
 
-                    return func;
+                    return (Func<Type, IRepositoryContext>)factory;
                 });
             }
         }
 
         public void Initialize(IApplicationBuilder builder)
         {
-            if (options.Services.Count > 0)
+            if (options.ServiceModules.Count > 0)
             {
-                foreach (var item in options.Services)
+                foreach (var item in options.ServiceModules)
                 {
-                    IServiceModule service = (IServiceModule)builder.ApplicationServices.GetService(item.Key);
+                    IServiceModule module = (IServiceModule)builder.ApplicationServices.GetService(item.Key);
 
-                    service.Initialize();
+                    module?.Initialize();
                 }
             }
         }

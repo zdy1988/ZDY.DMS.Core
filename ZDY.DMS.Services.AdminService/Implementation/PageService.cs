@@ -7,20 +7,20 @@ using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.AdminService.ServiceContracts;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.Services.Common.DataTransferObjects;
+using ZDY.DMS.AspNetCore;
 
 namespace ZDY.DMS.Services.AdminService.Implementation
 {
-    public class PageService : IPageService
+    public class PageService : ServiceBase<AdminServiceModule>, IPageService
     {
         private readonly IMapper mapper;
-        private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, Page> pageRepository;
 
-        public PageService(IMapper mapper,IRepositoryContext repositoryContext)
+        public PageService(IMapper mapper, Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory)
         {
             this.mapper = mapper;
-            this.repositoryContext = repositoryContext;
-            this.pageRepository = repositoryContext.GetRepository<Guid, Page>();
+            this.pageRepository = this.GetRepository<Guid, Page>();
         }
 
         public async Task<IEnumerable<MultiLevelPageDTO>> GetMultiLevelPagesAsync(Guid[] pageIdRanges, Guid companyId)

@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ZDY.DMS.AspNetCore;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 
 namespace ZDY.DMS.Services.WorkFlowService.Implementation
 {
-    public class WorkFlowService : IWorkFlowService
+    public class WorkFlowService : ServiceBase<WorkFlowServiceModule>, IWorkFlowService
     {
-        private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, Models.WorkFlow> workFlowRepository;
 
-        public WorkFlowService(IRepositoryContext repositoryContext)
+        public WorkFlowService(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory)
         {
-            this.repositoryContext = repositoryContext;
-            this.workFlowRepository = this.repositoryContext.GetRepository<Guid, Models.WorkFlow>();
+            this.workFlowRepository = this.GetRepository<Guid, Models.WorkFlow>();
         }
 
         private async Task<IEnumerable<Models.WorkFlow>> GetWorkFlows(Guid companyID, WorkFlowState workFlowState)
