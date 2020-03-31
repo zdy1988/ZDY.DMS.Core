@@ -9,19 +9,18 @@ using ZDY.DMS.Services.PermissionService.Models;
 
 namespace ZDY.DMS.Services.PermissionService.Controllers
 {
-    public class PermissionController : ApiController
+    public class PermissionController : ApiController<PermissionServiceModule>
     {
-        private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, UserGroupMember> userGroupMemberRepository;
         private readonly IRepository<Guid, UserGroupPagePermission> userGroupPagePermissionRepository;
         private readonly IRepository<Guid, UserGroupActionPermission> userGroupActionPermissionRepository;
 
-        public PermissionController(IRepositoryContext repositoryContext)
+        public PermissionController(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory)
         {
-            this.repositoryContext = repositoryContext;
-            this.userGroupMemberRepository = repositoryContext.GetRepository<Guid, UserGroupMember>();
-            this.userGroupPagePermissionRepository = repositoryContext.GetRepository<Guid, UserGroupPagePermission>();
-            this.userGroupActionPermissionRepository = repositoryContext.GetRepository<Guid, UserGroupActionPermission>();
+            this.userGroupMemberRepository = this.RepositoryContext.GetRepository<Guid, UserGroupMember>();
+            this.userGroupPagePermissionRepository = this.RepositoryContext.GetRepository<Guid, UserGroupPagePermission>();
+            this.userGroupActionPermissionRepository = this.RepositoryContext.GetRepository<Guid, UserGroupActionPermission>();
         }
 
         [HttpPost]
@@ -40,7 +39,7 @@ namespace ZDY.DMS.Services.PermissionService.Controllers
                 await userGroupMemberRepository.AddAsync(member);
             }
 
-            await this.repositoryContext.CommitAsync();
+            await this.RepositoryContext.CommitAsync();
         }
 
         [HttpPost]
@@ -77,7 +76,7 @@ namespace ZDY.DMS.Services.PermissionService.Controllers
                 }
             }
 
-            await this.repositoryContext.CommitAsync();
+            await this.RepositoryContext.CommitAsync();
         }
 
         [HttpPost]

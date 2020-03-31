@@ -11,14 +11,14 @@ using ZDY.DMS.Services.Common.Models;
 namespace ZDY.DMS.Services.AdminService.Controllers
 {
     //[Authorize(Roles = "Administrator")]
-    public class DictionaryKeyController : ApiDataServiceController<Guid, DictionaryKey>
+    public class DictionaryKeyController : ApiDataServiceController<Guid, DictionaryKey, AdminServiceModule>
     {
         IRepository<Guid, DictionaryValue> dictionaryValueRepository;
 
-        public DictionaryKeyController(IRepositoryContext repositoryContext)
-            : base(repositoryContext, new GuidKeyGenerator())
+        public DictionaryKeyController(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory, new GuidKeyGenerator())
         {
-            dictionaryValueRepository = repositoryContext.GetRepository<Guid, DictionaryValue>();
+            dictionaryValueRepository = this.RepositoryContext.GetRepository<Guid, DictionaryValue>();
         }
 
         protected override void BeforeAdd(DictionaryKey entity)

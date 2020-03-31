@@ -10,10 +10,10 @@ using ZDY.DMS.Services.Common.Models;
 namespace ZDY.DMS.Services.OrganizationService.Controllers
 {
     //[Authorize(Roles = "Administrator")]
-    public class CompanyController : ApiDataServiceController<Guid, Company>
+    public class CompanyController : ApiDataServiceController<Guid, Company, OrganizationServiceModule>
     {
-        public CompanyController(IRepositoryContext repositoryContext)
-            :base(repositoryContext, new GuidKeyGenerator())
+        public CompanyController(Func<Type, IRepositoryContext> repositoryContextFactory)
+            :base(repositoryContextFactory, new GuidKeyGenerator())
         { 
             
         }

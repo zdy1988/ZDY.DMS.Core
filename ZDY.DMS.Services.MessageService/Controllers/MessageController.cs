@@ -5,15 +5,14 @@ using ZDY.DMS.Services.MessageService.Models;
 
 namespace ZDY.DMS.Services.MessageService.Controllers
 {
-    public class MessageController: ApiController
+    public class MessageController : ApiDataServiceController<Guid, Message, MessageServiceModule>
     {
-        private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, Message> messageRepository;
 
-        public MessageController(IRepositoryContext repositoryContext)
+        public MessageController(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory)
         {
-            this.repositoryContext = repositoryContext;
-            this.messageRepository = repositoryContext.GetRepository<Guid, Message>();
+            this.messageRepository = this.RepositoryContext.GetRepository<Guid, Message>();
         }
     }
 }

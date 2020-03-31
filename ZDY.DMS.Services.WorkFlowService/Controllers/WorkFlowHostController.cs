@@ -10,15 +10,13 @@ using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
-    public class WorkFlowHostController : ApiController
+    public class WorkFlowHostController : ApiController<WorkFlowServiceModule>
     {
-        private readonly IRepositoryContext repositoryContext;
         private readonly IWorkFlowHostService workFlowHostService;
 
-        public WorkFlowHostController(IRepositoryContext repositoryContext,
-            IWorkFlowHostService workFlowHostService)
+        public WorkFlowHostController(Func<Type, IRepositoryContext> repositoryContextFactory, IWorkFlowHostService workFlowHostService)
+            :base(repositoryContextFactory)
         {
-            this.repositoryContext = repositoryContext;
             this.workFlowHostService = workFlowHostService;
         }
 

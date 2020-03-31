@@ -8,10 +8,10 @@ using ZDY.DMS.Services.Common.Models;
 namespace ZDY.DMS.Services.AdminService.Controllers
 {
     //[Authorize(Roles = "Administrator")]
-    public class PageController : ApiDataServiceController<Guid, Page>
+    public class PageController : ApiDataServiceController<Guid, Page, AdminServiceModule>
     {
-        public PageController(IRepositoryContext repositoryContext)
-            : base(repositoryContext, new GuidKeyGenerator())
+        public PageController(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory, new GuidKeyGenerator())
         {
 
         }

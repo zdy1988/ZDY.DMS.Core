@@ -15,23 +15,21 @@ using ZDY.DMS.StringEncryption;
 namespace ZDY.DMS.Services.AuthService.Controllers
 {
 
-    public class AuthController : ApiController
+    public class AuthController : ApiController<AuthServiceModule>
     {
-        private readonly IRepositoryContext repositoryContext;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IStringEncryption stringEncryption;
         private readonly IRepository<Guid, User> userRepository;
         private readonly IRepository<Guid, Company> companyRepository;
 
-        public AuthController(IRepositoryContext repositoryContext,
+        public AuthController(Func<Type, IRepositoryContext> repositoryContextFactory,
             IHttpContextAccessor httpContextAccessor,
-            IStringEncryption stringEncryption)
+            IStringEncryption stringEncryption) : base(repositoryContextFactory)
         {
-            this.repositoryContext = repositoryContext;
             this.httpContextAccessor = httpContextAccessor;
             this.stringEncryption = stringEncryption;
-            this.userRepository = repositoryContext.GetRepository<Guid, User>();
-            this.companyRepository = repositoryContext.GetRepository<Guid, Company>();
+            this.userRepository = this.RepositoryContext.GetRepository<Guid, User>();
+            this.companyRepository = this.RepositoryContext.GetRepository<Guid, Company>();
         }
 
         [HttpPost]
@@ -75,7 +73,10 @@ namespace ZDY.DMS.Services.AuthService.Controllers
             existUser.LastLoginTime = DateTime.Now;
             existUser.LastLoginIp = httpContextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
             existUser.Session = token;
+
             await userRepository.UpdateAsync(existUser);
+
+            await this.RepositoryContext.CommitAsync();
 
             return Ok(new
             {
@@ -116,6 +117,7 @@ namespace ZDY.DMS.Services.AuthService.Controllers
                     Gender = wechatUserInfo.gender == "1" ? "男" : "女"
                 };
                 await userRepository.AddAsync(existUser);
+                await this.RepositoryContext.CommitAsync();
             }
 
             if (existUser.IsDisabled)
@@ -150,6 +152,8 @@ namespace ZDY.DMS.Services.AuthService.Controllers
 
             await userRepository.UpdateAsync(existUser);
 
+            await this.RepositoryContext.CommitAsync();
+
             return Ok(new
             {
                 requestAt = requestAt,
@@ -180,9 +184,9 @@ namespace ZDY.DMS.Services.AuthService.Controllers
 
             user.Password = stringEncryption.Encrypt(newPassword);
 
-            userRepository.Update(user);
+            await userRepository.UpdateAsync(user);
 
-            await userRepository.Context.CommitAsync();
+            await this.RepositoryContext.CommitAsync();
         }
 
         [HttpPost]

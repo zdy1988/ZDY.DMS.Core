@@ -54,6 +54,7 @@ namespace ZDY.DMS.AspNetCore.Module
             {
                 this.CommandSubscriber.Dispose();
                 this.EventSubscriber.Dispose();
+                this.DictionaryRegister.Dispose();
             }
             base.Dispose(disposing);
         }

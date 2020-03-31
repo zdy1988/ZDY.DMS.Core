@@ -12,10 +12,10 @@ using ZDY.DMS.Services.Common.Models;
 namespace ZDY.DMS.Services.AdminService.Controllers
 {
     //[Authorize(Roles = "Administrator")]
-    public class LogController : ApiDataServiceController<Guid, Log>
+    public class LogController : ApiDataServiceController<Guid, Log, AdminServiceModule>
     {
-        public LogController(IRepositoryContext repositoryContext)
-            : base(repositoryContext, new GuidKeyGenerator())
+        public LogController(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory, new GuidKeyGenerator())
         {
 
         }

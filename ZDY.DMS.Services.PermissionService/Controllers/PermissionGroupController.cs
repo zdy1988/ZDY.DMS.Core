@@ -9,16 +9,16 @@ using ZDY.DMS.Services.PermissionService.Models;
 
 namespace ZDY.DMS.Services.PermissionService.Controllers
 {
-    public class PermissionGroupController : ApiDataServiceController<Guid, UserGroup>
+    public class PermissionGroupController : ApiDataServiceController<Guid, UserGroup, PermissionServiceModule>
     {
         private readonly IRepository<Guid, UserGroupMember> userGroupMemberRepository;
         private readonly IRepository<Guid, UserGroupPagePermission> userGroupPagePermissionRepository;
 
-        public PermissionGroupController(IRepositoryContext repositoryContext)
-            : base(repositoryContext, new GuidKeyGenerator())
+        public PermissionGroupController(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory, new GuidKeyGenerator())
         {
-            userGroupMemberRepository = repositoryContext.GetRepository<Guid, UserGroupMember>();
-            userGroupPagePermissionRepository = repositoryContext.GetRepository<Guid, UserGroupPagePermission>();
+            userGroupMemberRepository = this.RepositoryContext.GetRepository<Guid, UserGroupMember>();
+            userGroupPagePermissionRepository = this.RepositoryContext.GetRepository<Guid, UserGroupPagePermission>();
         }
 
         protected override void BeforeAdd(UserGroup entity)

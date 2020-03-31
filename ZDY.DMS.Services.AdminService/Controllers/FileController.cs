@@ -10,13 +10,13 @@ using ZDY.DMS.Services.Common.ServiceContracts;
 
 namespace ZDY.DMS.Services.AdminService.Controllers
 {
-    public class FileController : ApiDataServiceController<Guid, File>
+    public class FileController : ApiDataServiceController<Guid, File, AdminServiceModule>
     {
         private readonly IAppSettingService appSettingService;
 
-        public FileController(IRepositoryContext repositoryContex,
+        public FileController(Func<Type, IRepositoryContext> repositoryContextFactory,
             IAppSettingService appSettingService)
-            : base(repositoryContex, new GuidKeyGenerator())
+            : base(repositoryContextFactory, new GuidKeyGenerator())
         {
             this.appSettingService = appSettingService;
         }

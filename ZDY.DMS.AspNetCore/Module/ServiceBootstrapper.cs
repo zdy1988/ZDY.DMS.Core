@@ -33,9 +33,9 @@ namespace ZDY.DMS.AspNetCore
                 // Register RepositoryContext Owner Of The Service
                 services.AddScoped(implementationFactory =>
                 {
-                    Func<Type, IRepositoryContext> func = serviceType =>
+                    Func<Type, IRepositoryContext> func = serviceModuleType =>
                     {
-                        if (options.Services.TryGetValue(serviceType, out Func<IServiceProvider, IRepositoryContext> registryRepositoryContextFactory))
+                        if (options.Services.TryGetValue(serviceModuleType, out Func<IServiceProvider, IRepositoryContext> registryRepositoryContextFactory))
                         {
                             return registryRepositoryContextFactory.Invoke(implementationFactory);
                         }

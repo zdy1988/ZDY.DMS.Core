@@ -7,29 +7,28 @@ using Microsoft.AspNetCore.Mvc;
 using ZDY.DMS.DataPermission;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
+using ZDY.DMS.AspNetCore.Module;
 
 namespace ZDY.DMS.AspNetCore.Mvc
 {
-    public class ApiDataServiceController<TKey, TEntity> : ApiController
+    public class ApiDataServiceController<TKey, TEntity, TServiceModule> : ApiController<TServiceModule>
         where TEntity : class, IEntity<TKey>
         where TKey : IEquatable<TKey>
+        where TServiceModule: IServiceModule
     {
-        private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<TKey, TEntity> repository;
         private readonly IKeyGenerator<TKey, TEntity> keyGenerator;
 
-        public ApiDataServiceController(IRepositoryContext repositoryContext)
-            : this(repositoryContext, new NullKeyGenerator<TKey>())
+        public ApiDataServiceController(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : this(repositoryContextFactory, new NullKeyGenerator<TKey>())
         { }
 
-        public ApiDataServiceController(IRepositoryContext repositoryContext, IKeyGenerator<TKey, TEntity> keyGenerator)
+        public ApiDataServiceController(Func<Type, IRepositoryContext> repositoryContextFactory, IKeyGenerator<TKey, TEntity> keyGenerator)
+            : base(repositoryContextFactory)
         {
-            this.repositoryContext = repositoryContext;
-            this.repository = repositoryContext.GetRepository<TKey, TEntity>();
+            this.repository = this.RepositoryContext.GetRepository<TKey, TEntity>();
             this.keyGenerator = keyGenerator;
         }
-
-        protected IRepositoryContext RepositoryContext => this.repositoryContext;
 
         protected IRepository<TKey, TEntity> Repository => this.repository;
 
@@ -51,7 +50,7 @@ namespace ZDY.DMS.AspNetCore.Mvc
                 throw new InvalidOperationException("Entity key has not been specified.");
             }
 
-            var entity = await this.repository.FindByKeyAsync(id);
+            var entity = await this.Repository.FindByKeyAsync(id);
 
             if (entity == null)
             {
@@ -69,7 +68,7 @@ namespace ZDY.DMS.AspNetCore.Mvc
                 throw new InvalidOperationException("The searchModel items has not been specified.");
             }
 
-            var entity = await this.repository.FindAsync(searchModel.GetQueryModel());
+            var entity = await this.Repository.FindAsync(searchModel.GetQueryModel());
 
             if (entity == null)
             {
@@ -99,11 +98,11 @@ namespace ZDY.DMS.AspNetCore.Mvc
 
             if (searchModel.GetQueryModel().Items.Count <= 0)
             {
-                return await this.repository.FindAllAsync(searchModel.PageIndex, searchModel.PageSize, searchModel.OrderField, searchModel.IsAsc);
+                return await this.Repository.FindAllAsync(searchModel.PageIndex, searchModel.PageSize, searchModel.OrderField, searchModel.IsAsc);
             }
             else
             {
-                return await this.repository.FindAllAsync(searchModel.GetQueryModel(), searchModel.PageIndex, searchModel.PageSize, searchModel.OrderField, searchModel.IsAsc);
+                return await this.Repository.FindAllAsync(searchModel.GetQueryModel(), searchModel.PageIndex, searchModel.PageSize, searchModel.OrderField, searchModel.IsAsc);
             }
         }
 
@@ -115,7 +114,7 @@ namespace ZDY.DMS.AspNetCore.Mvc
                 throw new InvalidOperationException("The entity that is going to be created has not been specified.");
             }
 
-            if (!entity.Id.Equals(default) && await this.repository.ExistsAsync(x => x.Id.Equals(entity.Id)))
+            if (!entity.Id.Equals(default) && await this.Repository.ExistsAsync(x => x.Id.Equals(entity.Id)))
             {
                 throw new InvalidOperationException($"The entity already exists.");
             }
@@ -129,9 +128,9 @@ namespace ZDY.DMS.AspNetCore.Mvc
                 entity.Id = generatedKey;
             }
 
-            await this.repository.AddAsync(entity);
+            await this.Repository.AddAsync(entity);
 
-            await this.repositoryContext.CommitAsync();
+            await this.RepositoryContext.CommitAsync();
 
             return entity;
         }
@@ -160,8 +159,8 @@ namespace ZDY.DMS.AspNetCore.Mvc
 
             this.BeforeUpdate(original, entity);
 
-            await this.repository.UpdateAsync(original);
-            await this.repositoryContext.CommitAsync();
+            await this.Repository.UpdateAsync(original);
+            await this.RepositoryContext.CommitAsync();
 
             return entity;
         }
@@ -179,7 +178,7 @@ namespace ZDY.DMS.AspNetCore.Mvc
                 throw new InvalidOperationException("Entity key has not been specified.");
             }
 
-            if (!await this.repository.ExistsAsync(x => x.Id.Equals(id)))
+            if (!await this.Repository.ExistsAsync(x => x.Id.Equals(id)))
             {
                 throw new InvalidOperationException($"The entity does not exist.");
             }
@@ -194,14 +193,14 @@ namespace ZDY.DMS.AspNetCore.Mvc
 
                 ((IDisabledEntity<TKey>)original).IsDisabled = true;
 
-                await this.repository.UpdateAsync(original);
+                await this.Repository.UpdateAsync(original);
             }
             else
             {
-                await this.repository.RemoveByKeyAsync(id);
+                await this.Repository.RemoveByKeyAsync(id);
             }
 
-            await this.repositoryContext.CommitAsync();
+            await this.RepositoryContext.CommitAsync();
         }
 
         protected virtual void BeforeDelete(TKey id) { }

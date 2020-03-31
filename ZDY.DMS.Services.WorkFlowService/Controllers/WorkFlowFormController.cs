@@ -10,10 +10,10 @@ using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
-    public class WorkFlowFormController : ApiDataServiceController<Guid, WorkFlowForm>
+    public class WorkFlowFormController : ApiDataServiceController<Guid, WorkFlowForm, WorkFlowServiceModule>
     {
-        public WorkFlowFormController(IRepositoryContext repositoryContext)
-            : base(repositoryContext, new GuidKeyGenerator())
+        public WorkFlowFormController(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory, new GuidKeyGenerator())
         {
 
         }

@@ -8,13 +8,13 @@ using ZDY.DMS.Services.Common.Models;
 
 namespace ZDY.DMS.Services.UserService.Controllers
 {
-    public class UserController : ApiDataServiceController<Guid, User>
+    public class UserController : ApiDataServiceController<Guid, User, UserServiceModule>
     {
         private readonly IStringEncryption stringEncryption;
 
-        public UserController(IRepositoryContext repositoryContext,
+        public UserController(Func<Type, IRepositoryContext> repositoryContextFactory,
             IStringEncryption stringEncryption)
-            : base(repositoryContext, new GuidKeyGenerator())
+            : base(repositoryContextFactory, new GuidKeyGenerator())
         {
             this.stringEncryption = stringEncryption;
         }

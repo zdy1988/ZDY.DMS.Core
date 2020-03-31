@@ -9,10 +9,10 @@ using ZDY.DMS.Services.Common.Models;
 
 namespace ZDY.DMS.Services.OrganizationService.Controllers
 {
-    public class DepartmentController : ApiDataServiceController<Guid, Department>
+    public class DepartmentController : ApiDataServiceController<Guid, Department, OrganizationServiceModule>
     {
-        public DepartmentController(IRepositoryContext repositoryContext)
-            : base(repositoryContext, new GuidKeyGenerator())
+        public DepartmentController(Func<Type, IRepositoryContext> repositoryContextFactory)
+            : base(repositoryContextFactory, new GuidKeyGenerator())
         {
 
         }
