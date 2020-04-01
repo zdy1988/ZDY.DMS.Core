@@ -418,7 +418,7 @@
                 };
 
                 //选择值的字段
-                this.selectField = this.orderField();
+                this.selectField = options.selectField || "Id";
 
                 //是否选择全部
                 this.isSelectAll = ko.pureComputed(function () {
