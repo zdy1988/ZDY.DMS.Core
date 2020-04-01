@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Services.Common.Extensions;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.StringEncryption;
 
@@ -20,7 +19,6 @@ namespace ZDY.DMS.Services.AuthService.Controllers
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IStringEncryption stringEncryption;
         private readonly IRepository<Guid, User> userRepository;
-        private readonly IRepository<Guid, Company> companyRepository;
 
         public AuthController(Func<Type, IRepositoryContext> repositoryContextFactory,
             IHttpContextAccessor httpContextAccessor,
@@ -29,7 +27,6 @@ namespace ZDY.DMS.Services.AuthService.Controllers
             this.httpContextAccessor = httpContextAccessor;
             this.stringEncryption = stringEncryption;
             this.userRepository = this.RepositoryContext.GetRepository<Guid, User>();
-            this.companyRepository = this.RepositoryContext.GetRepository<Guid, Company>();
         }
 
         [HttpPost]
@@ -53,16 +50,6 @@ namespace ZDY.DMS.Services.AuthService.Controllers
             if (existUser.IsDisabled)
             {
                 throw new InvalidOperationException("账号已被禁用");
-            }
-
-            if (existUser.CompanyId != this.HttpContext.GetMysteriousCode())
-            {
-                var existCompany = await companyRepository.FindAsync(t => t.Id == existUser.CompanyId);
-
-                if (existCompany == null)
-                {
-                    throw new InvalidOperationException("无效公司或者公司已注销");
-                }
             }
 
             var requestAt = DateTime.Now;
@@ -123,16 +110,6 @@ namespace ZDY.DMS.Services.AuthService.Controllers
             if (existUser.IsDisabled)
             {
                 throw new InvalidOperationException("账号已被禁用");
-            }
-
-            if (existUser.CompanyId != default(Guid))
-            {
-                var existCompany = await companyRepository.FindByKeyAsync(existUser.CompanyId);
-
-                if (existCompany == null)
-                {
-                    throw new InvalidOperationException("无效公司或者公司已注销");
-                }
             }
 
             var requestAt = DateTime.Now;
@@ -210,7 +187,7 @@ namespace ZDY.DMS.Services.AuthService.Controllers
             {
                 Id = existUser.Id,
                 Avatar = existUser.Avatar,
-                AvatarUrl = existUser.GetUserAvatarUrl(),
+                AvatarUrl = existUser.AvatarUrl,
                 UserName = existUser.UserName,
                 NickName = existUser.NickName,
                 Gender = existUser.Gender,

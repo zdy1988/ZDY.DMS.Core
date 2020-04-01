@@ -3,11 +3,12 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
+using ZDY.DMS.AspNetCore.Service;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.AdminService.ServiceContracts;
-using ZDY.DMS.Services.Common.Models;
-using ZDY.DMS.Services.Common.DataTransferObjects;
-using ZDY.DMS.AspNetCore.Service;
+using ZDY.DMS.Services.AdminService.DataTransferObjects;
+using ZDY.DMS.Services.AdminService.Models;
+using System.Linq.Expressions;
 
 namespace ZDY.DMS.Services.AdminService.Implementation
 {
@@ -67,6 +68,13 @@ namespace ZDY.DMS.Services.AdminService.Implementation
                 page.ChildLevelPages = GetChildLevelPages(pages, page.Id);
             }
             return childPages;
+        }
+
+        public IEnumerable<Page> GetAllPages(Guid companyId)
+        {
+            var companies = new Guid[] { default, companyId };
+
+            return this.pageRepository.FindAll(t => companies.Contains(t.CompanyId));
         }
     }
 }

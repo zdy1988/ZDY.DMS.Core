@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Service;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Services.Common.Models;
+using ZDY.DMS.Services.OrganizationService.Models;
 using ZDY.DMS.Services.OrganizationService.ServiceContracts;
 
 namespace ZDY.DMS.Services.OrganizationService.Implementation

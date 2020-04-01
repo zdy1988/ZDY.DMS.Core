@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using ZDY.DMS.Services.Common.Models;
 
-namespace ZDY.DMS.Services.Common.Models
+namespace ZDY.DMS.Services.AdminService.Models
 {    
     [Table("Dictionary_Key")]
     public class DictionaryKey : BaseEntity

@@ -1,14 +1,5 @@
 ﻿@page
 @model ZDY.DMS.Web.Pages.Home.TaskModel
-@{
-    var Tags = new List<KeyValuePair<string, string>> {
-        new KeyValuePair<string, string>("Pending", "Pending"),
-        new KeyValuePair<string, string>("Completed", "Completed"),
-        new KeyValuePair<string, string>("Testing", "Testing"),
-        new KeyValuePair<string, string>("Approed", "Approed"),
-        new KeyValuePair<string, string>("Rejected", "Rejected")
-    };
-}
 
 <div class="row">
     <div class="col-md-3">
@@ -321,7 +312,7 @@
                                     <text-box is-date-picker="true"></text-box>
                                 </div>
                                 <div class="col-md-12">
-                                    <select-box options="@Tags"></select-box>
+                                    <select-box options="@Model.Tags"></select-box>
                                 </div>
                             </div>
                             <!-- TASK TAGS -->

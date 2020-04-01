@@ -4,19 +4,17 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.Metronic.TagHelpers.Tree;
-using ZDY.DMS.Repositories;
+using ZDY.DMS.Services.AdminService.ServiceContracts;
 
 namespace ZDY.DMS.Web.Pages.Admin
 {
     public class PageTreeModel : PageModel
     {
-        private readonly IRepositoryContext repositoryContext;
-        private readonly IRepository<Guid, Services.Common.Models.Page> pageRepository;
+        private readonly IPageService pageService;
 
-        public PageTreeModel(IRepositoryContext repositoryContext)
+        public PageTreeModel(IPageService pageService)
         {
-            this.repositoryContext = repositoryContext;
-            this.pageRepository = repositoryContext.GetRepository<Guid, Services.Common.Models.Page>();
+            this.pageService = pageService;
         }
 
         public List<TreeNode> TreeData { get; set; }
@@ -25,34 +23,14 @@ namespace ZDY.DMS.Web.Pages.Admin
         {
             var userIdentity = this.HttpContext.GetUserIdentity();
 
-            var companies = new Guid[] { default, userIdentity.CompanyId };
-
-            if (userIdentity.IsAdministrator)
+            TreeData = pageService.GetAllPages(userIdentity.CompanyId).Select(t => new TreeNode
             {
-                TreeData = pageRepository
-                    .FindAll(t => companies.Contains(t.CompanyId))
-                    .Select(t => new TreeNode
-                    {
-                        Data = t,
-                        Id = t.Id,
-                        Name = t.PageName,
-                        Order = t.Order,
-                        ParentId = t.ParentId
-                    }).ToList();
-            }
-            else
-            {
-                TreeData = pageRepository
-                    .FindAll(t => companies.Contains(t.CompanyId))
-                    .Select(t => new TreeNode
-                    {
-                        Data = t,
-                        Id = t.Id,
-                        Name = t.PageName,
-                        Order = t.Order,
-                        ParentId = t.ParentId
-                    }).ToList();
-            }
+                Data = t,
+                Id = t.Id,
+                Name = t.PageName,
+                Order = t.Order,
+                ParentId = t.ParentId
+            }).ToList();
         }
     }
 }

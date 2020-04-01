@@ -1,14 +1,5 @@
 ﻿@page
 @model ZDY.DMS.Web.Pages.User.UserDetailModel
-@*@inject SelectOptionsFactory SelectOptionsFactory*@
-@{
-    var Genders = new List<KeyValuePair<string, string>> { 
-        new KeyValuePair<string, string>("男", "男"),
-        new KeyValuePair<string, string>("女", "女")
-    };
-
-    //var DepartmentOptions = await SelectOptionsFactory.GetSelectDepartmentOptions();
-}
 
 <div class="row">
     <div class="col-md-12">
@@ -39,11 +30,11 @@
                     <div class="col-md-6">
                         <text-box field="Position" name="职位"></text-box>
                     </div>
-                    @*<div class="col-md-6">
-                        <select-box field="DepartmentId" name="部门" is-required="true" options="@DepartmentOptions"></select-box>
-                    </div>*@
                     <div class="col-md-6">
-                        <radio-box field="Gender" name="性别" options="@Genders" mode="Inline"></radio-box>
+                        <select-box field="DepartmentId" name="部门" is-required="true" options="@Model.DepartmentOptions"></select-box>
+                    </div>
+                    <div class="col-md-6">
+                        <radio-box field="Gender" name="性别" options="@Model.Genders" mode="Inline"></radio-box>
                     </div>
                 </div>
                 <form-actions>

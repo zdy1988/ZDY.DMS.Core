@@ -5,20 +5,19 @@ using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
+using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 
 namespace ZDY.DMS.Web.Pages.WorkFlow
 {
     public class WorkFlowStartUpModel : PageModel
     {
-        private readonly IRepositoryContext repositoryContext;
-        private readonly IRepository<Guid, WorkFlowForm> workFlowFormRepository;
-        private readonly IRepository<Guid, Services.WorkFlowService.Models.WorkFlow> workFlowRepository;
+        private readonly IWorkFlowService workFlowService;
+        private readonly IWorkFlowFormService workFlowFormService;
 
-        public WorkFlowStartUpModel(IRepositoryContext repositoryContext)
+        public WorkFlowStartUpModel(IWorkFlowService workFlowService, IWorkFlowFormService workFlowFormService)
         {
-            this.repositoryContext = repositoryContext;
-            this.workFlowFormRepository = repositoryContext.GetRepository<Guid, WorkFlowForm>();
-            this.workFlowRepository = repositoryContext.GetRepository<Guid, Services.WorkFlowService.Models.WorkFlow>();
+            this.workFlowService = workFlowService;
+            this.workFlowFormService = workFlowFormService;
         }
 
         public string Title { get; set; }
@@ -29,18 +28,22 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
 
         public async Task OnGetAsync(Guid id)
         {
-            var workflow = await this.workFlowRepository.FindAsync(t => t.Id == id && t.State == (int)WorkFlowState.Installed);
+            var workflow = await this.workFlowService.GetInstalledWorkFlowByKeyAsync(id);
+
             if (workflow == null)
             {
                 ViewData["ErrorMessage"] = "流程数据丢失或未发布";
                 return;
             }
+
             if (workflow.FormId == default)
             {
                 ViewData["ErrorMessage"] = "流程没有绑定任何表单";
                 return;
             }
-            var form = await this.workFlowFormRepository.FindAsync(t => t.Id == workflow.FormId && t.State == (int)WorkFlowFormState.Published);
+
+            var form = await this.workFlowFormService.GetPublishedWorkFlowFormByKeyAsync(workflow.FormId);
+
             if (form == null)
             {
                 ViewData["ErrorMessage"] = "表单数据丢失或未发布";
@@ -48,6 +51,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             }
 
             Flow = workflow;
+
             Form = form;
 
             Title = $"{this.HttpContext.GetUserIdentity().Name}的{workflow.Name}";

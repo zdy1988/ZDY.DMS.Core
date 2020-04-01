@@ -1,14 +1,5 @@
 ﻿@page
 @model ZDY.DMS.Web.Pages.Home.UserProfileModel
-@inject  SelectOptionsFactory SelectOptionsFactory
-@{
-    var Genders = new List<KeyValuePair<string, string>> {
-        new KeyValuePair<string, string>("男", "男"),
-        new KeyValuePair<string, string>("女", "女")
-    };
-
-    var DepartmentOptions = await SelectOptionsFactory.GetSelectDepartmentOptions();
-}
 
 <div class="row" data-model="profile">
     <!-- BEGIN PROFILE SIDEBAR -->
@@ -1173,10 +1164,10 @@
                                             <text-box field="Position" name="用户职位"></text-box>
                                         </div>
                                         <div class="col-md-6">
-                                            <select-box field="DepartmentID" name="用户部门" is-required="true" options="@DepartmentOptions"></select-box>
+                                            <select-box field="DepartmentID" name="用户部门" is-required="true" options="@Model.DepartmentOptions"></select-box>
                                         </div>
                                         <div class="col-md-6">
-                                            <radio-box field="Gender" name="用户性别" options="@Genders" mode="Inline"></radio-box>
+                                            <radio-box field="Gender" name="用户性别" options="@Model.Genders" mode="Inline"></radio-box>
                                         </div>
                                     </div>
                                     <div class="margin-top-10">

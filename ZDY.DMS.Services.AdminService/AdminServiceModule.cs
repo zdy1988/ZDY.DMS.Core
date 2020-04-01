@@ -4,9 +4,9 @@ using System.Text;
 using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.AspNetCore.EntityMapper;
 using ZDY.DMS.AspNetCore.Module;
+using ZDY.DMS.Services.AdminService.DataTransferObjects;
 using ZDY.DMS.Services.AdminService.Enums;
-using ZDY.DMS.Services.Common.DataTransferObjects;
-using ZDY.DMS.Services.Common.Models;
+using ZDY.DMS.Services.AdminService.Models;
 
 namespace ZDY.DMS.Services.AdminService
 {

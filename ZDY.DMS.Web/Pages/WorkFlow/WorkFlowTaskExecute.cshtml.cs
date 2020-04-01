@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Services.Common.DataTransferObjects;
 using ZDY.DMS.Services.Common.ServiceContracts;
 using ZDY.DMS.Services.WorkFlowService;
 using ZDY.DMS.Services.WorkFlowService.DataObjects;
@@ -19,21 +18,21 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
     {
         private readonly IDictionaryService dictionaryService;
         private readonly SelectOptionsFactory selectOptionsFactory;
-        private readonly IRepositoryContext repositoryContext;
-        private readonly IRepository<Guid, WorkFlowTask> workFlowTaskServiceRepository;
-        private readonly IRepository<Guid, WorkFlowInstance> workFlowInstanceRepository;
+        private readonly IWorkFlowTaskService workFlowTaskService;
+        private readonly IWorkFlowInstanceService workFlowInstanceService;
         private readonly IWorkFlowHostService workFlowHostService;
 
-        public WorkFlowTaskExecuteModel(IRepositoryContext repositoryContext,
+        public WorkFlowTaskExecuteModel(
             IDictionaryService dictionaryService,
-             SelectOptionsFactory selectOptionsFactory,
+            SelectOptionsFactory selectOptionsFactory,
+            IWorkFlowTaskService workFlowTaskService,
+            IWorkFlowInstanceService workFlowInstanceService,
             IWorkFlowHostService workFlowHostService)
         {
-            this.repositoryContext = repositoryContext;
             this.dictionaryService = dictionaryService;
             this.selectOptionsFactory = selectOptionsFactory;
-            this.workFlowTaskServiceRepository = repositoryContext.GetRepository<Guid, WorkFlowTask>();
-            this.workFlowInstanceRepository = repositoryContext.GetRepository<Guid, WorkFlowInstance>();
+            this.workFlowTaskService = workFlowTaskService;
+            this.workFlowInstanceService = workFlowInstanceService;
             this.workFlowHostService = workFlowHostService;
         }
 
@@ -51,23 +50,23 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
 
         public async Task OnGetAsync(Guid id)
         {
-            var taskEntity = await workFlowTaskServiceRepository.FindByKeyAsync(id);
-            if (taskEntity == null)
+            var task = await this.workFlowTaskService.GetWorkFlowTaskByKeyAsync(id);
+            if (task == null)
             {
                 ViewData["ErrorMessage"] = "任务数据未找到或丢失";
                 return;
             }
 
-            var workFlowInstanceEntity = await workFlowInstanceRepository.FindAsync(t => t.Id == taskEntity.InstanceId);
-            if (workFlowInstanceEntity == null)
+            var instance = await this.workFlowInstanceService.GetWorkFlowInstanceByKeyAsync(task.InstanceId);
+            if (instance == null)
             {
                 ViewData["ErrorMessage"] = "流程实例未找到或丢失";
                 return;
             }
 
             //获得当前步骤信息
-            Instance = workFlowInstanceEntity;
-            CurrentTask = taskEntity;
+            Instance = instance;
+            CurrentTask = task;
             var workFlowInstalled = Services.WorkFlowService.WorkFlowAnalyzing.WorkFlowInstalledDeserialize(Instance.FlowRuntimeJson);
             CurrentStep = workFlowInstalled.GetStep(CurrentTask.StepId);
 
@@ -84,17 +83,14 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             //加载审批意见
             if (CurrentStep.IsShowComment)
             {
-                HasCommentTasks = await workFlowHostService.GetWorkFlowCommentsAsync(workFlowInstanceEntity);
+                HasCommentTasks = await workFlowHostService.GetWorkFlowCommentsAsync(instance);
             }
 
             //更新打开时间
-            if (taskEntity.Is(WorkFlowTaskState.Pending))
+            if (task.Is(WorkFlowTaskState.Pending))
             {
-                taskEntity.State = (int)WorkFlowTaskState.Opened;
-                taskEntity.OpenedTime = DateTime.Now;
-                workFlowTaskServiceRepository.Update(taskEntity);
+                await this.workFlowTaskService.WorkFlowTaskOpenedAsync(task.Id);
             }
-
 
             Dictionary = dictionaryService.GetDictionary("WorkFlowTaskState"); 
 

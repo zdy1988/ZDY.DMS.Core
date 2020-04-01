@@ -3,18 +3,18 @@ using System.Linq;
 using ZDY.DMS.AspNetCore;
 using ZDY.DMS.AspNetCore.Service;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Services.Common.Models;
-using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.DMS.Services.AdminService.Models;
+using ZDY.DMS.Services.AdminService.ServiceContracts;
 using ZDY.DMS.Tools;
 
 namespace ZDY.DMS.Services.AdminService.Implementation
 {
-    public class StaticFileService : ServiceBase<AdminServiceModule>, IStaticFileService
+    public class FileService : ServiceBase<AdminServiceModule>, IFileService
     {
         private IRepository<Guid, File> fileRepository;
         private IAppSettingProvider appSettingProvider;
 
-        public StaticFileService(Func<Type, IRepositoryContext> repositoryContextFactory,
+        public FileService(Func<Type, IRepositoryContext> repositoryContextFactory,
             IAppSettingProvider appSettingProvider) : base(repositoryContextFactory)
         {
             this.fileRepository = this.GetRepository<Guid, File>();

@@ -19,7 +19,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             this.workFlowFormRepository = this.GetRepository<Guid, WorkFlowForm>();
         }
 
-        private async Task<IEnumerable<WorkFlowForm>> GetWorkFlowForms(Guid companyID, WorkFlowFormState workFlowFormState)
+        private async Task<IEnumerable<WorkFlowForm>> GetWorkFlowFormCollectionAsync(Guid companyID, WorkFlowFormState workFlowFormState)
         {
             var list = await this.workFlowFormRepository
                 .FindAllAsync(t => t.CompanyId == companyID
@@ -28,14 +28,19 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             return list;
         }
 
-        public async Task<IEnumerable<WorkFlowForm>> GetPublishedWorkFlowForms(Guid companyID)
+        public async Task<IEnumerable<WorkFlowForm>> GetPublishedWorkFlowFormCollectionAsync(Guid companyId)
         {
-            return await GetWorkFlowForms(companyID, WorkFlowFormState.Published);
+            return await GetWorkFlowFormCollectionAsync(companyId, WorkFlowFormState.Published);
         }
 
-        public async Task<IEnumerable<WorkFlowForm>> GetDesigningWorkFlowForms(Guid companyID)
+        public async Task<IEnumerable<WorkFlowForm>> GetDesigningWorkFlowFormCollectionAsync(Guid companyId)
         {
-            return await GetWorkFlowForms(companyID, WorkFlowFormState.Designing);
+            return await GetWorkFlowFormCollectionAsync(companyId, WorkFlowFormState.Designing);
+        }
+
+        public async Task<WorkFlowForm> GetPublishedWorkFlowFormByKeyAsync(Guid formId)
+        { 
+            return await this.workFlowFormRepository.FindAsync(t => t.Id == formId && t.State == (int)WorkFlowFormState.Published);
         }
     }
 }

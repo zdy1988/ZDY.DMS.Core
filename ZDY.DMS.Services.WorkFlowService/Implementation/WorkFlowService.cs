@@ -18,23 +18,27 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             this.workFlowRepository = this.GetRepository<Guid, Models.WorkFlow>();
         }
 
-        private async Task<IEnumerable<Models.WorkFlow>> GetWorkFlows(Guid companyID, WorkFlowState workFlowState)
+        private async Task<IEnumerable<Models.WorkFlow>> GetWorkFlowCollectionAsync(Guid companyId, WorkFlowState workFlowState)
         {
-            var list = await this.workFlowRepository
-                .FindAllAsync(t => t.CompanyId == companyID
+            var list = await this.workFlowRepository.FindAllAsync(t => t.CompanyId == companyId
                                 && t.State == (int)workFlowState
                                 && t.IsDisabled == false);
             return list;
         }
 
-        public async Task<IEnumerable<Models.WorkFlow>> GetInstalledWorkFlows(Guid companyID)
+        public async Task<IEnumerable<Models.WorkFlow>> GetInstalledWorkFlowCollectionAsync(Guid companyId)
         {
-            return await GetWorkFlows(companyID, WorkFlowState.Installed);
+            return await GetWorkFlowCollectionAsync(companyId, WorkFlowState.Installed);
         }
 
-        public async Task<IEnumerable<Models.WorkFlow>> GetDesigningWorkFlows(Guid companyID)
+        public async Task<IEnumerable<Models.WorkFlow>> GetDesigningWorkFlowCollectionAsync(Guid companyId)
         {
-            return await GetWorkFlows(companyID, WorkFlowState.Designing);
+            return await GetWorkFlowCollectionAsync(companyId, WorkFlowState.Designing);
+        }
+
+        public async Task<Models.WorkFlow> GetInstalledWorkFlowByKeyAsync(Guid flowId)
+        {
+            return await this.workFlowRepository.FindAsync(t => t.Id == flowId && t.State == (int)WorkFlowState.Installed);
         }
     }
 }

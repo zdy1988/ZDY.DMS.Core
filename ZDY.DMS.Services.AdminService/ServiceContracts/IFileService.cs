@@ -1,9 +1,9 @@
 ﻿using System;
-using ZDY.DMS.Services.Common.Models;
+using ZDY.DMS.Services.AdminService.Models;
 
-namespace ZDY.DMS.Services.Common.ServiceContracts
+namespace ZDY.DMS.Services.AdminService.ServiceContracts
 {
-    public interface IStaticFileService
+    public interface IFileService
     {
         string GetFileCodeByKey(Guid fileKey);
 

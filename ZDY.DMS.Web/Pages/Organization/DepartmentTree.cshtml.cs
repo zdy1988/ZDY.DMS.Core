@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.Metronic.TagHelpers.TreeTable;
-using ZDY.DMS.Services.Common.Models;
+using ZDY.DMS.Services.OrganizationService.Models;
 using ZDY.DMS.Services.OrganizationService.ServiceContracts;
 
 namespace ZDY.DMS.Web.Pages.Organization
@@ -25,15 +27,15 @@ namespace ZDY.DMS.Web.Pages.Organization
 
         public IEnumerable<TreeTableHead> TreeTableHeads { get; set; }
 
-        public async void OnGet(Guid companyId)
+        public async Task OnGetAsync(Guid companyId)
         {
             if (companyId == default)
             {
-                //var userIdentity = this.HttpContext.GetUserIdentity();
-                //companyId = userIdentity.CompanyId;
-
-                companyId = Guid.Empty;
+                var userIdentity = this.HttpContext.GetUserIdentity();
+                companyId = userIdentity.CompanyId;
             }
+
+            CompanyId = companyId;
 
             DepartmentData = await this.departmentService.GetAllDepartmentAsync(CompanyId);
 

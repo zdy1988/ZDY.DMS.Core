@@ -14,4 +14,8 @@
     <ProjectReference Include="..\ZDY.DMS.Tools\ZDY.DMS.Tools.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+  </ItemGroup>
+
 </Project>

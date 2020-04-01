@@ -1,7 +1,7 @@
 ﻿using System;
 using ZDY.DMS.Services.Common.Models;
 
-namespace ZDY.DMS.Services.Common.Models
+namespace ZDY.DMS.Services.OrganizationService.Models
 {
     public class Department : BaseEntity
     {

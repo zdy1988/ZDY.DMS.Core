@@ -10,6 +10,7 @@ using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 using ZDY.DMS.Services.Common.ServiceContracts;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.Services.PermissionService.Models;
+using ZDY.DMS.Services.OrganizationService.Models;
 
 namespace ZDY.DMS.Web
 {
@@ -60,7 +61,7 @@ namespace ZDY.DMS.Web
         {
             var flowKinds = dictionaryService.GetDictionary("WorkFlowKinds")["WorkFlowKinds"];
 
-            var flows = await workFlowService.GetInstalledWorkFlows(UserIdentity.CompanyId);
+            var flows = await workFlowService.GetInstalledWorkFlowCollectionAsync(UserIdentity.CompanyId);
 
             var options = new List<KeyValuePair<string, string>>();
 
@@ -77,7 +78,7 @@ namespace ZDY.DMS.Web
         {
             var formKinds = dictionaryService.GetDictionary("WorkFlowFormKinds")["WorkFlowFormKinds"];
 
-            var forms = await workFlowFormService.GetPublishedWorkFlowForms(UserIdentity.CompanyId);
+            var forms = await workFlowFormService.GetPublishedWorkFlowFormCollectionAsync(UserIdentity.CompanyId);
 
             var options = new List<KeyValuePair<string, string>>();
 

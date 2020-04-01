@@ -26,6 +26,7 @@ using ZDY.DMS.Services.Common.ServiceContracts;
 using ZDY.DMS.Services.AdminService.Implementation;
 using ZDY.DMS.API.Repositories.EntityFramework;
 using ZDY.DMS.AspNetCore;
+using ZDY.DMS.Services.AdminService.ServiceContracts;
 
 namespace ZDY.DMS.API
 {
@@ -119,7 +120,7 @@ namespace ZDY.DMS.API
             //·þÎñ
             builder.RegisterType<AppSettingProvider>().As<IAppSettingProvider>();
             builder.RegisterType<DictionaryService>().As<IDictionaryService>();
-            builder.RegisterType<StaticFileService>().As<IStaticFileService>();
+            builder.RegisterType<FileService>().As<IFileService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

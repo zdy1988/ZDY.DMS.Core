@@ -152,14 +152,6 @@ namespace ZDY.DMS.Services.WorkFlowService
                         messages.Add(new Tuple<Guid, string, string, string>(step.StepId, step.StepName, "步骤", $"步骤处理者类型为【{handlerTypeName}】，但所选人员与实际人员不符，即实际人员离职或数据丢失"));
                     }
                 }
-                else if (step.IsHandleBy(WorkFlowHandlerKinds.Department))
-                {
-                    var len2 = ServiceLocator.GetService<IRepositoryContext>().GetRepository<Guid, Department>().Count(t => handlers.Contains(t.Id.ToString()));
-                    if (len != len2)
-                    {
-                        messages.Add(new Tuple<Guid, string, string, string>(step.StepId, step.StepName, "步骤", $"步骤处理者类型为【{handlerTypeName}】，但所选部门不存在"));
-                    }
-                }
 
                 if (step.IsHandleTacticBy(WorkFlowHandleTacticKinds.PercentageAgree) && step.Percentage == 0)
                 {

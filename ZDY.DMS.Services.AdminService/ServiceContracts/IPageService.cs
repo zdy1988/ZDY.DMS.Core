@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
-using ZDY.DMS.Services.Common.DataTransferObjects;
+using ZDY.DMS.Services.AdminService.DataTransferObjects;
+using ZDY.DMS.Services.AdminService.Models;
 
 namespace ZDY.DMS.Services.AdminService.ServiceContracts
 {
@@ -12,5 +14,7 @@ namespace ZDY.DMS.Services.AdminService.ServiceContracts
         Task<IEnumerable<MultiLevelPageDTO>> GetMultiLevelPagesAsync();
 
         Task<IEnumerable<MultiLevelPageDTO>> GetChildLevelPagesAsync(Guid parentId);
+
+        IEnumerable<Page> GetAllPages(Guid companyId);
     }
 }
