@@ -1,6 +1,6 @@
-﻿namespace ZDY.DMS.Services.Common.ServiceContracts
+﻿namespace ZDY.DMS.AspNetCore
 {
-    public interface IAppSettingService
+    public interface IAppSettingProvider
     {
         string GetAppSetting(string key);
 

@@ -7,7 +7,7 @@ using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.AdminService.ServiceContracts;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.Services.Common.DataTransferObjects;
-using ZDY.DMS.AspNetCore;
+using ZDY.DMS.AspNetCore.Service;
 
 namespace ZDY.DMS.Services.AdminService.Implementation
 {

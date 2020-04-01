@@ -22,10 +22,10 @@ using ZDY.DMS.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Querying.DataTableGateway.MySQL;
-using ZDY.DMS.Services.Common.Implementation;
 using ZDY.DMS.Services.Common.ServiceContracts;
 using ZDY.DMS.Services.AdminService.Implementation;
 using ZDY.DMS.API.Repositories.EntityFramework;
+using ZDY.DMS.AspNetCore;
 
 namespace ZDY.DMS.API
 {
@@ -117,7 +117,7 @@ namespace ZDY.DMS.API
             builder.RegisterType<MD5StringEncryption>().As<IStringEncryption>();
 
             //·þÎñ
-            builder.RegisterType<AppSettingService>().As<IAppSettingService>();
+            builder.RegisterType<AppSettingProvider>().As<IAppSettingProvider>();
             builder.RegisterType<DictionaryService>().As<IDictionaryService>();
             builder.RegisterType<StaticFileService>().As<IStaticFileService>();
         }

@@ -17,7 +17,7 @@ namespace ZDY.DMS.AspNetCore
             this.services = services;
         }
 
-        public void DoConfigure(Action<ServiceBootstrapperOptions> configure = null)
+        public void Configure(Action<ServiceBootstrapperOptions> configure = null)
         {
             configure?.Invoke(options);
 

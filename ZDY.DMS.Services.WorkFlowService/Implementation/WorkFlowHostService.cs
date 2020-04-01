@@ -19,7 +19,7 @@ using ZDY.DMS.Services.WorkFlowService.Models;
 using ZDY.DMS.Tools;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.Common.Models;
-using ZDY.DMS.AspNetCore;
+using ZDY.DMS.AspNetCore.Service;
 
 namespace ZDY.DMS.Services.WorkFlowService.Implementation
 {

@@ -1,18 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
-using System.Reflection;
-using ZDY.DMS.Caching;
-using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.AdminService.Enums;
 using ZDY.DMS.Services.Common.Models;
-using ZDY.DMS.Services.Common.DataTransferObjects;
 using ZDY.DMS.Services.Common.ServiceContracts;
-using ZDY.DMS.Tools;
 using ZDY.DMS.AspNetCore.Dictionary;
-using ZDY.DMS.AspNetCore;
+using ZDY.DMS.AspNetCore.Service;
 
 namespace ZDY.DMS.Services.AdminService.Implementation
 {

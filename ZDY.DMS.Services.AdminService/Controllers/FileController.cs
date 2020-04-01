@@ -1,24 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ZDY.DMS.AspNetCore;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.DataPermission;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.Models;
-using ZDY.DMS.Services.Common.ServiceContracts;
 
 namespace ZDY.DMS.Services.AdminService.Controllers
 {
     public class FileController : ApiDataServiceController<Guid, File, AdminServiceModule>
     {
-        private readonly IAppSettingService appSettingService;
+        private readonly IAppSettingProvider appSettingProvider;
 
         public FileController(Func<Type, IRepositoryContext> repositoryContextFactory,
-            IAppSettingService appSettingService)
+            IAppSettingProvider appSettingProvider)
             : base(repositoryContextFactory, new GuidKeyGenerator())
         {
-            this.appSettingService = appSettingService;
+            this.appSettingProvider = appSettingProvider;
         }
 
         public override Task<Tuple<IEnumerable<File>, int>> Search(SearchModel searchModel)
@@ -50,7 +50,7 @@ namespace ZDY.DMS.Services.AdminService.Controllers
         {
             var file = this.Repository.FindByKey(id);
 
-            string staticFileServerPath = this.appSettingService.GetAppSetting("StaticFileServerPath");
+            string staticFileServerPath = this.appSettingProvider.GetAppSetting("StaticFileServerPath");
             string path = staticFileServerPath + file.Path;
             System.IO.File.Delete(path);
         }

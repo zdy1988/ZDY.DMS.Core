@@ -1,13 +1,12 @@
 ﻿using Microsoft.Extensions.Configuration;
-using ZDY.DMS.Services.Common.ServiceContracts;
 
-namespace ZDY.DMS.Services.Common.Implementation
+namespace ZDY.DMS.AspNetCore
 {
-    public class AppSettingService : IAppSettingService
+    public class AppSettingProvider : IAppSettingProvider
     {
         private readonly IConfiguration configuration;
 
-        public AppSettingService(IConfiguration configuration)
+        public AppSettingProvider(IConfiguration configuration)
         {
             this.configuration = configuration;
         }

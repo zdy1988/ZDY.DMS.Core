@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,14 +8,15 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ZDY.DMS.AspNetCore.Dictionary;
+using ZDY.DMS.AspNetCore.EntityMapper;
+using ZDY.DMS.AspNetCore.Service;
 using ZDY.DMS.Caching;
 using ZDY.DMS.Caching.InMemory;
-using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Querying.DataTableGateway.MySQL;
 using ZDY.DMS.StringEncryption;
 
-namespace ZDY.DMS.AspNetCore
+namespace ZDY.DMS.AspNetCore.Extensions.DependencyInjection
 {
     public static class IntegrationExtensions
     {
@@ -39,6 +42,9 @@ namespace ZDY.DMS.AspNetCore
             services.TryAddSingleton<IDictionaryRegister, DictionaryRegister>();
             services.TryAddSingleton<IDictionaryProvider, DictionaryProvider>();
 
+            //注入实体映射
+            services.TryAddSingleton<IEntityMapperRegister, EntityMapperRegister>();
+
             //加密方式
             //services.TryAddSingleton<IStringEncryption, MD5StringEncryption>();
             services.TryAddSingleton<IStringEncryption, NoStringEncryption>();
@@ -46,12 +52,69 @@ namespace ZDY.DMS.AspNetCore
             //注入DataTableGateway
             services.TryAddSingleton<IDataTableGateway, MySqlDataTableGateway>();
 
+            //注入AppSetting
+            services.TryAddSingleton<IAppSettingProvider, AppSettingProvider>();
+
+            //注入服务
+            services.AddServiceAssembly();
+
+            //注入AutoMapper
+            services.AddAutoMapper();
+
             //注册 Service 模块 
             var serviceBootstrapper = new ServiceBootstrapper(services);
-            serviceBootstrapper.DoConfigure(configure);
+            serviceBootstrapper.Configure(configure);
             services.AddSingleton<ServiceBootstrapper>(serviceBootstrapper);
         }
+    }
 
+    public static class ServiceRegisterExtensions
+    {
+        public static void AddServiceAssembly(this IServiceCollection services)
+        {
+            // 查找所有继承 IServiceBase 的类型
+            var types = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IServiceBase))))
+                .ToArray();
+
+            foreach (var type in types)
+            {
+                var interfaces = type.GetInterfaces();
+                foreach (var face in interfaces)
+                {
+                    if (!face.Equals(typeof(IServiceBase)))
+                    {
+                        services.TryAddSingleton(face, type);
+                    }
+                }
+            }
+        }
+    }
+
+    public static class EntityMapperServiceCollectionExtensions
+    {
+        public static void AddAutoMapper(this IServiceCollection services)
+        {
+            services.AddSingleton<IMapper>(sp => new MapperConfiguration(config =>
+            {
+                var register =sp.GetRequiredService<IEntityMapperRegister>();
+                if (register.GetMappers().Any())
+                {
+                    foreach (var mapper in register.GetMappers())
+                    {
+                        config.CreateMap(mapper.Key, mapper.Value);
+                    }
+                }
+
+            }).CreateMapper());
+        }
+    }
+}
+
+namespace ZDY.DMS.AspNetCore.Extensions.Builder
+{
+    public static class IntegrationExtensions
+    {
         public static IApplicationBuilder UseDMS(this IApplicationBuilder builder)
         {
             //使用错处处理

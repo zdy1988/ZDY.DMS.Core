@@ -11,28 +11,19 @@ using Microsoft.EntityFrameworkCore;
 using Autofac;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Repositories.EntityFramework;
+using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.AspNetCore.Mvc.Filters;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.Services.OrganizationService.Implementation;
-using ZDY.DMS.Services.AdminService.Implementation;
-using ZDY.DMS.Services.WorkFlowService.Implementation;
-using ZDY.DMS.AspNetCore;
-using ZDY.DMS.Services.OrganizationService.ServiceContracts;
-using ZDY.DMS.Services.AdminService.ServiceContracts;
-using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
-using ZDY.DMS.Services.PermissionService.ServiceContracts;
-using ZDY.DMS.Services.PermissionService.Implementation;
-using ZDY.DMS.Services.Common.Implementation;
-using ZDY.DMS.Services.Common.ServiceContracts;
-using ZDY.DMS.Web.Repositories.EntityFramework;
+using ZDY.DMS.AspNetCore.Extensions.DependencyInjection;
+using ZDY.DMS.AspNetCore.Extensions.Builder;
 using ZDY.DMS.Services.AdminService;
-using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.Services.AuthService;
 using ZDY.DMS.Services.MessageService;
 using ZDY.DMS.Services.OrganizationService;
 using ZDY.DMS.Services.PermissionService;
 using ZDY.DMS.Services.UserService;
 using ZDY.DMS.Services.WorkFlowService;
+using ZDY.DMS.Web.Repositories.EntityFramework;
 
 namespace ZDY.DMS.Web
 {
@@ -85,7 +76,6 @@ namespace ZDY.DMS.Web
                 options.SerializerSettings.ContractResolver = new NullToEmptyStringResolver();
             });
 
-
             services.AddDbContext<DMSDbContext>(options => options.UseMySql(@"server=localhost;userid=root;pwd=1234;port=3306;database=test;sslmode=none;", b => b.MigrationsAssembly("ZDY.DMS.Web")));
 
             //仓储
@@ -101,26 +91,11 @@ namespace ZDY.DMS.Web
                 options.AddService<UserServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
                 options.AddService<WorkFlowServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
             });
-
-            services.AddAutoMapper();
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-            //服务
-            builder.RegisterType<AppSettingService>().As<IAppSettingService>();
-            builder.RegisterType<DictionaryService>().As<IDictionaryService>();
-            builder.RegisterType<StaticFileService>().As<IStaticFileService>();
-
             builder.RegisterType<SelectOptionsFactory>().SingleInstance();
-
-            builder.RegisterType<DepartmentService>().As<IDepartmentService>().SingleInstance();
-            builder.RegisterType<PageService>().As<IPageService>().SingleInstance();
-            builder.RegisterType<PagePermissionService>().As<IPagePermissionService>().SingleInstance();
-
-            builder.RegisterType<WorkFlowService>().As<IWorkFlowService>().SingleInstance();
-            builder.RegisterType<WorkFlowFormService>().As<IWorkFlowFormService>().SingleInstance();
-            builder.RegisterType<WorkFlowHostService>().As<IWorkFlowHostService>().SingleInstance();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

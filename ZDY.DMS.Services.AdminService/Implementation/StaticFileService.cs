@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using ZDY.DMS.AspNetCore;
+using ZDY.DMS.AspNetCore.Service;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.Services.Common.ServiceContracts;
@@ -11,17 +12,17 @@ namespace ZDY.DMS.Services.AdminService.Implementation
     public class StaticFileService : ServiceBase<AdminServiceModule>, IStaticFileService
     {
         private IRepository<Guid, File> fileRepository;
-        private IAppSettingService appSettingService;
+        private IAppSettingProvider appSettingProvider;
 
         public StaticFileService(Func<Type, IRepositoryContext> repositoryContextFactory,
-            IAppSettingService appSettingService) : base(repositoryContextFactory)
+            IAppSettingProvider appSettingProvider) : base(repositoryContextFactory)
         {
             this.fileRepository = this.GetRepository<Guid, File>();
-            this.appSettingService = appSettingService;
+            this.appSettingProvider = appSettingProvider;
         }
 
-        private string EncryptKey => appSettingService.GetAppSetting("StaticFileEncryptKey");
-        private string FileServerUrl => appSettingService.GetAppSetting("StaticFileServerUrl");
+        private string EncryptKey => appSettingProvider.GetAppSetting("StaticFileEncryptKey");
+        private string FileServerUrl => appSettingProvider.GetAppSetting("StaticFileServerUrl");
         private string ParseFileUrl(File file) => $"{FileServerUrl}{file.Path}";
 
         public string GetFileCodeByKey(Guid fileKey)
