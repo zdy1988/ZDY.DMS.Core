@@ -6,7 +6,7 @@ using ZDY.DMS.Repositories;
 
 namespace ZDY.DMS.AspNetCore.Service
 {
-    public class ServiceBase<TServiceModule> : IServiceBase
+    public abstract class ServiceBase<TServiceModule> : IServiceBase
         where TServiceModule : IServiceModule
     {
         private readonly IRepositoryContext repositoryContext;
@@ -18,7 +18,7 @@ namespace ZDY.DMS.AspNetCore.Service
 
         protected IRepositoryContext RepositoryContext => this.repositoryContext;
 
-        public IRepository<TKey, TEntity> GetRepository<TKey, TEntity>()
+        protected IRepository<TKey, TEntity> GetRepository<TKey, TEntity>()
             where TKey : IEquatable<TKey>
             where TEntity : class, IEntity<TKey>
         {

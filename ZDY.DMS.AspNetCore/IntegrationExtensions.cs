@@ -20,14 +20,11 @@ namespace ZDY.DMS.AspNetCore.Extensions.DependencyInjection
 {
     public static class IntegrationExtensions
     {
-        public static void AddDMS(this IServiceCollection services, Action<ServiceBootstrapperOptions> configure = null)
+        public static void AddDMS(this IServiceCollection services, Action<ServiceBootstrapperConfigurator> configure = null)
         {
             //注入http上下文和action上下文
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.TryAddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
-            //注入数据权限控制
-            //services.AddDataPermission();
 
             //配置关闭默认ModelState验证
             services.Configure<ApiBehaviorOptions>(options =>
@@ -42,9 +39,6 @@ namespace ZDY.DMS.AspNetCore.Extensions.DependencyInjection
             services.TryAddSingleton<IDictionaryRegister, DictionaryRegister>();
             services.TryAddSingleton<IDictionaryProvider, DictionaryProvider>();
 
-            //注入实体映射
-            services.TryAddSingleton<IEntityMapperRegister, EntityMapperRegister>();
-
             //加密方式
             //services.TryAddSingleton<IStringEncryption, MD5StringEncryption>();
             services.TryAddSingleton<IStringEncryption, NoStringEncryption>();
@@ -58,10 +52,24 @@ namespace ZDY.DMS.AspNetCore.Extensions.DependencyInjection
             //注入服务
             services.AddServiceAssembly();
 
+            //注入实体映射注册
+            services.AddEntityMapperRegister();
+
             //注入AutoMapper
             services.AddAutoMapper();
 
+            //注入数据权限控制
+            //services.AddDataPermission();
+
             //注册 Service 模块 
+            services.AddServiceBootstrapper(configure);
+        }
+    }
+
+    public static class ServiceBootstrapperExtensions
+    {
+        public static void AddServiceBootstrapper(this IServiceCollection services, Action<ServiceBootstrapperConfigurator> configure = null)
+        {
             var serviceBootstrapper = new ServiceBootstrapper(services);
             serviceBootstrapper.Configure(configure);
             services.AddSingleton<ServiceBootstrapper>(serviceBootstrapper);
@@ -93,6 +101,11 @@ namespace ZDY.DMS.AspNetCore.Extensions.DependencyInjection
 
     public static class EntityMapperServiceCollectionExtensions
     {
+        public static void AddEntityMapperRegister(this IServiceCollection services)
+        {
+            services.TryAddSingleton<IEntityMapperRegister, EntityMapperRegister>();
+        }
+
         public static void AddAutoMapper(this IServiceCollection services)
         {
             services.AddSingleton<IMapper>(sp => new MapperConfiguration(config =>
@@ -115,7 +128,7 @@ namespace ZDY.DMS.AspNetCore.Extensions.Builder
 {
     public static class IntegrationExtensions
     {
-        public static IApplicationBuilder UseDMS(this IApplicationBuilder builder)
+        public static void UseDMS(this IApplicationBuilder builder)
         {
             //使用错处处理
             builder.UseErrorHandle();
@@ -127,9 +140,16 @@ namespace ZDY.DMS.AspNetCore.Extensions.Builder
             //builder.UseDataPermission();
 
             //初始化 Service 模块
+            builder.UseServiceBootstrapper();
+        }
+    }
+
+    public static class ServiceBootstrapperExtensions
+    {
+        public static void UseServiceBootstrapper(this IApplicationBuilder builder)
+        {
             var serviceBootstrapper = builder.ApplicationServices.GetRequiredService<ServiceBootstrapper>();
             serviceBootstrapper?.Initialize(builder);
-            return builder;
         }
     }
 }

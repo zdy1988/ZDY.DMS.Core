@@ -6,8 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Mvc;
+using ZDY.DMS.Events;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
+using ZDY.DMS.Services.Common.Events;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
 
@@ -15,10 +17,12 @@ namespace ZDY.DMS.Services.WorkFlowService
 {
     public class WorkFlowController : ApiDataServiceController<Guid, WorkFlow, WorkFlowServiceModule>
     {
-        public WorkFlowController(Func<Type, IRepositoryContext> repositoryContextFactory)
+        private readonly IEventPublisher eventPublisher;
+
+        public WorkFlowController(Func<Type, IRepositoryContext> repositoryContextFactory, IEventPublisher eventPublisher)
             : base(repositoryContextFactory, new GuidKeyGenerator())
         {
-
+            this.eventPublisher = eventPublisher;
         }
 
         protected override void BeforeAdd(Models.WorkFlow entity)
@@ -127,7 +131,7 @@ namespace ZDY.DMS.Services.WorkFlowService
                 await this.Repository.Context.CommitAsync();
 
                 //安装流程
-                //await original.Install();
+                this.eventPublisher.Publish(new WorkFlowInstallEvent(original.CompanyId, original.Id, original.Name));
 
                 return Ok(new { IsInstallSuccess = true, Messages = messages });
             }
@@ -153,7 +157,7 @@ namespace ZDY.DMS.Services.WorkFlowService
             await this.Repository.Context.CommitAsync();
 
             //卸载流程
-            //await original.UnInstall();
+            this.eventPublisher.Publish(new WorkFlowUnInstallEvent(original.Id));
         }
     }
 }

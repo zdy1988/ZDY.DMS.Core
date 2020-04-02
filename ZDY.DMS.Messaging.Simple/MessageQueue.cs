@@ -11,21 +11,30 @@ namespace ZDY.DMS.Messaging.Simple
         private static Task backgroundTask;
         private Action<IMessage> Consumer;
 
-        private Task BackgroundTask
+        private static MessageQueue instance;
+
+        private static readonly object syncRoot = new object();
+
+        public static MessageQueue GetInstance()
         {
-            get
+            if (instance == null)
             {
-                if (backgroundTask == null)
+                lock (syncRoot)
                 {
-                    backgroundTask = new Task(MessageHandler);
+                    if (instance == null)
+                    {
+                        instance = new MessageQueue();
+                    }
                 }
-                return backgroundTask;
             }
+            return instance;
         }
 
         public MessageQueue()
         {
-            this.BackgroundTask.Start();
+            backgroundTask = new Task(MessageHandler);
+
+            backgroundTask.Start();
         }
 
         public int Count

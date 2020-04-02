@@ -82,14 +82,16 @@ namespace ZDY.DMS.Web
             services.AddScoped<IRepositoryContext>(sp => new EntityFrameworkRepositoryContext(sp.GetService<DMSDbContext>()));
 
             //DMS
-            services.AddDMS(options => {
-                options.AddService<AdminServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
-                options.AddService<AuthServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
-                options.AddService<MessageServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
-                options.AddService<OrganizationServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
-                options.AddService<PermissionServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
-                options.AddService<UserServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
-                options.AddService<WorkFlowServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+            services.AddDMS(config => {
+                config.AddService<AdminServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                config.AddService<AuthServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                config.AddService<MessageServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                config.AddService<OrganizationServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                config.AddService<PermissionServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                config.AddService<UserServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                config.AddService<WorkFlowServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+
+                config.UseEventBus();
             });
         }
 

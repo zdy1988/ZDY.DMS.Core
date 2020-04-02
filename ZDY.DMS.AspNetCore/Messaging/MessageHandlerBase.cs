@@ -1,20 +1,19 @@
 ﻿using System;
-using Microsoft.AspNetCore.Mvc;
-using ZDY.DMS.AspNetCore.Auth;
+using System.Collections.Generic;
+using System.Text;
 using ZDY.DMS.AspNetCore.Module;
+using ZDY.DMS.Messaging;
 using ZDY.DMS.Repositories;
 
-namespace ZDY.DMS.AspNetCore.Mvc
+namespace ZDY.DMS.AspNetCore.Messaging
 {
-    //[Authorize]
-    //[ApiController]
-    [ApiRoute(ApiVersions.v1)]
-    public abstract class ApiController<TServiceModule> : ControllerBase
+    public abstract class MessageHandlerBase<TServiceModule, TMessage> : MessageHandler<TMessage>
         where TServiceModule : IServiceModule
+        where TMessage : IMessage
     {
         private readonly IRepositoryContext repositoryContext;
 
-        public ApiController(Func<Type, IRepositoryContext> repositoryContextFactory)
+        public MessageHandlerBase(Func<Type, IRepositoryContext> repositoryContextFactory)
         {
             this.repositoryContext = repositoryContextFactory.Invoke(typeof(TServiceModule));
         }
@@ -27,7 +26,5 @@ namespace ZDY.DMS.AspNetCore.Mvc
         {
             return this.RepositoryContext.GetRepository<TKey, TEntity>();
         }
-
-        protected UserIdentity UserIdentity => this.HttpContext.GetUserIdentity();
     }
 }

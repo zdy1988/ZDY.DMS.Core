@@ -16,8 +16,12 @@
   <ItemGroup>
     <ProjectReference Include="..\ZDY.DMS.Caching.InMemory\ZDY.DMS.Caching.InMemory.csproj" />
     <ProjectReference Include="..\ZDY.DMS.DataPermission\ZDY.DMS.DataPermission.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.EventStore.AdoNet\ZDY.DMS.EventStore.AdoNet.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.EventStore.MySQL\ZDY.DMS.EventStore.MySQL.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Extensions.DependencyInjection.Autofac\ZDY.DMS.ServiceProvider.Autofac.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Messaging.Simple\ZDY.DMS.Messaging.Simple.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Querying.DataTableGateway.MySQL\ZDY.DMS.Querying.DataTableGateway.MySQL.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Serialization.Json\ZDY.DMS.Serialization.Json.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Tools\ZDY.DMS.Tools.csproj" />
     <ProjectReference Include="..\ZDY.DMS\ZDY.DMS.csproj" />
   </ItemGroup>

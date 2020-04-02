@@ -11,7 +11,7 @@ using ZDY.DMS.AspNetCore.Module;
 
 namespace ZDY.DMS.AspNetCore.Mvc
 {
-    public class ApiDataServiceController<TKey, TEntity, TServiceModule> : ApiController<TServiceModule>
+    public abstract class ApiDataServiceController<TKey, TEntity, TServiceModule> : ApiController<TServiceModule>
         where TEntity : class, IEntity<TKey>
         where TKey : IEquatable<TKey>
         where TServiceModule: IServiceModule
@@ -26,7 +26,7 @@ namespace ZDY.DMS.AspNetCore.Mvc
         public ApiDataServiceController(Func<Type, IRepositoryContext> repositoryContextFactory, IKeyGenerator<TKey, TEntity> keyGenerator)
             : base(repositoryContextFactory)
         {
-            this.repository = this.RepositoryContext.GetRepository<TKey, TEntity>();
+            this.repository = this.GetRepository<TKey, TEntity>();
             this.keyGenerator = keyGenerator;
         }
 

@@ -27,11 +27,16 @@ namespace ZDY.DMS.AspNetCore.Module
             this.entityMapperRegister = entityMapperRegister;
         }
 
-        public ServiceModule(IDictionaryRegister dictionaryRegister, IEntityMapperRegister entityMapperRegister, ICommandSubscriber commandSubscriber, IEventSubscriber eventSubscriber)
+        public ServiceModule(IDictionaryRegister dictionaryRegister, IEntityMapperRegister entityMapperRegister, IEventSubscriber eventSubscriber)
             : this(dictionaryRegister, entityMapperRegister)
         {
-            this.commandSubscriber = commandSubscriber;
             this.eventSubscriber = eventSubscriber;
+        }
+
+        public ServiceModule(IDictionaryRegister dictionaryRegister, IEntityMapperRegister entityMapperRegister, ICommandSubscriber commandSubscriber, IEventSubscriber eventSubscriber)
+            : this(dictionaryRegister, entityMapperRegister, eventSubscriber)
+        {
+            this.commandSubscriber = commandSubscriber;
         }
 
         protected ICommandSubscriber CommandSubscriber => this.commandSubscriber;

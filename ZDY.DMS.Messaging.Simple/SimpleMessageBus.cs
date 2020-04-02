@@ -22,7 +22,7 @@ namespace ZDY.DMS.Messaging.Simple
             IMessageHandlerExecutionContext messageHandlerExecutionContext)
             : base(messageSerializer, messageHandlerExecutionContext)
         {
-            this.messageQueue = new MessageQueue();
+            this.messageQueue = MessageQueue.GetInstance();
 
             InitializeMessageConsumer();
         }
