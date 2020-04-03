@@ -8,15 +8,15 @@ using ZDY.DMS.Services.Common.Events;
 
 namespace ZDY.DMS.Services.AdminService.EventHandlers
 {
-    public class WorkFlowInstallEventHandler : EventHandlerBase<AdminServiceModule, WorkFlowInstallEvent>
+    public class WorkFlowInstalledEventHandler : EventHandlerBase<AdminServiceModule, WorkFlowInstalledEvent>
     {
-        public WorkFlowInstallEventHandler(Func<Type, IRepositoryContext> repositoryContextFactory)
+        public WorkFlowInstalledEventHandler(Func<Type, IRepositoryContext> repositoryContextFactory)
             : base(repositoryContextFactory)
         { 
             
         }
 
-        public async override Task<bool> HandleAsync(WorkFlowInstallEvent message, CancellationToken cancellationToken = default)
+        public async override Task<bool> HandleAsync(WorkFlowInstalledEvent message, CancellationToken cancellationToken = default)
         {
             var pageRepository = this.GetRepository<Guid, Page>();
 

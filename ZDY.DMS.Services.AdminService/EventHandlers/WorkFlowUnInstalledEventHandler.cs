@@ -10,15 +10,15 @@ using ZDY.DMS.Services.Common.Events;
 
 namespace ZDY.DMS.Services.AdminService.EventHandlers
 {
-    public class WorkFlowUnInstallEventHandler : EventHandlerBase<AdminServiceModule, WorkFlowUnInstallEvent>
+    public class WorkFlowUnInstalledEventHandler : EventHandlerBase<AdminServiceModule, WorkFlowUnInstalledEvent>
     {
-        public WorkFlowUnInstallEventHandler(Func<Type, IRepositoryContext> repositoryContextFactory)
+        public WorkFlowUnInstalledEventHandler(Func<Type, IRepositoryContext> repositoryContextFactory)
             : base(repositoryContextFactory)
         {
 
         }
 
-        public async override Task<bool> HandleAsync(WorkFlowUnInstallEvent message, CancellationToken cancellationToken = default)
+        public async override Task<bool> HandleAsync(WorkFlowUnInstalledEvent message, CancellationToken cancellationToken = default)
         {
             var pageRepository = this.GetRepository<Guid, Page>();
 

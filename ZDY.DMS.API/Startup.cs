@@ -27,6 +27,7 @@ using ZDY.DMS.Services.AdminService.Implementation;
 using ZDY.DMS.API.Repositories.EntityFramework;
 using ZDY.DMS.AspNetCore;
 using ZDY.DMS.Services.AdminService.ServiceContracts;
+using ZDY.DMS.AspNetCore.Extensions.Builder;
 
 namespace ZDY.DMS.API
 {

@@ -46,6 +46,22 @@ namespace ZDY.DMS.AspNetCore.Auth
             };
         }
 
+        public static bool TryGetUserId(this HttpContext context, out Guid userId)
+        {
+            try
+            {
+                var claimsIdentity = context.User.Identity as ClaimsIdentity;
+                var id = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "Id").Value;
+                userId = Guid.Parse(id);
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public static string GenerateToken(Guid UserId, string Name, Guid CompanyId, DateTime expires)
         {
             var handler = new JwtSecurityTokenHandler();

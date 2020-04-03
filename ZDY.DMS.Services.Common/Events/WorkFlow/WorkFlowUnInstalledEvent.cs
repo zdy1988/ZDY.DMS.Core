@@ -5,14 +5,14 @@ using ZDY.DMS.Events;
 
 namespace ZDY.DMS.Services.Common.Events
 {
-    public class WorkFlowUnInstallEvent : Event
+    public class WorkFlowUnInstalledEvent : Event
     {
         /// <summary>
         /// 需要卸载的流程Id
         /// </summary>
         public Guid FlowId { get; set; }
 
-        public WorkFlowUnInstallEvent(Guid flowId)
+        public WorkFlowUnInstalledEvent(Guid flowId)
         {
             this.FlowId = flowId;
         }

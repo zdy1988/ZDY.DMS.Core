@@ -3,12 +3,12 @@ using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Middlewares;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ZDY.DMS.AspNetCore.Dictionary;
-using ZDY.DMS.AspNetCore.EntityMapper;
 using ZDY.DMS.AspNetCore.Service;
 using ZDY.DMS.Caching;
 using ZDY.DMS.Caching.InMemory;
@@ -52,9 +52,6 @@ namespace ZDY.DMS.AspNetCore.Extensions.DependencyInjection
             //注入服务
             services.AddServiceAssembly();
 
-            //注入实体映射注册
-            services.AddEntityMapperRegister();
-
             //注入AutoMapper
             services.AddAutoMapper();
 
@@ -82,7 +79,7 @@ namespace ZDY.DMS.AspNetCore.Extensions.DependencyInjection
         {
             // 查找所有继承 IServiceBase 的类型
             var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(a => a.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IServiceBase))))
+                .SelectMany(a => a.GetTypes().Where(t => t.GetInterfaces().Contains(typeof(IServiceBase)) && !t.IsAbstract && t.IsPublic))
                 .ToArray();
 
             foreach (var type in types)
@@ -101,22 +98,17 @@ namespace ZDY.DMS.AspNetCore.Extensions.DependencyInjection
 
     public static class EntityMapperServiceCollectionExtensions
     {
-        public static void AddEntityMapperRegister(this IServiceCollection services)
-        {
-            services.TryAddSingleton<IEntityMapperRegister, EntityMapperRegister>();
-        }
-
         public static void AddAutoMapper(this IServiceCollection services)
         {
+            var profiles = AppDomain.CurrentDomain.GetAssemblies()
+                .SelectMany(a => a.GetTypes().Where(t => typeof(Profile).IsAssignableFrom(t) && !t.IsAbstract && t.IsPublic))
+                .ToList();
+
             services.AddSingleton<IMapper>(sp => new MapperConfiguration(config =>
             {
-                var register =sp.GetRequiredService<IEntityMapperRegister>();
-                if (register.GetMappers().Any())
+                foreach (var profile in profiles)
                 {
-                    foreach (var mapper in register.GetMappers())
-                    {
-                        config.CreateMap(mapper.Key, mapper.Value);
-                    }
+                    config.AddProfile(profile);
                 }
 
             }).CreateMapper());
@@ -150,6 +142,22 @@ namespace ZDY.DMS.AspNetCore.Extensions.Builder
         {
             var serviceBootstrapper = builder.ApplicationServices.GetRequiredService<ServiceBootstrapper>();
             serviceBootstrapper?.Initialize(builder);
+        }
+    }
+
+    public static class CookiesAuthorizationAppBuilderExtensions
+    {
+        public static IApplicationBuilder UseCookiesAuthentication(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<CookiesAuthenticationMiddleware>();
+        }
+    }
+
+    public static class ExceptionHandleBuilderExtensions
+    {
+        public static IApplicationBuilder UseErrorHandle(this IApplicationBuilder app)
+        {
+            return app.UseMiddleware<ExceptionHandleMiddleware>();
         }
     }
 }

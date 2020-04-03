@@ -20,11 +20,14 @@ using ZDY.DMS.Tools;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.AspNetCore.Service;
+using ZDY.DMS.Events;
+using ZDY.DMS.Services.Common.Events;
 
 namespace ZDY.DMS.Services.WorkFlowService.Implementation
 {
     public class WorkFlowHostService : ServiceBase<WorkFlowServiceModule>, IWorkFlowHostService
     {
+        private readonly IEventPublisher eventPublisher;
         private readonly IDataTableGateway dataTableGateway;
         private readonly IStringEncryption stringEncryption;
         private readonly IRepository<Guid, User> userRepository;
@@ -36,12 +39,14 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         private readonly AsyncLock execute_lock = new AsyncLock();
 
         public WorkFlowHostService(Func<Type, IRepositoryContext> repositoryContextFactory,
+                                   IEventPublisher  eventPublisher,
                                    IStringEncryption stringEncryption,
                                    IDataTableGateway dataTableGateway)
             : base(repositoryContextFactory)
         {
             this.dataTableGateway = dataTableGateway;
             this.stringEncryption = stringEncryption;
+            this.eventPublisher = eventPublisher;
             this.userRepository = this.GetRepository<Guid, User>();
             this.workFlowRepository = this.GetRepository<Guid, WorkFlow>();
             this.workFlowTaskRepository = this.GetRepository<Guid, WorkFlowTask>();
@@ -2106,21 +2111,12 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
         #region 发送消息
 
-        public void SendMessage(string title, string message, params Guid[] users)
+        public void SendMessage(string title, string message, params Guid[] receiver)
         {
-            //if (users.Count() > 0)
-            //{
-            //    eventBus.Publish<SendMessageEvent>(new SendMessageEvent
-            //    {
-            //        Message = new Message
-            //        {
-            //            Title = $"【审批】{title}",
-            //            Content = $"【审批】{message}",
-            //            Level = 0
-            //        },
-            //        To = users
-            //    });
-            //}
+            title = $"【审批】{title}";
+            message = $"【审批】{message}";
+
+            eventPublisher.Publish<PublicMessageCreatedEvent>(new PublicMessageCreatedEvent(title, message, 0, receiver));
         }
 
         #endregion

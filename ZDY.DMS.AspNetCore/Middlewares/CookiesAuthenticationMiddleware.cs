@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace Microsoft.AspNetCore.Builder
+namespace Microsoft.AspNetCore.Middlewares
 {
     public class CookiesAuthenticationMiddleware
     {
@@ -30,14 +30,6 @@ namespace Microsoft.AspNetCore.Builder
             }
 
             await _next.Invoke(context);
-        }
-    }
-
-    public static class CookiesAuthorizationAppBuilderExtensions
-    {
-        public static IApplicationBuilder UseCookiesAuthentication(this IApplicationBuilder builder)
-        {
-            return builder.UseMiddleware<CookiesAuthenticationMiddleware>();
         }
     }
 }

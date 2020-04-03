@@ -5,7 +5,7 @@ using ZDY.DMS.Events;
 
 namespace ZDY.DMS.Services.Common.Events
 {
-    public class WorkFlowInstallEvent : Event
+    public class WorkFlowInstalledEvent : Event
     {
         /// <summary>
         /// 流程所在的公司
@@ -22,7 +22,7 @@ namespace ZDY.DMS.Services.Common.Events
         /// </summary>
         public string FlowName { get; set; }
 
-        public WorkFlowInstallEvent(Guid companyId, Guid flowId, string flowName)
+        public WorkFlowInstalledEvent(Guid companyId, Guid flowId, string flowName)
         {
             this.CompanyId = companyId;
             this.FlowId = flowId;

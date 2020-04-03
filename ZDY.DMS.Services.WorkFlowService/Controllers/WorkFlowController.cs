@@ -131,7 +131,7 @@ namespace ZDY.DMS.Services.WorkFlowService
                 await this.Repository.Context.CommitAsync();
 
                 //安装流程
-                this.eventPublisher.Publish(new WorkFlowInstallEvent(original.CompanyId, original.Id, original.Name));
+                this.eventPublisher.Publish(new WorkFlowInstalledEvent(original.CompanyId, original.Id, original.Name));
 
                 return Ok(new { IsInstallSuccess = true, Messages = messages });
             }
@@ -157,7 +157,7 @@ namespace ZDY.DMS.Services.WorkFlowService
             await this.Repository.Context.CommitAsync();
 
             //卸载流程
-            this.eventPublisher.Publish(new WorkFlowUnInstallEvent(original.Id));
+            this.eventPublisher.Publish(new WorkFlowUnInstalledEvent(original.Id));
         }
     }
 }

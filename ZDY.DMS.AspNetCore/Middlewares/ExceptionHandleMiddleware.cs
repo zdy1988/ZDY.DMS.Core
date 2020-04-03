@@ -2,9 +2,12 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
+using ZDY.DMS.AspNetCore.Auth;
+using ZDY.DMS.AspNetCore.Events;
 using ZDY.DMS.AspNetCore.Mvc;
+using ZDY.DMS.Events;
 
-namespace Microsoft.AspNetCore.Builder
+namespace Microsoft.AspNetCore.Middlewares
 {
     public class ExceptionHandleMiddleware
     {
@@ -15,7 +18,7 @@ namespace Microsoft.AspNetCore.Builder
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, IEventPublisher eventPublisher)
         {
             var message = "";
             try
@@ -33,6 +36,15 @@ namespace Microsoft.AspNetCore.Builder
                 {
                     context.Response.StatusCode = 400;
                     message = e.Message;
+
+                    if (context.TryGetUserId(out Guid userId))
+                    {
+                        eventPublisher.Publish<ExceptionLogCreatedEvent>(new ExceptionLogCreatedEvent(e, userId));
+                    }
+                    else
+                    {
+                        eventPublisher.Publish<ExceptionLogCreatedEvent>(new ExceptionLogCreatedEvent(e));
+                    }
                 }
             }
             finally
@@ -78,14 +90,6 @@ namespace Microsoft.AspNetCore.Builder
             };
 
             await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
-        }
-    }
-
-    public static class ExceptionHandleBuilderExtensions
-    {
-        public static IApplicationBuilder UseErrorHandle(this IApplicationBuilder app)
-        {
-            return app.UseMiddleware<ExceptionHandleMiddleware>();
         }
     }
 }

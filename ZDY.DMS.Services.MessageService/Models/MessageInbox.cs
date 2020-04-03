@@ -18,6 +18,6 @@ namespace ZDY.DMS.Services.MessageService.Models
         /// <summary>
         /// 是否已读
         /// </summary>
-        public bool IsReaded { get; set; }
+        public bool IsReaded { get; set; } = false;
     }
 }

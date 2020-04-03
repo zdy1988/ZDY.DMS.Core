@@ -7,7 +7,9 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.AspNetCore.Mvc;
+using ZDY.DMS.Events;
 using ZDY.DMS.Repositories;
+using ZDY.DMS.Services.Common.Events;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.StringEncryption;
 
@@ -18,14 +20,17 @@ namespace ZDY.DMS.Services.AuthService.Controllers
     {
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IStringEncryption stringEncryption;
+        private readonly IEventPublisher eventPublisher;
         private readonly IRepository<Guid, User> userRepository;
 
         public AuthController(Func<Type, IRepositoryContext> repositoryContextFactory,
             IHttpContextAccessor httpContextAccessor,
+            IEventPublisher eventPublisher,
             IStringEncryption stringEncryption) : base(repositoryContextFactory)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.stringEncryption = stringEncryption;
+            this.eventPublisher = eventPublisher;
             this.userRepository = this.RepositoryContext.GetRepository<Guid, User>();
         }
 
@@ -64,6 +69,8 @@ namespace ZDY.DMS.Services.AuthService.Controllers
             await userRepository.UpdateAsync(existUser);
 
             await this.RepositoryContext.CommitAsync();
+
+            PublishLoginMessage(existUser);
 
             return Ok(new
             {
@@ -198,6 +205,14 @@ namespace ZDY.DMS.Services.AuthService.Controllers
                 Phone = existUser.Phone,
                 Mobile = existUser.Mobile
             };
+        }
+
+        private void PublishLoginMessage(User user)
+        {
+            var title = "登陆消息";
+            var content = $@"您的账号于 {user.LastLoginTime} 登陆系统，祝您使用愉快！";
+
+            this.eventPublisher.Publish<SystemMessageCreatedEvent>(new SystemMessageCreatedEvent(title, content, 0, user.Id));
         }
     }
 }
