@@ -40,7 +40,7 @@ namespace ZDY.DMS.Services.MessageService.Controllers
 
         public override Task<Tuple<IEnumerable<Message>, int>> Search(SearchModel searchModel)
         {
-            return base.Search(searchModel);
+            throw new NotSupportedException();
         }
     }
 }

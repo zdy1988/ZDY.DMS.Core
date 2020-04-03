@@ -20,34 +20,29 @@ namespace ZDY.DMS.Services.AdminService.Controllers
 
         }
 
-        public override Task<Tuple<IEnumerable<Log>, int>> Search(SearchModel searchModel)
-        {
-            return base.Search(searchModel);
-        }
-
         public override Task<Log> Find(SearchModel searchModel)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override Task<Log> FindByKey(Guid id)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override Task<Log> Add(Log entity)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override Task<Log> Update(Log entity)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override Task Delete(Guid id)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }

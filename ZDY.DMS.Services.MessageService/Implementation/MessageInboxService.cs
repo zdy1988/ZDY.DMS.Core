@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.AspNetCore.Service;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.MessageService.Models;
@@ -12,6 +11,8 @@ using ZDY.DMS.Services.MessageService.ServiceContracts;
 using ZDY.DMS.Services.MessageService.DataTransferObjects;
 using System.Threading.Tasks;
 using ZDY.DMS.KeyGeneration;
+using ZDY.DMS.Querying;
+using ZDY.DMS.Querying.SearchModel.Model;
 
 namespace ZDY.DMS.Services.MessageService.Implementation
 {
@@ -43,8 +44,18 @@ namespace ZDY.DMS.Services.MessageService.Implementation
             await this.RepositoryContext.CommitAsync();
         }
 
-        public async Task<List<MessageInboxDTO>> GetAllMessageAsync(Guid receiverId)
+        public Tuple<IEnumerable<MessageInboxDTO>, int> GetAllMessage(Guid receiverId, QueryModel queryModel, int pageIndex, int pageSize, string orderField, bool isAsc)
         {
+            if (pageIndex <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(pageIndex), "The page index should be greater than 0.");
+            }
+
+            if (pageSize <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(pageSize), "The page size should be greater than 0.");
+            }
+
             var context = (DbContext)this.RepositoryContext.Session;
 
             var query = from m in context.Set<Message>()
@@ -52,7 +63,13 @@ namespace ZDY.DMS.Services.MessageService.Implementation
                         on new { messageId = m.Id, receiverId } equals new { messageId = mi.MessageId, receiverId = mi.ReceiverId }
                         select ValueTuple.Create(m, mi);
 
-            return await query.ProjectTo<MessageInboxDTO>(this.mapper.ConfigurationProvider).ToListAsync();
+            var dtoQuery = query.ProjectTo<MessageInboxDTO>(this.mapper.ConfigurationProvider);
+
+            var total = dtoQuery.Count();
+
+            var list = dtoQuery.Sort<MessageInboxDTO>(orderField, isAsc).Skip((pageIndex - 1) * pageSize).Take(pageSize);
+
+            return new Tuple<IEnumerable<MessageInboxDTO>, int>(list, total);
         }
     }
 }

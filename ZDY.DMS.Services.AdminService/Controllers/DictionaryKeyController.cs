@@ -46,10 +46,5 @@ namespace ZDY.DMS.Services.AdminService.Controllers
 
             dictionaryValueRepository.Update(t => t.DictionaryKey == originalCode, query => new DictionaryValue { DictionaryKey = newCode });
         }
-
-        public override Task<Tuple<IEnumerable<DictionaryKey>, int>> Search(SearchModel searchModel)
-        {
-            return base.Search(searchModel);
-        }
     }
 }

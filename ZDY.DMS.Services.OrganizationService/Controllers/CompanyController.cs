@@ -35,10 +35,5 @@ namespace ZDY.DMS.Services.OrganizationService.Controllers
 
             base.BeforeUpdate(original, entity);
         }
-
-        public override Task<Tuple<IEnumerable<Company>, int>> Search(SearchModel searchModel)
-        {
-            return base.Search(searchModel);
-        }
     }
 }

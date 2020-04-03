@@ -42,10 +42,5 @@ namespace ZDY.DMS.Services.AdminService.Controllers
             original.ParentValue = entity.ParentValue;
             original.Value = entity.Value;
         }
-
-        public override Task<Tuple<IEnumerable<DictionaryValue>, int>> Search(SearchModel searchModel)
-        {
-            return base.Search(searchModel);
-        }
     }
 }

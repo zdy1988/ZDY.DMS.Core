@@ -44,10 +44,5 @@ namespace ZDY.DMS.Services.PermissionService.Controllers
             userGroupPagePermissionRepository.Remove(t => t.GroupId == id);
             userGroupMemberRepository.Remove(t => t.GroupId == id);
         }
-
-        public override Task<Tuple<IEnumerable<UserGroup>, int>> Search(SearchModel searchModel)
-        {
-            return base.Search(searchModel);
-        }
     }
 }

@@ -21,29 +21,24 @@ namespace ZDY.DMS.Services.AdminService.Controllers
             this.appSettingProvider = appSettingProvider;
         }
 
-        public override Task<Tuple<IEnumerable<File>, int>> Search(SearchModel searchModel)
-        {
-            return base.Search(searchModel);
-        }
-
         public override Task<File> Find(SearchModel searchModel)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override Task<File> FindByKey(Guid id)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override Task<File> Add(File entity)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override Task<File> Update(File entity)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         protected override void BeforeDelete(Guid id)

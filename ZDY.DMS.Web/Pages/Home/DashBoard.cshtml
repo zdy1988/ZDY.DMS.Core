@@ -274,7 +274,7 @@
                         { field: 'State', value: [-1, 0, 1], method: zdy.querymethod.in }
                     ],
                     defaultOrderBy: "Id",
-                    dataQueryUrl: 'WorkFlowTask/List',
+                    dataQueryUrl: 'WorkFlowTask/Search',
                     pageSize: 10
                 }).import(function () {
 
@@ -287,7 +287,7 @@
                         { field: 'State', value: [2, 3, 4, 5], method: zdy.querymethod.in }
                     ],
                     defaultOrderBy: "Id",
-                    dataQueryUrl: 'WorkFlowTask/List'
+                    dataQueryUrl: 'WorkFlowTask/Search'
                 }).import(function () {
 
                     this.dic(dictionary)

@@ -18,22 +18,22 @@ namespace ZDY.DMS.Services.WorkFlowService
 
         public override Task<WorkFlowInstance> Add(WorkFlowInstance entity)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override Task<WorkFlowInstance> Update(WorkFlowInstance entity)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override Task Delete(Guid id)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public override Task<WorkFlowInstance> Find(SearchModel searchModel)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }
