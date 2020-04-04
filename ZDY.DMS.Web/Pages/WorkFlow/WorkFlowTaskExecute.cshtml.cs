@@ -67,7 +67,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             //获得当前步骤信息
             Instance = instance;
             CurrentTask = task;
-            var workFlowInstalled = Services.WorkFlowService.WorkFlowAnalyzing.WorkFlowInstalledDeserialize(Instance.FlowRuntimeJson);
+            var workFlowInstalled = WorkFlowDefinition.Parse(Instance.FlowRuntimeJson);
             CurrentStep = workFlowInstalled.GetStep(CurrentTask.StepId);
 
 

@@ -79,7 +79,8 @@ namespace ZDY.DMS.Messaging.Simple
                         {
                             this.Consumer.Invoke(message.Item1);
                         }
-                        catch (Exception e)
+                        catch
+                        //catch (Exception e)
                         {
                             message.Item2++;
 

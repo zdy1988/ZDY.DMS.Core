@@ -11,40 +11,29 @@ namespace ZDY.DMS.Services.WorkFlowService
 {
     public static class WorkFlowAnalyzing
     {
-        public static WorkFlowDefinition WorkFlowInstalledDeserialize(string flowJson)
-        {
-            try
-            {
-                return JsonConvert.DeserializeObject<WorkFlowDefinition>(flowJson);
-            }
-            catch
-            {
-                throw new InvalidOperationException("流程数据解析异常");
-            }
-        }
 
-        public static List<Tuple<Guid, string, string, string>> CheckFlow(this WorkFlowDefinition workFlowInstalled)
+        public static List<Tuple<Guid, string, string, string>> CheckFlow(this WorkFlowDefinition definition)
         {
             //验证流程名称
-            if (string.IsNullOrEmpty(workFlowInstalled.Name))
+            if (string.IsNullOrEmpty(definition.Name))
             {
                 throw new InvalidOperationException("流程名称未填写");
             }
 
             //验证数据存在
-            if (workFlowInstalled.Steps.Count <= 0 || workFlowInstalled.Transits.Count <= 0)
+            if (definition.Steps.Count <= 0 || definition.Transits.Count <= 0)
             {
                 throw new InvalidOperationException("流程数据解析异常");
             }
 
             //验证首尾存在
-            var start = workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowConstant.StartStepId);
+            var start = definition.Steps.Find(t => t.StepId == WorkFlowConstant.StartStepId);
             if (start == null)
             {
                 throw new InvalidOperationException("流程数据解析异常");
             }
 
-            var end = workFlowInstalled.Steps.Find(t => t.StepId == WorkFlowConstant.EndStepId);
+            var end = definition.Steps.Find(t => t.StepId == WorkFlowConstant.EndStepId);
             if (end == null)
             {
                 throw new InvalidOperationException("流程数据解析异常");
@@ -52,11 +41,11 @@ namespace ZDY.DMS.Services.WorkFlowService
 
             List<Tuple<Guid, string, string, string>> messages = new List<Tuple<Guid, string, string, string>>();
 
-            var stepArray = workFlowInstalled.Steps.Select(t => t.StepId).ToArray();
+            var stepArray = definition.Steps.Select(t => t.StepId).ToArray();
 
-            var fromTransitPointArray = workFlowInstalled.Transits.Select(t => t.FromStepId).ToArray();
+            var fromTransitPointArray = definition.Transits.Select(t => t.FromStepId).ToArray();
 
-            var toTransitPointArray = workFlowInstalled.Transits.Select(t => t.ToStepId).ToArray();
+            var toTransitPointArray = definition.Transits.Select(t => t.ToStepId).ToArray();
 
             var transitPointArray = fromTransitPointArray.Concat(toTransitPointArray).ToArray();
 
@@ -79,7 +68,7 @@ namespace ZDY.DMS.Services.WorkFlowService
 
 
             //验证步骤节点
-            var messages1 = CheckSteps(workFlowInstalled.Steps, stepArray, transitPointArray, fromTransitPointArray, toTransitPointArray);
+            var messages1 = CheckSteps(definition.Steps, stepArray, transitPointArray, fromTransitPointArray, toTransitPointArray);
 
             if (messages1.Count > 0)
             {
@@ -87,7 +76,7 @@ namespace ZDY.DMS.Services.WorkFlowService
             }
 
             //验证条件链接
-            var messages2 = CheckTransits(workFlowInstalled.Transits, stepArray, transitPointArray);
+            var messages2 = CheckTransits(definition.Transits, stepArray, transitPointArray);
             if (messages2.Count > 0)
             {
                 messages.AddRange(messages2);

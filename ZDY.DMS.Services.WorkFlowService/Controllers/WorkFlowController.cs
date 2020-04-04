@@ -10,6 +10,7 @@ using ZDY.DMS.Events;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.Events;
+using ZDY.DMS.Services.WorkFlowService.DataObjects;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
 
@@ -110,7 +111,7 @@ namespace ZDY.DMS.Services.WorkFlowService
                 throw new InvalidOperationException("只有设计中的流程才可以安装！");
             }
 
-            var workFlowInstalled = WorkFlowAnalyzing.WorkFlowInstalledDeserialize(runtimeJson);
+            var workFlowInstalled = WorkFlowDefinition.Parse(runtimeJson);
 
             var messages = WorkFlowAnalyzing.CheckFlow(workFlowInstalled);
 

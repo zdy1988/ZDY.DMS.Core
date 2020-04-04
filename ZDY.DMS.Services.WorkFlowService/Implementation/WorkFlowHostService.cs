@@ -85,7 +85,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             {
                 throw new InvalidOperationException("流程数据丢失");
             }
-            execute.WorkFlowDefinition = WorkFlowAnalyzing.WorkFlowInstalledDeserialize(instance.FlowRuntimeJson);
+            execute.WorkFlowDefinition = WorkFlowDefinition.Parse(instance.FlowRuntimeJson);
 
             //获取当前步骤
             var current = await GetTaskAndStepForExecuting(execute);
@@ -1883,7 +1883,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 {
                     throw new InvalidOperationException("子流程数据丢失");
                 }
-                var parentWorkFlowInstalled = WorkFlowAnalyzing.WorkFlowInstalledDeserialize(subflowInstanceEntity.FlowRuntimeJson);
+                var parentWorkFlowInstalled = WorkFlowDefinition.Parse(subflowInstanceEntity.FlowRuntimeJson);
                 if (parentWorkFlowInstalled != null)
                 {
                     var parentStep = parentWorkFlowInstalled.GetStep(parentTask.StepId);
@@ -2279,7 +2279,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             {
                 var groupId = workFlowAllTask.Select(t => t.GroupId).First();
 
-                var workFlowInstalled = WorkFlowAnalyzing.WorkFlowInstalledDeserialize(instance.FlowRuntimeJson);
+                var workFlowInstalled = WorkFlowDefinition.Parse(instance.FlowRuntimeJson);
 
                 foreach (var step in workFlowInstalled.Steps)
                 {
