@@ -30,6 +30,9 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         private readonly IEventPublisher eventPublisher;
         private readonly IDataTableGateway dataTableGateway;
         private readonly IStringEncryption stringEncryption;
+        private readonly IWorkFlowService workFlowService;
+        private readonly IWorkFlowInstanceService workFlowInstanceService;
+
         private readonly IRepository<Guid, User> userRepository;
         private readonly IRepository<Guid, WorkFlow> workFlowRepository;
         private readonly IRepository<Guid, WorkFlowTask> workFlowTaskRepository;
@@ -39,14 +42,19 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         private readonly AsyncLock execute_lock = new AsyncLock();
 
         public WorkFlowHostService(Func<Type, IRepositoryContext> repositoryContextFactory,
-                                   IEventPublisher  eventPublisher,
-                                   IStringEncryption stringEncryption,
-                                   IDataTableGateway dataTableGateway)
-            : base(repositoryContextFactory)
+            IDataTableGateway dataTableGateway,
+            IEventPublisher eventPublisher,
+            IStringEncryption stringEncryption,
+            IWorkFlowService workFlowService,
+            IWorkFlowInstanceService workFlowInstanceService) : base(repositoryContextFactory)
         {
+            this.eventPublisher = eventPublisher;
             this.dataTableGateway = dataTableGateway;
             this.stringEncryption = stringEncryption;
-            this.eventPublisher = eventPublisher;
+
+            this.workFlowService = workFlowService;
+            this.workFlowInstanceService = workFlowInstanceService;
+
             this.userRepository = this.GetRepository<Guid, User>();
             this.workFlowRepository = this.GetRepository<Guid, WorkFlow>();
             this.workFlowTaskRepository = this.GetRepository<Guid, WorkFlowTask>();
@@ -148,18 +156,18 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             {
                 throw new InvalidOperationException("流程数据未找到，发起流程失败");
             }
+            
+            var flow = await this.workFlowService.GetInstalledWorkFlowByKeyAsync(instance.FlowId);
 
-            var workflowEntity = await workFlowRepository.FindAsync(t => t.Id == instance.FlowId && t.State == (int)WorkFlowState.Installed);
-
-            if (workflowEntity == null)
+            if (flow == null)
             {
                 throw new InvalidOperationException("流程数据未找到或流程未安装");
             }
-
-            var workFlowInstalled = WorkFlowAnalyzing.WorkFlowInstalledDeserialize(workflowEntity.RuntimeJson);
+                          
+            var definition = WorkFlowDefinition.Parse(flow.RuntimeJson);
 
             //设置开始节点和结束节点的一些默认规则
-            foreach (var step in workFlowInstalled.Steps)
+            foreach (var step in definition.Steps)
             {
                 if (step.IsStart() || step.IsEnd())
                 {
@@ -174,12 +182,12 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 }
             }
 
-            var flowRuntimeJson = JsonConvert.SerializeObject(workFlowInstalled);
+            var flowRuntimeJson = JsonConvert.SerializeObject(definition);
 
-            instance.Id = GuidHelper.NewGuid();
-            instance.FlowName = workflowEntity.Name;
+            instance.Id = Guid.NewGuid();
+            instance.FlowName = flow.Name;
             instance.FlowRuntimeJson = flowRuntimeJson;
-            instance.FlowDesignJson = workflowEntity.DesignJson;
+            instance.FlowDesignJson = flow.DesignJson;
 
             //创建实例
             await workFlowInstanceRepository.AddAsync(instance);
@@ -187,7 +195,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
             //创建开始任务
             var execute = new WorkFlowExecution
             {
-                WorkFlowDefinition = workFlowInstalled,
+                WorkFlowDefinition = definition,
                 Title = instance.Title,
                 FlowId = instance.FlowId,
                 FlowName = instance.FlowName,
@@ -1554,7 +1562,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
                 && !string.IsNullOrEmpty(currentStep.SubFlowId)
                 && currentTask.SubFlowInstanceId != default)
             {
-                if (currentStep.SubFlowTactic != (int)WorkFlowSubFlowTacticKinds.SubFlowStarted)
+                if (currentStep.IsExecuteAfterSubFlowEnd())
                 {
                     var wrokFlowInstance = await workFlowInstanceRepository.FindAsync(t => t.Id == currentTask.SubFlowInstanceId && t.FlowId == Guid.Parse(currentStep.SubFlowId) && t.IsDisabled == false);
 
@@ -2099,7 +2107,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
                 isPassed = (Int64)dataTableGateway.ExecuteScalar(query) == 1;
             }
-            catch (System.Exception e)
+            catch
             {
                 isPassed = false;
             }

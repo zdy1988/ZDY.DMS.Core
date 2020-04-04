@@ -33,6 +33,11 @@ namespace ZDY.DMS.Services.WorkFlowService
             return types.Contains((WorkFlowStepKinds)step.StepType);
         }
 
+        public static bool IsSubFlowStep(this WorkFlowStep step)
+        {
+            return step.Is(WorkFlowStepKinds.SubFlow);
+        }
+
         public static bool IsControlBy(this WorkFlowStep step, params WorkFlowControlKinds[] types)
         {
             return types.Contains((WorkFlowControlKinds)step.FlowControl);
@@ -73,19 +78,24 @@ namespace ZDY.DMS.Services.WorkFlowService
             return !step.IsNeedCountersignature();
         }
 
-        public static bool IsNeedSignature(this WorkFlowStep step)
-        {
-            return step.IsSignatureBy(WorkFlowSignatureKinds.CommentAndSignature);
-        }
-
         public static bool IsSignatureBy(this WorkFlowStep step, params WorkFlowSignatureKinds[] types)
         {
             return types.Contains((WorkFlowSignatureKinds)step.SignatureType);
         }
 
-        public static bool IsSubFlowStep(this WorkFlowStep step)
+        public static bool IsNeedSignature(this WorkFlowStep step)
         {
-            return step.Is(WorkFlowStepKinds.SubFlow);
+            return step.IsSignatureBy(WorkFlowSignatureKinds.CommentAndSignature);
+        }
+
+        public static bool IsSubFlowTacticBy(this WorkFlowStep step, params WorkFlowSubFlowTacticKinds[] types)
+        {
+            return types.Contains((WorkFlowSubFlowTacticKinds)step.SubFlowTactic);
+        }
+
+        public static bool IsExecuteAfterSubFlowEnd(this WorkFlowStep step)
+        {
+            return !step.IsSubFlowTacticBy(WorkFlowSubFlowTacticKinds.SubFlowStarted);
         }
 
         public static string GetHandleTypeName(this WorkFlowStep step)

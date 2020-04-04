@@ -21,7 +21,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
         public async Task<WorkFlowInstance> GetWorkFlowInstanceByKeyAsync(Guid instanceId)
         {
-            return await this.workFlowInstanceRepository.FindByKeyAsync(instanceId);
+            return await this.workFlowInstanceRepository.FindAsync(t => t.Id.Equals(instanceId) && t.IsDisabled.Equals(false));
         }
     }
 }
