@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq;
 using AutoMapper;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Middlewares;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using ZDY.DMS.AspNetCore;
 using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.AspNetCore.Service;
 using ZDY.DMS.Caching;
@@ -16,9 +16,9 @@ using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Querying.DataTableGateway.MySQL;
 using ZDY.DMS.StringEncryption;
 
-namespace ZDY.DMS.AspNetCore.Extensions.DependencyInjection
+namespace Microsoft.Extensions.DependencyInjection
 {
-    public static class IntegrationExtensions
+    public static class ServiceCollectionExtensions
     {
         public static void AddDMS(this IServiceCollection services, Action<ServiceBootstrapperConfigurator> configure = null)
         {
@@ -116,9 +116,9 @@ namespace ZDY.DMS.AspNetCore.Extensions.DependencyInjection
     }
 }
 
-namespace ZDY.DMS.AspNetCore.Extensions.Builder
+namespace Microsoft.AspNetCore.Builder
 {
-    public static class IntegrationExtensions
+    public static class ServiceCollectionExtensions
     {
         public static void UseDMS(this IApplicationBuilder builder)
         {

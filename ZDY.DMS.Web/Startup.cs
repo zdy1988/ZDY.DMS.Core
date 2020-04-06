@@ -14,8 +14,6 @@ using ZDY.DMS.Repositories.EntityFramework;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.AspNetCore.Mvc.Filters;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.AspNetCore.Extensions.DependencyInjection;
-using ZDY.DMS.AspNetCore.Extensions.Builder;
 using ZDY.DMS.Services.AdminService;
 using ZDY.DMS.Services.AuthService;
 using ZDY.DMS.Services.MessageService;
@@ -80,6 +78,9 @@ namespace ZDY.DMS.Web
 
             //仓储
             services.AddScoped<IRepositoryContext>(sp => new EntityFrameworkRepositoryContext(sp.GetService<DMSDbContext>()));
+
+            //工作流
+            services.AddWorkflow();
 
             //DMS
             services.AddDMS(config => {
