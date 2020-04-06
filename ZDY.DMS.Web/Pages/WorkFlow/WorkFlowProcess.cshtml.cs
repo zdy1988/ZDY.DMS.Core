@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Services.WorkFlowService.DataObjects;
+using ZDY.DMS.Services.WorkFlowService.Core.Models;
 using ZDY.DMS.Services.WorkFlowService.Models;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 
@@ -39,7 +39,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
 
             Instance = workFlowInstanceEntity;
 
-            Process = await workFlowHostService.GetWorkFlowProcessAsync(Instance);
+            Process = await workFlowHostService.GetWorkFlowProcessAsync(Instance.Id);
 
             States = await workFlowHostService.GetWorkFlowProcessStatesAsync(Instance);
         }

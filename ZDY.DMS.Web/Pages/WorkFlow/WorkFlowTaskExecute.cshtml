@@ -1,7 +1,7 @@
 ﻿@page
 @model ZDY.DMS.Web.Pages.WorkFlow.WorkFlowTaskExecuteModel
 @using ZDY.DMS.Services.WorkFlowService.Enums
-@using ZDY.DMS.Services.WorkFlowService
+@using ZDY.DMS.Services.WorkFlowService.Core.Extensions
 
 @{
     if (ViewData["ErrorMessage"] != null)
@@ -358,11 +358,11 @@
                     this.GetExecuteModel = function (steps) {
 
                         var ExecuteModel = function () {
-                            this.InstanceID = '@Model.CurrentTask.InstanceId'
-                            this.GroupID = '@Model.CurrentTask.GroupId'
-                            this.StepID = '@Model.CurrentTask.StepId'
-                            this.FlowID = '@Model.CurrentTask.FlowId'
-                            this.TaskID = '@Model.CurrentTask.Id'
+                            this.InstanceId = '@Model.CurrentTask.InstanceId'
+                            this.GroupId = '@Model.CurrentTask.GroupId'
+                            this.StepId = '@Model.CurrentTask.StepId'
+                            this.FlowId = '@Model.CurrentTask.FlowId'
+                            this.TaskId = '@Model.CurrentTask.Id'
                             this.Steps = steps || [],
                             this.Comment = flowInstance.Comment(),
                             this.SignPassword = flowInstance.SignPassword()
@@ -389,16 +389,16 @@
                         var steps = this.NextSteps()
                         steps.map(function (item) {
                             if (item.IsChecked) {
-                                var stepId = item.StepID
+                                var stepId = item.StepId
                                 var stepHandler = item.Handlers.map(function (item) {
                                     return {
-                                        ID: item
+                                        Id: item
                                     }
                                 })
 
                                 result.push({
                                     Key: stepId,
-                                    Value: stepHandler.length == 0 ? [{ ID: 0 }] : stepHandler
+                                    Value: stepHandler
                                 })
                             }
                         })
@@ -457,7 +457,7 @@
 
                             var steps = [{
                                 Key: '@(Model.CurrentTask.StepId)',
-                                Value: [{ ID: handler}]
+                                Value: [{ Id: handler}]
                             }]
 
                             var execute = flowInstance.GetExecuteModel(steps)

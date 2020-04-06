@@ -1,17 +1,16 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using ZDY.DMS.Services.WorkFlowService.DataObjects;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.Common.Models;
+using ZDY.DMS.Services.WorkFlowService.Core.Models;
+using ZDY.DMS.Services.WorkFlowService.Core.Extensions;
 
-namespace ZDY.DMS.Services.WorkFlowService
+namespace ZDY.DMS.Services.WorkFlowService.Core
 {
     public static class WorkFlowAnalyzing
     {
-
         public static List<Tuple<Guid, string, string, string>> CheckFlow(this WorkFlowDefinition definition)
         {
             //验证流程名称

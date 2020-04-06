@@ -7,7 +7,8 @@ using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.ServiceContracts;
 using ZDY.DMS.Services.WorkFlowService;
-using ZDY.DMS.Services.WorkFlowService.DataObjects;
+using ZDY.DMS.Services.WorkFlowService.Core.Extensions;
+using ZDY.DMS.Services.WorkFlowService.Core.Models;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
@@ -83,7 +84,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             //加载审批意见
             if (CurrentStep.IsShowComment)
             {
-                HasCommentTasks = await workFlowHostService.GetWorkFlowCommentsAsync(instance);
+                HasCommentTasks = await workFlowHostService.GetWorkFlowCommentsAsync(instance.Id);
             }
 
             //更新打开时间

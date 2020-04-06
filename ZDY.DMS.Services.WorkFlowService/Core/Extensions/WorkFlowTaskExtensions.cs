@@ -4,20 +4,10 @@ using ZDY.DMS.Services.Common.ServiceContracts;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
 
-namespace ZDY.DMS.Services.WorkFlowService
+namespace ZDY.DMS.Services.WorkFlowService.Core.Extensions
 {
     public static class WorkFlowTaskExtensions
     {
-        public static bool IsExecute(this WorkFlowTask task)
-        {
-            return ((WorkFlowTaskState)task.State).IsExecute();
-        }
-
-        public static bool IsNotExecute(this WorkFlowTask task)
-        {
-            return !task.IsExecute();
-        }
-
         public static bool IsFirstStep(this WorkFlowTask task)
         {
             return task.StepId == WorkFlowConstant.StartStepId;
@@ -36,6 +26,26 @@ namespace ZDY.DMS.Services.WorkFlowService
         public static bool IsEnd(this WorkFlowTask task)
         {
             return task.StepId == WorkFlowConstant.EndStepId;
+        }
+
+        public static bool IsExecute(this WorkFlowTask task)
+        {
+            return ((WorkFlowTaskState)task.State).IsExecute();
+        }
+
+        public static bool IsNotExecute(this WorkFlowTask task)
+        {
+            return !task.IsExecute();
+        }
+
+        public static bool IsCopy(this WorkFlowTask task)
+        {
+            return task.Is(WorkFlowTaskKinds.Copy);
+        }
+
+        public static bool IsNotCopy(this WorkFlowTask task)
+        {
+            return !task.IsCopy();
         }
 
         public static bool Is(this WorkFlowTask task, params WorkFlowTaskKinds[] types)

@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.Events;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.Events;
-using ZDY.DMS.Services.WorkFlowService.DataObjects;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
 
@@ -111,9 +108,11 @@ namespace ZDY.DMS.Services.WorkFlowService
                 throw new InvalidOperationException("只有设计中的流程才可以安装！");
             }
 
-            var workFlowInstalled = WorkFlowDefinition.Parse(runtimeJson);
+            //var workFlowInstalled = WorkFlowDefinition.Parse(runtimeJson);
 
-            var messages = WorkFlowAnalyzing.CheckFlow(workFlowInstalled);
+            //var messages = WorkFlowAnalyzing.CheckFlow(workFlowInstalled);
+
+            var messages = new System.Collections.Generic.List<string>();
 
             if (messages.Count() > 0)
             {

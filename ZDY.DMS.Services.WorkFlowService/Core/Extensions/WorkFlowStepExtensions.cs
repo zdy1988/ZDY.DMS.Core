@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Linq;
 using ZDY.DMS.Services.Common.ServiceContracts;
-using ZDY.DMS.Services.WorkFlowService.DataObjects;
 using ZDY.DMS.Services.WorkFlowService.Enums;
+using ZDY.DMS.Services.WorkFlowService.Core.Models;
 
-namespace ZDY.DMS.Services.WorkFlowService
+namespace ZDY.DMS.Services.WorkFlowService.Core.Extensions
 {
     public static class WorkFlowStepExtensions
     {
@@ -96,6 +96,11 @@ namespace ZDY.DMS.Services.WorkFlowService
         public static bool IsExecuteAfterSubFlowEnd(this WorkFlowStep step)
         {
             return !step.IsSubFlowTacticBy(WorkFlowSubFlowTacticKinds.SubFlowStarted);
+        }
+
+        public static bool IsNeedCopy(this WorkFlowStep step)
+        {
+            return !string.IsNullOrWhiteSpace(step.CopyToUsers);
         }
 
         public static string GetHandleTypeName(this WorkFlowStep step)
