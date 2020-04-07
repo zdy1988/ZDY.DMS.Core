@@ -12,10 +12,10 @@ namespace ZDY.DMS.Services.WorkFlowService.ServiceContracts
 
         Task Execute(WorkFlowExecute execute);
 
-        Task<List<WorkFlowTask>> GetWorkFlowProcessAsync(Guid instanceId);
+        Task<List<WorkFlowTask>> GetWorkFlowProcessTaskListAsync(Guid instanceId);
 
-        Task<List<WorkFlowTask>> GetWorkFlowCommentsAsync(Guid instanceId);
+        Task<List<WorkFlowTask>> GetWorkFlowCommentTaskListAsync(Guid instanceId);
 
-        Task<Dictionary<int, List<WorkFlowStep>>> GetWorkFlowProcessStatesAsync(WorkFlowInstance instance);
+        Task<Dictionary<int, List<WorkFlowStep>>> GetWorkFlowProcessAsync(WorkFlowInstance instance);
     }
 }

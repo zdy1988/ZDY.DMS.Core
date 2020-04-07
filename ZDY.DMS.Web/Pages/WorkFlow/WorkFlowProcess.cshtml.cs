@@ -39,9 +39,9 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
 
             Instance = workFlowInstanceEntity;
 
-            Process = await workFlowHostService.GetWorkFlowProcessAsync(Instance.Id);
+            Process = await workFlowHostService.GetWorkFlowProcessTaskListAsync(Instance.Id);
 
-            States = await workFlowHostService.GetWorkFlowProcessStatesAsync(Instance);
+            States = await workFlowHostService.GetWorkFlowProcessAsync(Instance);
         }
     }
 }

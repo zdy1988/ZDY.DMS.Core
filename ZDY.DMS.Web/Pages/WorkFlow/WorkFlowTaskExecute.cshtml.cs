@@ -84,7 +84,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
             //加载审批意见
             if (CurrentStep.IsShowComment)
             {
-                HasCommentTasks = await workFlowHostService.GetWorkFlowCommentsAsync(instance.Id);
+                HasCommentTasks = await workFlowHostService.GetWorkFlowCommentTaskListAsync(instance.Id);
             }
 
             //更新打开时间

@@ -53,7 +53,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// </summary>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public async Task<List<WorkFlowTask>> GetWorkFlowCommentsAsync(Guid instanceId)
+        public async Task<List<WorkFlowTask>> GetWorkFlowCommentTaskListAsync(Guid instanceId)
         {
             var taskList = await this.workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instanceId
                                                                             && !string.IsNullOrEmpty(t.Comment)
@@ -69,7 +69,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// </summary>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public async Task<List<WorkFlowTask>> GetWorkFlowProcessAsync(Guid instanceId)
+        public async Task<List<WorkFlowTask>> GetWorkFlowProcessTaskListAsync(Guid instanceId)
         {
             var taskList = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instanceId
                                                                        && t.State != (int)WorkFlowTaskState.Waiting
@@ -84,7 +84,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         /// </summary>
         /// <param name="instance"></param>
         /// <returns></returns>
-        public async Task<Dictionary<int, List<WorkFlowStep>>> GetWorkFlowProcessStatesAsync(WorkFlowInstance instance)
+        public async Task<Dictionary<int, List<WorkFlowStep>>> GetWorkFlowProcessAsync(WorkFlowInstance instance)
         {
             return await this.workFlowExecutor.GetWorkFlowProcessAsync(instance);
         }
