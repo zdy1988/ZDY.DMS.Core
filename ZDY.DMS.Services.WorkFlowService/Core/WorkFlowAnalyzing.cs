@@ -132,14 +132,14 @@ namespace ZDY.DMS.Services.WorkFlowService.Core
                 var handlerTypeName = step.GetHandleTypeName();
                 var len = handlers.Length;
 
-                if (step.IsHandleBy(WorkFlowHandlerKinds.User, WorkFlowHandlerKinds.DirectorForHandler, WorkFlowHandlerKinds.LeaderForHandler))
-                {
-                    var len2 = ServiceLocator.GetService<IRepositoryContext>().GetRepository<Guid, User>().Count(t => t.IsDisabled == false && handlers.Contains(t.Id.ToString()));
-                    if (len != len2)
-                    {
-                        messages.Add(new Tuple<Guid, string, string, string>(step.StepId, step.StepName, "步骤", $"步骤处理者类型为【{handlerTypeName}】，但所选人员与实际人员不符，即实际人员离职或数据丢失"));
-                    }
-                }
+                //if (step.IsHandleBy(WorkFlowHandlerKinds.User, WorkFlowHandlerKinds.DirectorForHandler, WorkFlowHandlerKinds.LeaderForHandler))
+                //{
+                //    var len2 = ServiceLocator.GetService<IRepositoryContext>().GetRepository<Guid, User>().Count(t => t.IsDisabled == false && handlers.Contains(t.Id.ToString()));
+                //    if (len != len2)
+                //    {
+                //        messages.Add(new Tuple<Guid, string, string, string>(step.StepId, step.StepName, "步骤", $"步骤处理者类型为【{handlerTypeName}】，但所选人员与实际人员不符，即实际人员离职或数据丢失"));
+                //    }
+                //}
 
                 if (step.IsHandleTacticBy(WorkFlowHandleTacticKinds.PercentageAgree) && step.Percentage == 0)
                 {

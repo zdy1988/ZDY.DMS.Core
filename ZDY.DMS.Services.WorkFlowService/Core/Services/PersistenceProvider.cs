@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +13,7 @@ using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService.Core.Services
 {
-    public class PersistenceProvider : DisposableObject, IPersistenceProvider
+    public class PersistenceProvider : IPersistenceProvider
     {
         private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, WorkFlow> workFlowRepository;
@@ -66,6 +68,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         public async Task CreateInstanceAsync(WorkFlowInstance instance)
         {
             await workFlowInstanceRepository.AddAsync(instance);
+
+            await repositoryContext.CommitAsync();
         }
 
         /// <summary>
@@ -97,6 +101,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                     }
                 }
             }
+
+            await repositoryContext.CommitAsync();
         }
 
         /// <summary>
@@ -107,6 +113,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         public async Task UpdateInstanceAsync(WorkFlowInstance instance)
         {
             await workFlowInstanceRepository.UpdateAsync(instance);
+
+            await repositoryContext.CommitAsync();
         }
 
         /// <summary>
@@ -129,7 +137,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         {
             var parentTask = await workFlowTaskRepository.FindAsync(t => t.GroupId == groupId
                                                                       && t.SubFlowInstanceId == instanceId
-                                                                      && t.State != (int)WorkFlowTaskKinds.Copy
+                                                                      && t.Type != (int)WorkFlowTaskKinds.Copy
                                                                       && t.IsDisabled == false);
 
             return parentTask;
@@ -142,7 +150,9 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <returns></returns>
         public async Task CreateTaskAsync(WorkFlowTask task)
         {
-            await this.workFlowTaskRepository.AddAsync(task);
+            await workFlowTaskRepository.AddAsync(task);
+
+            await repositoryContext.CommitAsync();
         }
 
         /// <summary>
@@ -152,7 +162,9 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <returns></returns>
         public async Task RemoveTaskAsync(WorkFlowTask task)
         {
-            await this.workFlowTaskRepository.RemoveAsync(task);
+            await workFlowTaskRepository.RemoveAsync(task);
+
+            await repositoryContext.CommitAsync();
         }
 
         /// <summary>
@@ -163,6 +175,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         public async Task UpdateTaskAsync(WorkFlowTask task)
         {
             await workFlowTaskRepository.UpdateAsync(task);
+
+            await repositoryContext.CommitAsync();
         }
 
         /// <summary>
@@ -176,10 +190,9 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                                                                    && t.StepId == stepId
                                                                    && t.GroupId == groupId
                                                                    && t.Sort == sort
-                                                                   && t.State != (int)WorkFlowTaskKinds.Copy
                                                                    && t.IsDisabled == false);
 
-            return list.ToList();
+            return list.AsEnumerable().Where(t => t.IsNotCopy()).ToList();
         }
 
         /// <summary>
@@ -196,12 +209,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                                                                    && t.InstanceId == instanceId
                                                                    && t.StepId == stepId
                                                                    && t.GroupId == groupId
-                                                                   && t.State != (int)WorkFlowTaskKinds.Copy
                                                                    && t.IsDisabled == false);
 
             var maxSort = list.Select(t => t.Sort).Max();
 
-            return list.Where(t => t.Sort == maxSort).ToList();
+            return list.AsEnumerable().Where(t => t.Sort == maxSort && t.IsNotCopy()).ToList();
         }
 
         /// <summary>
@@ -215,14 +227,9 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                                                                    && t.InstanceId == instanceId
                                                                    && t.GroupId == groupId
                                                                    && t.FlowId == flowId
-                                                                   && t.State != (int)WorkFlowTaskState.Handled
-                                                                   && t.State != (int)WorkFlowTaskState.Returned
-                                                                   && t.State != (int)WorkFlowTaskState.HandledByOthers
-                                                                   && t.State != (int)WorkFlowTaskState.ReturnedByOthers
-                                                                   && t.State != (int)WorkFlowTaskKinds.Copy
                                                                    && t.IsDisabled == false);
 
-            return list.ToList();
+            return list.AsEnumerable().Where(t => t.IsNotExecute() && t.IsNotCopy()).ToList();
         }
 
         /// <summary>
@@ -231,18 +238,14 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <returns></returns>
         public async Task<bool> IsTheReceiverHasNotExecuteTask(Guid flowId, Guid instanceId, Guid stepId, Guid groupId, Guid userId)
         {
-            var count = await workFlowTaskRepository.CountAsync(t => t.FlowId == flowId
-                                                                  && t.InstanceId == instanceId
-                                                                  && t.StepId == stepId
-                                                                  && t.GroupId == groupId
-                                                                  && t.ReceiverId == userId
-                                                                  && t.State != (int)WorkFlowTaskState.Handled
-                                                                  && t.State != (int)WorkFlowTaskState.Returned
-                                                                  && t.State != (int)WorkFlowTaskState.HandledByOthers
-                                                                  && t.State != (int)WorkFlowTaskState.ReturnedByOthers
-                                                                  && t.IsDisabled == false);
+            var query = await workFlowTaskRepository.FindAllAsync(t => t.FlowId == flowId
+                                                                    && t.InstanceId == instanceId
+                                                                    && t.StepId == stepId
+                                                                    && t.GroupId == groupId
+                                                                    && t.ReceiverId == userId
+                                                                    && t.IsDisabled == false);
 
-            return count > 0;
+            return query.AsEnumerable().Where(t => t.IsNotExecute()).Any();
         }
 
         /// <summary>
@@ -279,22 +282,9 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <returns></returns>
         public async Task<List<WorkFlowTask>> GetAllTaskAsync(Guid instanceId)
         {
-            var list = await this.workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instanceId
-                                                                        && t.IsNot(WorkFlowTaskKinds.Copy)
-                                                                        && t.IsDisabled == false);
+            var list = await this.workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instanceId && t.IsDisabled == false);
 
-            return list.ToList();
-        }
-
-        /// <summary>
-        /// 释放之前将数据更改提交
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected async override void Dispose(bool disposing)
-        {
-            await this.repositoryContext.CommitAsync();
-
-            base.Dispose(disposing);
+            return list.AsEnumerable().Where(t => t.IsNotCopy()).ToList();
         }
     }
 }

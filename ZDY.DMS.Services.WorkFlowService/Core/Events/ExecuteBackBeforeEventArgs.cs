@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ZDY.DMS.Services.WorkFlowService.Events
+namespace ZDY.DMS.Services.WorkFlowService.Core.Events
 {
     public class ExecuteBackBeforeEventArgs : WorkFlowCustomEventArgs
     {

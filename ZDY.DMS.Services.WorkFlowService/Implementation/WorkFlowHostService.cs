@@ -34,8 +34,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
         public async Task StartUp(WorkFlowInstance instance)
         {
             await this.workFlowExecutor.ExecuteStartAsync(instance, Guid.NewGuid());
-
-            await this.RepositoryContext.CommitAsync();
         }
 
         /// <summary>

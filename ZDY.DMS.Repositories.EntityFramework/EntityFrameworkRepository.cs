@@ -26,34 +26,40 @@ namespace ZDY.DMS.Repositories.EntityFramework
 
         public override void Add(TEntity entity)
         {
-            this.dbContext.Set<TEntity>().Add(entity);
-        }
+            if (entity == null)
+            {
+                throw new ArgumentException("Can not add a null entity.");
+            }
 
-        public override async Task AddAsync(TEntity entity, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            await this.dbContext.Set<TEntity>().AddAsync(entity, cancellationToken);
+            this.dbContext.Set<TEntity>().Add(entity);
         }
 
         public override void RemoveByKey(TKey key)
         {
-            var entity = this.FindByKey(key);
-            if (entity != null)
+            if (key == null)
             {
-                this.dbContext.Set<TEntity>().Remove(entity);
+                throw new ArgumentException("Can not remove by a null key.");
             }
-        }
 
-        public override async Task RemoveByKeyAsync(TKey key, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            var entity = await this.FindByKeyAsync(key, cancellationToken);
-            if (entity != null)
+            var original = this.FindByKey(key);
+            if (original != null)
             {
-                this.dbContext.Set<TEntity>().Remove(entity);
+                this.dbContext.Set<TEntity>().Remove(original);
             }
         }
 
         public override void UpdateByKey(TKey key, TEntity entity)
         {
+            if (key == null)
+            {
+                throw new ArgumentException("Can not update by a null key.");
+            }
+
+            if (entity == null)
+            {
+                throw new ArgumentException("Can not update a null entity.");
+            }
+
             this.dbContext.Set<TEntity>().Update(entity);
         }
 
@@ -67,11 +73,6 @@ namespace ZDY.DMS.Repositories.EntityFramework
             return this.dbContext.Set<TEntity>().FirstOrDefault(t => t.Id.Equals(key));
         }
 
-        public override async Task<TEntity> FindByKeyAsync(TKey key, CancellationToken cancellationToken = default(CancellationToken))
-        {
-            return await this.dbContext.Set<TEntity>().FirstOrDefaultAsync(t => t.Id.Equals(key));
-        }
-
         public override IEnumerable<TEntity> FindAll(Expression<Func<TEntity, bool>> conditions)
         {
             if (conditions == null)
@@ -79,7 +80,7 @@ namespace ZDY.DMS.Repositories.EntityFramework
                 conditions = _ => true;
             }
 
-            var query = this.dbContext.Set<TEntity>().Where(conditions).AsNoTracking();
+            var query = this.dbContext.Set<TEntity>().Where(conditions);
 
             return query;
         }
@@ -91,7 +92,7 @@ namespace ZDY.DMS.Repositories.EntityFramework
                 conditions = _ => true;
             }
 
-            var query = this.dbContext.Set<TEntity>().Where(conditions).AsNoTracking();
+            var query = this.dbContext.Set<TEntity>().Where(conditions);
 
             if (!string.IsNullOrEmpty(orderField))
             {
@@ -108,7 +109,7 @@ namespace ZDY.DMS.Repositories.EntityFramework
                 conditions = _ => true;
             }
 
-            var query = this.dbContext.Set<TEntity>().Where(conditions).AsNoTracking();
+            var query = this.dbContext.Set<TEntity>().Where(conditions);
 
             if (orderBy != null)
             {
@@ -172,19 +173,21 @@ namespace ZDY.DMS.Repositories.EntityFramework
 
         public override TEntity Find(QueryModel queryModel)
         {
-            return this.dbContext.Set<TEntity>().Where(queryModel).FirstOrDefault();
+            var query = this.dbContext.Set<TEntity>().Where(queryModel);
+
+            return query.FirstOrDefault();
         }
 
         public override IEnumerable<TEntity> FindAll(QueryModel queryModel)
         {
-            var query = this.dbContext.Set<TEntity>().Where(queryModel).AsNoTracking();
+            var query = this.dbContext.Set<TEntity>().Where(queryModel);
 
             return query;
         }
 
         public override IEnumerable<TEntity> FindAll(QueryModel queryModel, string orderField, bool isAsc)
         {
-            var query = this.dbContext.Set<TEntity>().Where(queryModel).AsNoTracking();
+            var query = this.dbContext.Set<TEntity>().Where(queryModel);
 
             if (!string.IsNullOrEmpty(orderField))
             {
@@ -196,7 +199,7 @@ namespace ZDY.DMS.Repositories.EntityFramework
 
         public override IEnumerable<TEntity> FindAll(QueryModel queryModel, Action<IOrderable<TEntity>> orderBy)
         {
-            var query = this.dbContext.Set<TEntity>().Where(queryModel).AsNoTracking();
+            var query = this.dbContext.Set<TEntity>().Where(queryModel);
 
             if (orderBy != null)
             {

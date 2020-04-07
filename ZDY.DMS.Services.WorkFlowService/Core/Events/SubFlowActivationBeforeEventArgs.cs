@@ -1,8 +1,8 @@
 ﻿using ZDY.DMS.Services.WorkFlowService.Models;
 
-namespace ZDY.DMS.Services.WorkFlowService.Events
+namespace ZDY.DMS.Services.WorkFlowService.Core.Events
 {
-    public class SubFlowFinishedEventResults : WorkFlowCustomEventResults
+    public class SubFlowActivationBeforeEventArgs : WorkFlowCustomEventArgs
     {
         /// <summary>
         /// 子流程实例

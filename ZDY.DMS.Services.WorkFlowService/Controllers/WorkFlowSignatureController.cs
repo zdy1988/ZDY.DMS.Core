@@ -28,6 +28,9 @@ namespace ZDY.DMS.Services.WorkFlowService.Controllers
             {
                 throw new InvalidOperationException("此签名密钥已存在，请另考虑其他密钥");
             }
+
+            entity.UserId = this.UserIdentity.Id;
+            entity.CompanyId = this.UserIdentity.CompanyId;
         }
 
         protected override void BeforeUpdate(WorkFlowSignature original, WorkFlowSignature entity)
@@ -46,6 +49,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Controllers
 
             original.Name = entity.Name;
             original.Note = entity.Note;
+            original.LastModifyTime = DateTime.Now;
         }
     }
 }

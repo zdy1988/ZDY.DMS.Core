@@ -14,7 +14,8 @@ namespace ZDY.DMS.Web.Repositories.EntityFramework
         public DMSDbContext(DbContextOptions<DMSDbContext> options)
             : base(options)
         {
-                
+            // 取消查询跟踪
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
         }
 
         public DbSet<UserGroup> UserGroup { set; get; }
@@ -37,6 +38,7 @@ namespace ZDY.DMS.Web.Repositories.EntityFramework
         public DbSet<WorkFlowForm> WorkFlowForm { set; get; }
         public DbSet<WorkFlowInstance> WorkFlowInstance { set; get; }
         public DbSet<WorkFlowTask> WorkFlowTask { set; get; }
+        public DbSet<WorkFlowSignature> WorkFlowSignature { set; get; }
 
         public DbSet<Message> Message { set; get; }
         public DbSet<MessageInbox> MessageInbox { set; get; }

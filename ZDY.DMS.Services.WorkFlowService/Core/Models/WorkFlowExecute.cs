@@ -37,6 +37,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Models
         /// <summary>
         /// 自定义到达的步骤Id和人员
         /// </summary>
-        public Dictionary<Guid, List<WorkFlowUser>> Steps { get; set; }
+        public Dictionary<Guid, List<WorkFlowUser>> Steps { get; set; } = new Dictionary<Guid, List<WorkFlowUser>>();
     }
 }

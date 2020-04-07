@@ -7,54 +7,51 @@
 
     <h2>@ViewData["ErrorMessage"]</h2>
 
+    return;
 }
-else
-{
 
-    <tabs mode="Line">
-        <tab-content tab-name="图示">
-            <div id="canvas"></div>
-        </tab-content>
-        <tab-content tab-name="列表">
-            <div class="table-scrollable scroller" style="margin:0px !important; height:500px;">
-                <table class="table table-striped table-bordered table-hover table-active">
-                    <thead>
-                        <tr class="uppercase">
-                            <th style="width:100%"> 步骤名称 </th>
-                            <th> 发送人员 </th>
-                            <th> 发送时间 </th>
-                            <th> 接收人员 </th>
-                            <th> 接收时间 </th>
-                            <th> 处理时间 </th>
-                            <th style="width:1%"> 处理结果 </th>
-                            <th>备注信息</th>
+<tabs mode="Line">
+    <tab-content tab-name="图示">
+        <div id="canvas"></div>
+    </tab-content>
+    <tab-content tab-name="列表">
+        <div class="table-scrollable scroller" style="margin:0px !important; height:500px;">
+            <table class="table table-striped table-bordered table-hover table-active">
+                <thead>
+                    <tr class="uppercase">
+                        <th style="width:100%"> 步骤名称 </th>
+                        <th> 发送人员 </th>
+                        <th> 发送时间 </th>
+                        <th> 接收人员 </th>
+                        <th> 接收时间 </th>
+                        <th> 处理时间 </th>
+                        <th style="width:1%"> 处理结果 </th>
+                        <th>备注信息</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @foreach (var item in Model.Process)
+                    {
+
+                        <tr>
+                            <td> @item.StepName </td>
+                            <td> @item.SenderName </td>
+                            <td> @item.SendTime </td>
+                            <td> @item.ReceiverName </td>
+                            <td> @item.ReceiveTime </td>
+                            <td> @item.ExecutedTime </td>
+                            <td> @item.GetTaskStateName() </td>
+                            <td> @item.Note </td>
                         </tr>
-                    </thead>
-                    <tbody>
 
-                        @foreach (var item in Model.Process)
-                        {
+                    }
 
-                            <tr>
-                                <td> @item.StepName </td>
-                                <td> @item.SenderName </td>
-                                <td> @item.SendTime </td>
-                                <td> @item.ReceiverName </td>
-                                <td> @item.ReceiveTime </td>
-                                <td> @item.ExecutedTime </td>
-                                <td> @item.GetTaskStateName() </td>
-                                <td> @item.Note </td>
-                            </tr>
-
-                        }
-
-                    </tbody>
-                </table>
-            </div>
-        </tab-content>
-    </tabs>
-
-}
+                </tbody>
+            </table>
+        </div>
+    </tab-content>
+</tabs>
 
 @section Styles{
     <style type="text/css">

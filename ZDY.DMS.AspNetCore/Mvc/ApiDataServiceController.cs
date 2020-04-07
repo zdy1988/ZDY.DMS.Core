@@ -132,10 +132,14 @@ namespace ZDY.DMS.AspNetCore.Mvc
 
             await this.RepositoryContext.CommitAsync();
 
+            this.AfterAdd(entity);
+
             return entity;
         }
 
         protected virtual void BeforeAdd(TEntity entity) { }
+
+        protected virtual void AfterAdd(TEntity entity) { }
 
         [HttpPost]
         public virtual async Task<TEntity> Update(TEntity entity)
@@ -162,6 +166,8 @@ namespace ZDY.DMS.AspNetCore.Mvc
             await this.Repository.UpdateAsync(original);
             await this.RepositoryContext.CommitAsync();
 
+            this.AfterUpdate(original);
+
             return entity;
         }
 
@@ -169,6 +175,8 @@ namespace ZDY.DMS.AspNetCore.Mvc
         {
             AutoMapping(entity, original);
         }
+
+        protected virtual void AfterUpdate(TEntity original) { }
 
         [HttpPost]
         public virtual async Task Delete(TKey id)
@@ -194,18 +202,28 @@ namespace ZDY.DMS.AspNetCore.Mvc
                 ((IDisabledEntity<TKey>)original).IsDisabled = true;
 
                 await this.Repository.UpdateAsync(original);
+
+                await this.RepositoryContext.CommitAsync();
+
+                this.AfterDelete(original);
             }
             else
             {
                 await this.Repository.RemoveByKeyAsync(id);
+
+                await this.RepositoryContext.CommitAsync();
             }
 
-            await this.RepositoryContext.CommitAsync();
+            this.AfterDelete(id);
         }
 
         protected virtual void BeforeDelete(TKey id) { }
 
         protected virtual void BeforeDelete(TEntity original) { }
+
+        protected virtual void AfterDelete(TKey id) { }
+
+        protected virtual void AfterDelete(TEntity original) { }
 
 
         /// <summary>

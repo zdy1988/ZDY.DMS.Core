@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Storage;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService.Core.Interfaces
 {
-    public interface IPersistenceProvider : IDisposable
+    public interface IPersistenceProvider
     {
         Task<WorkFlow> GetWorkFlowAsync(Guid flowId);
 

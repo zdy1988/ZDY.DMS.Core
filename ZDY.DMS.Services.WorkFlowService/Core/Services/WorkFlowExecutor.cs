@@ -3,15 +3,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using ZDY.DMS.Events;
 using ZDY.DMS.Services.Common.Events;
+using ZDY.DMS.Services.WorkFlowService.Core.Events;
 using ZDY.DMS.Services.WorkFlowService.Core.Extensions;
 using ZDY.DMS.Services.WorkFlowService.Core.Interfaces;
 using ZDY.DMS.Services.WorkFlowService.Core.Models;
 using ZDY.DMS.Services.WorkFlowService.Enums;
-using ZDY.DMS.Services.WorkFlowService.Events;
 using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService.Core.Services
@@ -32,6 +32,26 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         }
 
         public async Task ExecuteAsync(WorkFlowExecute execute)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await HandleExecuteAsync(execute);
+
+                scope.Complete();
+            }
+        }
+
+        public async Task ExecuteStartAsync(WorkFlowInstance instance, Guid groupId)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                await HandleExecuteStartAsync(instance, groupId);
+
+                scope.Complete();
+            }
+        }
+
+        public async Task HandleExecuteAsync(WorkFlowExecute execute)
         {
             var task = await HandleGetWorkFlowTaskAsync(execute.TaskId);
 
@@ -89,7 +109,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
             await UpdateWorkFlowInstanceLastExecuteTask(execution.Instance, execution.Task);
         }
 
-        public async Task ExecuteStartAsync(WorkFlowInstance instance, Guid groupId)
+        public async Task HandleExecuteStartAsync(WorkFlowInstance instance, Guid groupId)
         {
             var flow = await HandleGetWorkFlowAsync(instance.FlowId);
 
@@ -235,12 +255,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// 结束流程实例
         /// </summary>
         /// <returns></returns>
-        private async Task FinishWorkFlowInstance(WorkFlowTask endStepTask, WorkFlowInstanceState state)
+        private async Task FinishWorkFlowInstance(WorkFlowInstance instance, WorkFlowTask endStepTask)
         {
-            var instance = await HandleGetWorkFlowInstanceAsync(endStepTask.InstanceId);
-
-            instance.State = (int)state;
-
             await this.persistenceProvider.UpdateInstanceAsync(instance);
 
             //如果有临时任务，直接删除掉
@@ -257,18 +273,22 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// 成功结束流程实例
         /// </summary>
         /// <returns></returns>
-        private async Task CompleteWorkFlowInstance(WorkFlowTask endStepTask)
+        private async Task CompleteWorkFlowInstance(WorkFlowInstance instance, WorkFlowTask endStepTask)
         {
-            await FinishWorkFlowInstance(endStepTask, WorkFlowInstanceState.Completed);
+            instance.State = (int)WorkFlowInstanceState.Completed;
+
+            await FinishWorkFlowInstance(instance, endStepTask);
         }
 
         /// <summary>
         /// 意外关闭流程实例
         /// </summary>
         /// <returns></returns>
-        private async Task CloseWorkFlowInstance(WorkFlowTask endStepTask)
+        private async Task CloseWorkFlowInstance(WorkFlowInstance instance, WorkFlowTask endStepTask)
         {
-            await FinishWorkFlowInstance(endStepTask, WorkFlowInstanceState.Closed);
+            instance.State = (int)WorkFlowInstanceState.Closed;
+
+            await FinishWorkFlowInstance(instance, endStepTask);
         }
 
         /// <summary>
@@ -381,7 +401,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
             bool isNeedNextStepTaskWating = await ExecuteSubmitHandleTactic(execution);
 
             //如果存在下一步骤，如果不存在下一步，则判断是否是最后一步
-            if (execution.ToStepCollection.Count > 0)
+            if (execution.ToStepCollection.Any())
             {
                 if (isNeedNextStepTaskWating)
                 {
@@ -421,7 +441,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                     if (isComplated)
                     {
                         //结束流程
-                        await CompleteWorkFlowInstance(execution.Task);
+                        await CompleteWorkFlowInstance(execution.Instance, execution.Task);
                     }
                 }
             }
@@ -444,7 +464,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
             //回退策略判断，返回下一步是否需要等待
             bool isNextStepTaskWating = await ExecuteBackBackTactic(execution);
 
-            if (execution.ToStepCollection.Count > 0)
+            if (execution.ToStepCollection.Any())
             {
                 if (!isNextStepTaskWating)
                 {
@@ -469,7 +489,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                     if (isBacked)
                     {
                         //结束流程,属于创建人自己退回，就关闭掉
-                        await CloseWorkFlowInstance(execution.Task);
+                        await CloseWorkFlowInstance(execution.Instance, execution.Task);
                     }
                 }
             }
@@ -488,6 +508,11 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
             if (execution.Task.Is(WorkFlowTaskState.Waiting))
             {
                 throw new InvalidOperationException("当前任务正在等待他人处理");
+            }
+
+            if (!execution.ToStepCollection.Any())
+            {
+                throw new InvalidOperationException("未或者转交任务");
             }
 
             if (execution.ToStepCollection.First().Value.Count == 0)
@@ -1858,34 +1883,35 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// 执行子流程完成后事件
         /// </summary>
         /// <returns></returns>
-        private async Task<SubFlowFinishedEventResults> ExecuteSubFlowFinishedEvent(WorkFlowTask subflowTask, WorkFlowInstance subflowInstance)
+        private async Task<SubFlowFinishedEventResults> ExecuteSubFlowFinishedEvent(WorkFlowTask subflowEndStepTask, WorkFlowInstance subflowInstance)
         {
-            var parentTask = await this.persistenceProvider.GetRootInstanceTaskAsync(subflowTask.InstanceId, subflowTask.GroupId);
+            // 寻找出发子流程的根任务
+            var rootInstanceTask = await this.persistenceProvider.GetRootInstanceTaskAsync(subflowEndStepTask.InstanceId, subflowEndStepTask.GroupId);
 
             // 执行子流程完成后事件
-            if (parentTask != null)
+            if (rootInstanceTask != null)
             {
-                var subflowInstanceEntity = await HandleGetWorkFlowInstanceAsync(parentTask.InstanceId);
+                var rootInstance = await HandleGetWorkFlowInstanceAsync(rootInstanceTask.InstanceId);
 
-                var parentWorkFlowInstalled = WorkFlowDefinition.Parse(subflowInstanceEntity.FlowRuntimeJson);
+                var rootWorkFlowDefinition = WorkFlowDefinition.Parse(rootInstance.FlowRuntimeJson);
 
-                if (parentWorkFlowInstalled != null)
+                if (rootWorkFlowDefinition != null)
                 {
-                    var parentStep = parentWorkFlowInstalled.GetStep(parentTask.StepId);
+                    var rootInstanceTaskStep = rootWorkFlowDefinition.GetStep(rootInstanceTask.StepId);
 
-                    if (parentStep != null && parentStep.IsSubFlowStep() && !string.IsNullOrEmpty(parentStep.SubFlowFinishedEvent))
+                    if (rootInstanceTaskStep != null && rootInstanceTaskStep.IsSubFlowStep() && !string.IsNullOrEmpty(rootInstanceTaskStep.SubFlowFinishedEvent))
                     {
                         var eventArgs = new SubFlowFinishedEventArgs
                         {
-                            FlowId = parentTask.FlowId,
-                            GroupId = parentTask.GroupId,
-                            InstanceId = parentTask.InstanceId,
-                            StepId = parentTask.StepId,
-                            TaskId = parentTask.Id,
+                            FlowId = rootInstanceTask.FlowId,
+                            GroupId = rootInstanceTask.GroupId,
+                            InstanceId = rootInstanceTask.InstanceId,
+                            StepId = rootInstanceTask.StepId,
+                            TaskId = rootInstanceTask.Id,
                             SubFlowInstance = subflowInstance
                         };
 
-                        var eventName = parentStep.SubFlowFinishedEvent.Trim();
+                        var eventName = rootInstanceTaskStep.SubFlowFinishedEvent.Trim();
 
                         var result = ExecuteCustomMethod<SubFlowFinishedEventArgs, SubFlowFinishedEventResults>(eventName, eventArgs);
 

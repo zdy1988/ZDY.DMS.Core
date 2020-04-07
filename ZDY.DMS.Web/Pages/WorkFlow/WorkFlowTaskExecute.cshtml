@@ -3,189 +3,184 @@
 @using ZDY.DMS.Services.WorkFlowService.Enums
 @using ZDY.DMS.Services.WorkFlowService.Core.Extensions
 
-@{
-    if (ViewData["ErrorMessage"] != null)
-    {
+@if (ViewData["ErrorMessage"] != null)
+{
 
-        <h2>@ViewData["ErrorMessage"]</h2>
+    <h2>@ViewData["ErrorMessage"]</h2>
 
-    }
-    else
-    {
-
-        @if (Model.CurrentTask.Is(WorkFlowTaskState.Waiting))
-        {
-            <note state="Warning">
-                <strong>提醒</strong> 此任务还需其他人员处理后才能处理！
-            </note>
-        }
-
-        <div class="row" data-model="flow-instance">
-            <div class="@(Model.CanExecute ? "col-md-8" : "col-md-12")">
-                <portlet title="@Model.Instance.Title" title-icon="Slack" is-fit="true" is-show-tools="false">
-
-                    <portlet-actions>
-                        <button bs-toggle-modal="modal-work-process">查看审批过程</button>
-                    </portlet-actions>
-
-                    <form-builder action="" id="fb">
-                        <div id="fb-render" style="min-height: 600px;"></div>
-                    </form-builder>
-
-                </portlet>
-            </div>
-
-            @if (Model.CanExecute)
-            {
-                <div class="col-md-4">
-                    <portlet title="审批意见" title-icon="Pencil" is-fit="true" is-show-tools="false">
-
-                        <form-builder>
-
-                            <div class="row">
-
-                                <div class="col-md-12">
-                                    <select-box name="抄送至" options="@Model.UserOptions" is-use-place-holder="false" is-multiple="true" bind="select2: {placeholder: '请选择...', width: '100%', multiple: true, value: CopyTo}"></select-box>
-
-                                    @if (Model.CurrentStep.SignatureType != (int)WorkFlowSignatureKinds.NoComment)
-                                    {
-
-                                        <text-box name="处理意见" field="Comment" is-multiple="true"></text-box>
-
-                                    }
-
-                                    @if (Model.CurrentStep.SignatureType == (int)WorkFlowSignatureKinds.CommentAndSignature)
-                                    {
-
-                                        <text-box name="签名密钥" field="SignaturePassword" text-box-type="Password"></text-box>
-
-                                    }
-
-                                </div>
-
-                            </div>
-
-                            <form-actions class="margin-top-20">
-
-                                <button icon="HandOLeft" color="BlueHoki" bs-toggle-modal="model-redirect-task">转交</button>
-
-                                @if (!Model.CurrentStep.IsBackTacticBy(WorkFlowBackTacticKinds.UnableToReturn))
-                                {
-
-                                    <button icon="HandStopO" color="Red" data-bind="click:handleBack">退回</button>
-
-                                }
-
-                                @if (Model.NextSteps.Count() > 0)
-                                {
-                                    <button icon="HandshakeO" color="GreenJungle" bs-toggle-modal="modal-next-steps">处理</button>
-                                }
-                                else
-                                {
-                                    <button icon="HandshakeO" color="GreenJungle" data-bind="click:handleComplate">同意</button>
-                                }
-
-                            </form-actions>
-
-                        </form-builder>
-
-                    </portlet>
-                </div>
-            }
-
-        </div>
-
-        @if (Model.CurrentStep.IsShowComment && Model.HasCommentTasks.Count > 0)
-        {
-
-            <div class="row" data-model="flow-instance">
-                <div class="col-md-12">
-                    <portlet title="审批意见" title-icon="Pencil" is-fit="true" is-show-tools="false">
-
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="todo-tasklist scroller" style="height: 265px;">
-
-                                    @foreach (var opinion in Model.HasCommentTasks)
-                                    {
-
-                                        <div class="todo-tasklist-item todo-tasklist-item-border-green">
-                                            <img class="todo-userpic pull-left" src="/assets/layouts/layout2/img/avatar4.jpg" style="width:27px; height:27px;">
-                                            <div class="todo-tasklist-item-title"> @opinion.ReceiverName </div>
-                                            <div class="todo-tasklist-item-text"> @(string.IsNullOrEmpty(opinion.Comment.Trim()) ? "无审批意见" : opinion.Comment) </div>
-                                            <div class="todo-tasklist-controls pull-left">
-                                                <span class="todo-tasklist-date">
-                                                    <i class="fa fa-calendar"></i> @opinion.ExecutedTime
-                                                </span>
-                                                <lable theme="Success" class-names="todo-tasklist-lable" data-bind="state: $root.dic('WorkFlowTaskState', '@opinion.State', true)">@opinion.GetTaskStateName()</lable>
-                                            </div>
-                                        </div>
-
-                                    }
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </portlet>
-                </div>
-            </div>
-        }
-
-        <div data-model="flow-instance">
-            <modal title="下一步骤" id="modal-next-steps">
-                <modal-body>
-                    <note state="Info">
-                        请选择以下步骤：
-                    </note>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <list data-bind="foreach:NextSteps">
-                                <list-item>
-
-                                    @{
-                                        var inputType = @Model.CurrentStep.IsControlBy(WorkFlowControlKinds.SingleSelect) ? "radio" : "checkbox";
-                                    }
-                                    <h4 class="list-group-item-heading no-margin text-success">
-                                        <input type="@inputType" name="nextStep" style="margin-right: 5px;" data-bind="checked: IsChecked, enable: IsAllowRuntimeToSelect == true" />
-                                        <!-- ko text:StepName --><!-- /ko -->
-                                        <badge data-bind="if: IsAllowRuntimeToSelect == false" theme="Danger" style="float: right; margin-top: 1px;">不能选择</badge>
-                                    </h4>
-                                    <div data-bind="if:HandlerType==0">
-                                        <select-box options="@Model.UserOptions" name="选择步骤处理者" is-use-place-holder="false" is-multiple="true" field="Handlers" style="margin-bottom: 0px; margin-top: 10px;"></select-box>
-                                    </div>
-                                </list-item>
-                            </list>
-                        </div>
-                    </div>
-                </modal-body>
-                <modal-footer dismiss-text="关闭">
-                    <button type="button" class="btn green" data-bind="click:handleSubmit">提交</button>
-                </modal-footer>
-            </modal>
-
-            <modal title="转交任务" id="model-redirect-task">
-                <modal-body>
-                    <select-box name="选择转交处理人" options="@Model.UserOptions" field="RedirectHandler" is-use-place-holder="false"></select-box>
-                </modal-body>
-                <modal-footer dismiss-text="关闭">
-                    <button type="button" class="btn green" data-bind="click:handleRedirect">确认</button>
-                </modal-footer>
-            </modal>
-
-            <modal title="审批过程" id="modal-work-process" size="Lg">
-                <modal-body>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <iframe src="WorkFlowProcess?id=@Model.CurrentTask.InstanceId" frameborder="0" scrolling="no" style="width: 100%; border: none; height: 560px; margin-top: -48px;"></iframe>
-                        </div>
-                    </div>
-                </modal-body>
-            </modal>
-        </div>
-
-    }
+    return;
 }
+
+@if (Model.CurrentTask.Is(WorkFlowTaskState.Waiting))
+{
+    <note state="Warning">
+        <strong>提醒</strong> 此任务还需其他人员处理后才能处理！
+    </note>
+}
+
+<div class="row" data-model="flow-instance">
+    <div class="@(Model.CanExecute ? "col-md-8" : "col-md-12")">
+        <portlet title="@Model.Instance.Title" title-icon="Slack" is-fit="true" is-show-tools="false">
+
+            <portlet-actions>
+                <button bs-toggle-modal="modal-work-process">查看审批过程</button>
+            </portlet-actions>
+
+            <form-builder action="" id="fb">
+                <div id="fb-render" style="min-height: 600px;"></div>
+            </form-builder>
+
+        </portlet>
+    </div>
+
+    @if (Model.CanExecute)
+    {
+        <div class="col-md-4">
+            <portlet title="审批意见" title-icon="Pencil" is-fit="true" is-show-tools="false">
+
+                <form-builder>
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <select-box name="抄送至" options="@Model.UserOptions" is-use-place-holder="false" is-multiple="true" bind="select2: {placeholder: '请选择...', width: '100%', multiple: true, value: CopyTo}"></select-box>
+
+                            @if (Model.CurrentStep.SignatureType != (int)WorkFlowSignatureKinds.NoComment)
+                            {
+
+                                <text-box name="处理意见" field="Comment" is-multiple="true"></text-box>
+
+                            }
+
+                            @if (Model.CurrentStep.SignatureType == (int)WorkFlowSignatureKinds.CommentAndSignature)
+                            {
+
+                                <text-box name="签名密钥" field="SignaturePassword" text-box-type="Password"></text-box>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+                    <form-actions class="margin-top-20">
+
+                        <button icon="HandOLeft" color="BlueHoki" bs-toggle-modal="model-redirect-task">转交</button>
+
+                        @if (!Model.CurrentStep.IsBackTacticBy(WorkFlowBackTacticKinds.UnableToReturn))
+                        {
+
+                            <button icon="HandStopO" color="Red" data-bind="click:handleBack">退回</button>
+
+                        }
+
+                        @if (Model.NextSteps.Count() > 0)
+                        {
+                            <button icon="HandshakeO" color="GreenJungle" bs-toggle-modal="modal-next-steps">处理</button>
+                        }
+                        else
+                        {
+                            <button icon="HandshakeO" color="GreenJungle" data-bind="click:handleComplate">同意</button>
+                        }
+
+                    </form-actions>
+
+                </form-builder>
+
+            </portlet>
+        </div>
+    }
+
+</div>
+
+@if (Model.CurrentStep.IsShowComment && Model.HasCommentTasks.Count > 0)
+{
+
+    <div class="row" data-model="flow-instance">
+        <div class="col-md-12">
+            <portlet title="审批意见" title-icon="Pencil" is-fit="true" is-show-tools="false">
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="todo-tasklist scroller" style="height: 265px;">
+
+                            @foreach (var opinion in Model.HasCommentTasks)
+                            {
+
+                                <div class="todo-tasklist-item todo-tasklist-item-border-green">
+                                    <img class="todo-userpic pull-left" src="/assets/layouts/layout2/img/avatar4.jpg" style="width:27px; height:27px;">
+                                    <div class="todo-tasklist-item-title"> @opinion.ReceiverName </div>
+                                    <div class="todo-tasklist-item-text"> @(string.IsNullOrEmpty(opinion.Comment.Trim()) ? "无审批意见" : opinion.Comment) </div>
+                                    <div class="todo-tasklist-controls pull-left">
+                                        <span class="todo-tasklist-date">
+                                            <i class="fa fa-calendar"></i> @opinion.ExecutedTime
+                                        </span>
+                                        <lable theme="Success" class-names="todo-tasklist-lable" data-bind="state: $root.dic('WorkFlowTaskState', '@opinion.State', true)">@opinion.GetTaskStateName()</lable>
+                                    </div>
+                                </div>
+
+                            }
+
+                        </div>
+                    </div>
+                </div>
+
+            </portlet>
+        </div>
+    </div>
+}
+
+<div data-model="flow-instance">
+    <modal title="下一步骤" id="modal-next-steps">
+        <modal-body>
+            <note state="Info">
+                请选择以下步骤：
+            </note>
+            <div class="row">
+                <div class="col-md-12">
+                    <list data-bind="foreach:NextSteps">
+                        <list-item>
+
+                            @{
+                                var inputType = @Model.CurrentStep.IsControlBy(WorkFlowControlKinds.SingleSelect) ? "radio" : "checkbox";
+                            }
+                            <h4 class="list-group-item-heading no-margin text-success">
+                                <input type="@inputType" name="nextStep" style="margin-right: 5px;" data-bind="checked: IsChecked, enable: IsAllowRuntimeToSelect == true" />
+                                <!-- ko text:StepName --><!-- /ko -->
+                                <badge data-bind="if: IsAllowRuntimeToSelect == false" theme="Danger" style="float: right; margin-top: 1px;">不能选择</badge>
+                            </h4>
+                            <div data-bind="if:HandlerType==0">
+                                <select-box options="@Model.UserOptions" name="选择步骤处理者" is-use-place-holder="false" is-multiple="true" field="Handlers" style="margin-bottom: 0px; margin-top: 10px;"></select-box>
+                            </div>
+                        </list-item>
+                    </list>
+                </div>
+            </div>
+        </modal-body>
+        <modal-footer dismiss-text="关闭">
+            <button type="button" class="btn green" data-bind="click:handleSubmit">提交</button>
+        </modal-footer>
+    </modal>
+
+    <modal title="转交任务" id="model-redirect-task">
+        <modal-body>
+            <select-box name="选择转交处理人" options="@Model.UserOptions" field="RedirectHandler" is-use-place-holder="false"></select-box>
+        </modal-body>
+        <modal-footer dismiss-text="关闭">
+            <button type="button" class="btn green" data-bind="click:handleRedirect">确认</button>
+        </modal-footer>
+    </modal>
+
+    <modal title="审批过程" id="modal-work-process" size="Lg">
+        <modal-body>
+            <div class="row">
+                <div class="col-md-12">
+                    <iframe src="WorkFlowProcess?id=@Model.CurrentTask.InstanceId" frameborder="0" scrolling="no" style="width: 100%; border: none; height: 560px; margin-top: -48px;"></iframe>
+                </div>
+            </div>
+        </modal-body>
+    </modal>
+</div>
 
 @section Styles{
     <style type="text/css">

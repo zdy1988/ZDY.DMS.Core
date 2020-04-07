@@ -9,7 +9,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Extensions
     {
         public static bool Is(this WorkFlow flow, params WorkFlowState[] states)
         {
-            return states.Contains((WorkFlowState)flow.Type);
+            return states.Contains((WorkFlowState)flow.State);
         }
 
         public static bool IsNot(this WorkFlow flow, params WorkFlowState[] states)

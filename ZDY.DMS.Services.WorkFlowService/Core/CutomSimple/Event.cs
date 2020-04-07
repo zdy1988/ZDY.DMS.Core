@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ZDY.DMS.Services.WorkFlowService.Events;
+using ZDY.DMS.Services.WorkFlowService.Core.Events;
 
-namespace ZDY.DMS.Services.WorkFlowService.Test
+namespace ZDY.DMS.Services.WorkFlowService.CutomSimple
 {
     public class Event
     {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
@@ -11,22 +12,31 @@ namespace ZDY.DMS.AspNetCore.Mvc.Filters
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            //只有在提交Model的时候才进行验证
-            if (context.ActionArguments.Count == 1 && context.ActionArguments.First().Value != null && context.ActionArguments.First().Value.GetType().Namespace == "ZDY.DMS.Models")
+            var action = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName;
+
+            if (action == "Add" || action == "Update")
             {
-                if (!context.ModelState.IsValid)
+                //只有在提交Model的时候才进行验证
+                if (context.ActionArguments.Count == 1
+                    && context.ActionArguments.First().Value != null
+                    && context.ActionArguments.First().Value.GetType().GetInterfaces().Contains((typeof(IEntity<Guid>))))
                 {
-                    string error = string.Empty;
-                    foreach (var key in context.ModelState.Keys)
+                    if (!context.ModelState.IsValid)
                     {
-                        var state = context.ModelState[key];
-                        if (state.Errors.Any())
+                        string error = string.Empty;
+
+                        foreach (var key in context.ModelState.Keys)
                         {
-                            error = state.Errors.First(t => !string.IsNullOrEmpty(t.ErrorMessage)).ErrorMessage;
-                            break;
+                            var state = context.ModelState[key];
+                            if (state.Errors.Any())
+                            {
+                                error = state.Errors.First(t => !string.IsNullOrEmpty(t.ErrorMessage)).ErrorMessage;
+                                break;
+                            }
                         }
+
+                        throw new InvalidOperationException(error);
                     }
-                    throw new InvalidOperationException(error);
                 }
             }
         }
