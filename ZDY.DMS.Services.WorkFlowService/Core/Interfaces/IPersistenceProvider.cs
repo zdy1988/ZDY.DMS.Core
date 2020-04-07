@@ -6,7 +6,7 @@ using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService.Core.Interfaces
 {
-    public interface IPersistenceProvider
+    public interface IPersistenceProvider : IDisposable
     {
         Task<WorkFlow> GetWorkFlowAsync(Guid flowId);
 

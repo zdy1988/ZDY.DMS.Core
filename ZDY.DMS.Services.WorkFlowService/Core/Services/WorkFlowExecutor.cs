@@ -58,7 +58,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
             //审批签名检测
             if (execution.Step.IsNeedSignature())
             {
-                if (!await this.signatureProvider.TrySignatureAsync())
+                if (!await this.signatureProvider.TrySignatureAsync(execute.Sender.Id, execute.SignaturePassword))
                 {
                     throw new InvalidOperationException("密钥错误或其他原因导致签名失败");
                 }
@@ -87,9 +87,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
 
             //更新实例中步骤信息
             await UpdateWorkFlowInstanceLastExecuteTask(execution.Instance, execution.Task);
-
-            //提交数据库操作
-            //await this.RepositoryContext.CommitAsync();
         }
 
         public async Task ExecuteStartAsync(WorkFlowInstance instance, Guid groupId)

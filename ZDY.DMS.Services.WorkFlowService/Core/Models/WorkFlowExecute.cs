@@ -22,7 +22,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Models
         /// <summary>
         /// 签名密钥
         /// </summary>
-        public string SignPassword { get; set; }
+        public string SignaturePassword { get; set; }
 
         /// <summary>
         /// 备注

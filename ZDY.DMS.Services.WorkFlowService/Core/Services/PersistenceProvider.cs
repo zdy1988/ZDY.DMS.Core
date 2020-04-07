@@ -11,7 +11,7 @@ using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService.Core.Services
 {
-    public class PersistenceProvider : IPersistenceProvider
+    public class PersistenceProvider : DisposableObject, IPersistenceProvider
     {
         private readonly IRepositoryContext repositoryContext;
         private readonly IRepository<Guid, WorkFlow> workFlowRepository;
@@ -78,7 +78,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
             //删除实例
             var instance = await workFlowInstanceRepository.FindByKeyAsync(instanceId);
 
-            if (instance!=null)
+            if (instance != null)
             {
                 instance.IsDisabled = true;
 
@@ -251,7 +251,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <returns></returns>
         public async Task<List<WorkFlowTask>> GetAllTemporaryTaskAsync(Guid instanceId)
         {
-            var list = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instanceId 
+            var list = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instanceId
                                                                    && t.State == (int)WorkFlowTaskState.Waiting
                                                                    && t.IsDisabled == false);
             return list.ToList();
@@ -284,6 +284,17 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                                                                         && t.IsDisabled == false);
 
             return list.ToList();
+        }
+
+        /// <summary>
+        /// 释放之前将数据更改提交
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected async override void Dispose(bool disposing)
+        {
+            await this.repositoryContext.CommitAsync();
+
+            base.Dispose(disposing);
         }
     }
 }

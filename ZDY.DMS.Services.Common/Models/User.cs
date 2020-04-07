@@ -11,7 +11,9 @@ namespace ZDY.DMS.Services.Common.Models
         ICompanyEntity<Guid>,
         IDepartmentEntity<Guid>
     {
+        [Required(ErrorMessage = "账号是必须的，不能为空")]
         public string UserName { get; set; }
+        [Required(ErrorMessage = "密码是必须的，不能为空")]
         public string Password { get; set; }
         public Guid Avatar { get; set; }
         public string AvatarUrl { get; set; }
@@ -22,7 +24,7 @@ namespace ZDY.DMS.Services.Common.Models
         public string Position { get; set; }
         public string Gender { get; set; }
         public string Phone { get; set; }
-        [Required(ErrorMessage = "请填写手机号码")]
+        [Required(ErrorMessage = "手机号码是必须的，不能为空")]
         [Mobile]
         public string Mobile { get; set; }
         [Email]

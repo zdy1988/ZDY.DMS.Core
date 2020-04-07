@@ -57,7 +57,7 @@
                                     @if (Model.CurrentStep.SignatureType == (int)WorkFlowSignatureKinds.CommentAndSignature)
                                     {
 
-                                        <text-box name="签名密钥" field="SignPassword" text-box-type="Password"></text-box>
+                                        <text-box name="签名密钥" field="SignaturePassword" text-box-type="Password"></text-box>
 
                                     }
 
@@ -353,7 +353,7 @@
 
                     this.Comment = ko.observable("")
 
-                    this.SignPassword = ko.observable("")
+                    this.SignaturePassword = ko.observable("")
 
                     this.GetExecuteModel = function (steps) {
 
@@ -365,7 +365,7 @@
                             this.TaskId = '@Model.CurrentTask.Id'
                             this.Steps = steps || [],
                             this.Comment = flowInstance.Comment(),
-                            this.SignPassword = flowInstance.SignPassword()
+                            this.SignaturePassword = flowInstance.SignaturePassword()
                             this.IsSign = false,
                             this.Note = ''
                         }
