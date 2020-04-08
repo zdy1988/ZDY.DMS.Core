@@ -34,8 +34,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <summary>
         /// 获取一个流程数据
         /// </summary>
-        /// <param name="flowId"></param>
-        /// <returns></returns>
         public async Task<WorkFlow> GetWorkFlowAsync(Guid flowId)
         {
             return await workFlowRepository.FindAsync(t => t.Id == flowId && t.IsDisabled == false);
@@ -44,7 +42,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <summary>
         /// 获取一个表单数据
         /// </summary>
-        /// <returns></returns>
         public async Task<WorkFlowForm> GetWorkFlowFormAsync(Guid formId)
         {
             return await workFlowFormRepository.FindAsync(t => t.Id == formId && t.IsDisabled == false);
@@ -53,8 +50,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <summary>
         /// 获取一个流程实例
         /// </summary>
-        /// <param name="instanceId"></param>
-        /// <returns></returns>
         public async Task<WorkFlowInstance> GetWorkFlowInstanceAsync(Guid instanceId)
         {
             return await workFlowInstanceRepository.FindAsync(t => t.Id == instanceId && t.IsDisabled == false);
@@ -63,8 +58,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <summary>
         /// 创建一个流程实例
         /// </summary>
-        /// <param name="instance"></param>
-        /// <returns></returns>
         public async Task CreateInstanceAsync(WorkFlowInstance instance)
         {
             await workFlowInstanceRepository.AddAsync(instance);
@@ -75,8 +68,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <summary>
         /// 删除一个流程实例
         /// </summary>
-        /// <param name="instanceId"></param>
-        /// <returns></returns>
         public async Task RemoveInstanceAsync(Guid instanceId)
         {
             //删除实例
@@ -108,8 +99,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <summary>
         /// 更新一个流程实例
         /// </summary>
-        /// <param name="instance"></param>
-        /// <returns></returns>
         public async Task UpdateInstanceAsync(WorkFlowInstance instance)
         {
             await workFlowInstanceRepository.UpdateAsync(instance);
@@ -120,8 +109,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <summary>
         /// 获取一个流程任务
         /// </summary>
-        /// <param name="taskId"></param>
-        /// <returns></returns>
         public async Task<WorkFlowTask> GetWorkFlowTaskAsync(Guid taskId)
         {
             return await workFlowTaskRepository.FindAsync(t => t.Id == taskId && t.IsDisabled == false);
@@ -130,9 +117,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <summary>
         /// 获取发布子流程的根流程任务
         /// </summary>
-        /// <param name="instanceId"></param>
-        /// <param name="groupId"></param>
-        /// <returns></returns>
         public async Task<WorkFlowTask> GetRootInstanceTaskAsync(Guid instanceId, Guid groupId)
         {
             var parentTask = await workFlowTaskRepository.FindAsync(t => t.GroupId == groupId
@@ -183,7 +167,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// 获取某个步骤所有分发的任务
         /// </summary>
         /// <returns></returns>
-        public async Task<List<WorkFlowTask>> GetAllStepDistributionTaskAsync(Guid stepId, Guid flowId, Guid instanceId, Guid groupId, int sort)
+        public async Task<List<WorkFlowTask>> GetDistributionTaskAsync(Guid stepId, Guid flowId, Guid instanceId, Guid groupId, int sort)
         {
             var list = await workFlowTaskRepository.FindAllAsync(t => t.FlowId == flowId
                                                                    && t.InstanceId == instanceId
@@ -203,7 +187,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <param name="instanceId"></param>
         /// <param name="groupId"></param>
         /// <returns></returns>
-        public async Task<List<WorkFlowTask>> GetAllStepDistributionNewestTaskAsync(Guid stepId, Guid flowId, Guid instanceId, Guid groupId)
+        public async Task<List<WorkFlowTask>> GetNewestDistributionTaskAsync(Guid stepId, Guid flowId, Guid instanceId, Guid groupId)
         {
             var list = await workFlowTaskRepository.FindAllAsync(t => t.FlowId == flowId
                                                                    && t.InstanceId == instanceId
@@ -221,7 +205,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// </summary>
         /// <param name="currentTask"></param>
         /// <returns></returns>
-        public async Task<List<WorkFlowTask>> GetAllStepDistributionNotExecuteTaskAsync(Guid[] stepArray, Guid flowId, Guid instanceId, Guid groupId)
+        public async Task<List<WorkFlowTask>> GetNotExecuteDistributionTaskAsync(Guid[] stepArray, Guid flowId, Guid instanceId, Guid groupId)
         {
             var list = await workFlowTaskRepository.FindAllAsync(t => stepArray.Contains(t.StepId)
                                                                    && t.InstanceId == instanceId
@@ -252,7 +236,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// 获取某个实例下所有的临时任务
         /// </summary>
         /// <returns></returns>
-        public async Task<List<WorkFlowTask>> GetAllTemporaryTaskAsync(Guid instanceId)
+        public async Task<List<WorkFlowTask>> GetTemporaryTaskAsync(Guid instanceId)
         {
             var list = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instanceId
                                                                    && t.State == (int)WorkFlowTaskState.Waiting
@@ -266,7 +250,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <param name="instanceId"></param>
         /// <param name="stepArray"></param>
         /// <returns></returns>
-        public async Task<List<WorkFlowTask>> GetAllTemporaryTaskAsync(Guid instanceId, params Guid[] stepArray)
+        public async Task<List<WorkFlowTask>> GetTemporaryTaskAsync(Guid instanceId, params Guid[] stepArray)
         {
             var list = await workFlowTaskRepository.FindAllAsync(t => t.InstanceId == instanceId
                                                                    && stepArray.Contains(t.StepId)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ZDY.DMS.Services.WorkFlowService.Models;
 
-namespace ZDY.DMS.Services.WorkFlowService
+namespace ZDY.DMS.Services.WorkFlowService.Core.Comparers
 {
     public class WorkFlowReceiverTaskComparer : IEqualityComparer<WorkFlowTask>
     {

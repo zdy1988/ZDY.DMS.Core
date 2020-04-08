@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Text;
 using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.AspNetCore.Module;
+using ZDY.DMS.Events;
+using ZDY.DMS.Services.Common.Events;
 using ZDY.DMS.Services.WorkFlowService.Enums;
+using ZDY.DMS.Services.WorkFlowService.EventHandlers;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
     public class WorkFlowServiceModule: ServiceModule
     {
-        public WorkFlowServiceModule(IDictionaryRegister dictionaryRegister)
-            : base(dictionaryRegister)
+        public WorkFlowServiceModule(IDictionaryRegister dictionaryRegister, IEventSubscriber eventSubscriber)
+            : base(dictionaryRegister, eventSubscriber)
         {
 
         }
@@ -35,6 +38,11 @@ namespace ZDY.DMS.Services.WorkFlowService
             this.DictionaryRegister.RegisterEnum<WorkFlowTaskKinds>();
             this.DictionaryRegister.RegisterEnum<WorkFlowTaskState>();
             this.DictionaryRegister.RegisterEnum<WorkFlowTransitConditionKinds>();
+        }
+
+        protected override void EventHandlersInitializer()
+        {
+            EventSubscriber.Subscribe<UserCreatedEvent, UserCreatedEventHandler>();
         }
     }
 }

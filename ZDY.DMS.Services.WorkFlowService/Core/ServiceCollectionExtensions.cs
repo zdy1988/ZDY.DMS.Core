@@ -10,11 +10,13 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddWorkflow(this IServiceCollection services)
         {
-            services.AddTransient<ISignatureProvider, SignatureProvider>();
+            services.AddSingleton<INoticeSender, NoticeSender>();
 
-            services.AddTransient<IPersistenceProvider, PersistenceProvider>();
+            services.AddSingleton<ISignatureProvider, SignatureProvider>();
 
-            services.AddTransient<IWorkFlowExecutor, WorkFlowExecutor>();
+            services.AddSingleton<IPersistenceProvider, PersistenceProvider>();
+
+            services.AddSingleton<IWorkFlowExecutor, WorkFlowExecutor>();
 
             return services;
         }

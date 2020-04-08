@@ -1,12 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Transactions;
-using ZDY.DMS.Events;
-using ZDY.DMS.Services.Common.Events;
+using Newtonsoft.Json.Linq;
+using ZDY.DMS.Services.WorkFlowService.Core.Comparers;
 using ZDY.DMS.Services.WorkFlowService.Core.Events;
 using ZDY.DMS.Services.WorkFlowService.Core.Extensions;
 using ZDY.DMS.Services.WorkFlowService.Core.Interfaces;
@@ -18,15 +17,15 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
 {
     public class WorkFlowExecutor : IWorkFlowExecutor
     {
-        private readonly IEventPublisher eventPublisher;
+        private readonly INoticeSender noticeSender;
         private readonly IPersistenceProvider persistenceProvider;
         private readonly ISignatureProvider signatureProvider;
 
-        public WorkFlowExecutor(IEventPublisher eventPublisher,
+        public WorkFlowExecutor(INoticeSender noticeSender,
             IPersistenceProvider persistenceProvider,
             ISignatureProvider signatureProvider)
         {
-            this.eventPublisher = eventPublisher;
+            this.noticeSender = noticeSender;
             this.persistenceProvider = persistenceProvider;
             this.signatureProvider = signatureProvider;
         }
@@ -421,7 +420,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                         //发送消息
                         SendMessage(execution.Instance.Title, $"您有一个新的审批需要处理，关于<b>{execution.Instance.Title}</b>.", nextStepTasks.Select(t => t.ReceiverId).Distinct().ToArray());
 
-                        await CreateDuplicateTask(execution);
+                        await CreateCopyTask(execution);
                     }
                     else
                     {
@@ -705,7 +704,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                 string note = "";
 
                 //获取当前步骤分发的任务
-                var taskList = await this.persistenceProvider.GetAllStepDistributionTaskAsync(execution.Step.StepId, execution.Task.FlowId, execution.Task.InstanceId, execution.Task.GroupId, execution.Task.Sort);
+                var taskList = await this.persistenceProvider.GetDistributionTaskAsync(execution.Step.StepId, execution.Task.FlowId, execution.Task.InstanceId, execution.Task.GroupId, execution.Task.Sort);
 
                 switch ((WorkFlowHandleTacticKinds)execution.Step.HandleTactic)
                 {
@@ -972,7 +971,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
             //激活临时任务
             var stepArray = nextStepTasks.Select(t => t.StepId).Distinct().ToArray();
 
-            var waitingTasks = await this.persistenceProvider.GetAllTemporaryTaskAsync(nextStepTasks.First().InstanceId, stepArray);
+            var waitingTasks = await this.persistenceProvider.GetTemporaryTaskAsync(nextStepTasks.First().InstanceId, stepArray);
 
             if (waitingTasks.Count() > 0)
             {
@@ -998,7 +997,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <param name="currentTask"></param>
         /// <param name="execution"></param>
         /// <returns></returns>
-        private async Task CreateDuplicateTask(WorkFlowExecution execution)
+        private async Task CreateCopyTask(WorkFlowExecution execution)
         {
             foreach (var step in execution.ToStepCollection)
             {
@@ -1020,13 +1019,13 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                             continue;
                         }
 
-                        await HandleCreateDuplicateTask(nextStep, receiver, execution);
+                        await HandleCreateCopyTask(nextStep, receiver, execution);
                     }
                 }
             }
         }
 
-        private async Task<WorkFlowTask> HandleCreateDuplicateTask(WorkFlowStep nextStep, WorkFlowUser receiver, WorkFlowExecution execution)
+        private async Task<WorkFlowTask> HandleCreateCopyTask(WorkFlowStep nextStep, WorkFlowUser receiver, WorkFlowExecution execution)
         {
             var task = new WorkFlowTask();
 
@@ -1149,7 +1148,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <returns></returns>
         private async Task RemoveTemporaryTask(WorkFlowTask currentTask, bool isRemoveAll = true)
         {
-            var temporaryTask = await this.persistenceProvider.GetAllTemporaryTaskAsync(currentTask.InstanceId);
+            var temporaryTask = await this.persistenceProvider.GetTemporaryTaskAsync(currentTask.InstanceId);
 
             if (!isRemoveAll)
             {
@@ -1191,7 +1190,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
             else
             {
                 //获取当前步骤分发的所有任务
-                var taskList = await this.persistenceProvider.GetAllStepDistributionTaskAsync(execution.Step.StepId, execution.Task.FlowId, execution.Task.InstanceId, execution.Task.GroupId, execution.Task.Sort);
+                var taskList = await this.persistenceProvider.GetDistributionTaskAsync(execution.Step.StepId, execution.Task.FlowId, execution.Task.InstanceId, execution.Task.GroupId, execution.Task.Sort);
 
                 if (execution.Step.IsBackTacticBy(WorkFlowBackTacticKinds.ReturnByTactic))
                 {
@@ -1422,7 +1421,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
             foreach (var step in execution.ToStepCollection)
             {
                 //获取当前步骤最后一次分发的任务
-                var backStepTask = await this.persistenceProvider.GetAllStepDistributionNewestTaskAsync(step.Key, execution.Task.FlowId, execution.Task.InstanceId, execution.Task.GroupId);
+                var backStepTask = await this.persistenceProvider.GetNewestDistributionTaskAsync(step.Key, execution.Task.FlowId, execution.Task.InstanceId, execution.Task.GroupId);
 
                 tasks.AddRange(backStepTask);
             }
@@ -1649,7 +1648,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <returns></returns>
         private async Task<bool> IsStepPassed(WorkFlowStep step, Guid instanceId, Guid flowId, Guid groupId, int sort)
         {
-            var tasks = await this.persistenceProvider.GetAllStepDistributionTaskAsync(step.StepId, flowId, instanceId, groupId, sort);
+            var tasks = await this.persistenceProvider.GetDistributionTaskAsync(step.StepId, flowId, instanceId, groupId, sort);
 
             if (tasks.Count == 0)
             {
@@ -1745,7 +1744,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <returns></returns>
         private async Task<bool> IsStepBacked(WorkFlowStep step, Guid instanceId, Guid flowId, Guid groupId, int sort)
         {
-            var tasks = await this.persistenceProvider.GetAllStepDistributionTaskAsync(step.StepId, flowId, instanceId, groupId, sort);
+            var tasks = await this.persistenceProvider.GetDistributionTaskAsync(step.StepId, flowId, instanceId, groupId, sort);
 
             if (tasks.Count == 0)
             {
@@ -2059,7 +2058,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
             title = $"【审批】{title}";
             message = $"【审批】{message}";
 
-            eventPublisher.Publish<PublicMessageCreatedEvent>(new PublicMessageCreatedEvent(title, message, 0, receiver));
+            this.noticeSender.Push(title, message, receiver);
         }
 
         #endregion
@@ -2077,7 +2076,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
 
             var stepArray = sameLevelSteps.Select(t => t.StepId).ToArray();
 
-            return await this.persistenceProvider.GetAllStepDistributionNotExecuteTaskAsync(stepArray, execution.Task.FlowId, execution.Task.InstanceId, execution.Task.GroupId);
+            return await this.persistenceProvider.GetNotExecuteDistributionTaskAsync(stepArray, execution.Task.FlowId, execution.Task.InstanceId, execution.Task.GroupId);
         }
 
         #endregion
