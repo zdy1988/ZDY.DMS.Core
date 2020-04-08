@@ -9,36 +9,36 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Models
         /// <summary>
         /// 步骤提交前事件
         /// </summary>
-        public string SubmitBeforeEvent { get; set; }
+        public string BeforeSubmitInterceptor { get; set; }
 
         /// <summary>
         /// 步骤提交后事件
         /// </summary>
-        public string SubmitAfterEvent { get; set; }
+        public string AfterSubmitInterceptor { get; set; }
 
         /// <summary>
         /// 步骤退回前事件
         /// </summary>
-        public string BackBeforeEvent { get; set; }
+        public string BeforeBackInterceptor { get; set; }
 
         /// <summary>
         /// 步骤退回后事件
         /// </summary>
-        public string BackAfterEvent { get; set; }
+        public string AfterBackInterceptor { get; set; }
 
         /// <summary>
         /// 子流程激活前事件
         /// </summary>
-        public string SubFlowActivationBeforeEvent { get; set; }
+        public string BeforeSubFlowActivationInterceptor { get; set; }
 
         /// <summary>
         /// 子流程激活后事件
         /// </summary>
-        public string SubFlowActivationAfterEvent { get; set; }
+        public string AfterSubFlowActivationInterceptor { get; set; }
 
         /// <summary>
         /// 子流程结束事件
         /// </summary>
-        public string SubFlowFinishedEvent { get; set; }
+        public string SubFlowFinishedInterceptor { get; set; }
     }
 }

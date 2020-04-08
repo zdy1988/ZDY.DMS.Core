@@ -7,8 +7,11 @@ using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.Events;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Services.Common.Events;
+using ZDY.DMS.Services.WorkFlowService.Core.Models;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
+using ZDY.DMS.Services.WorkFlowService.Core.Extensions;
+using System.Collections.Generic;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
@@ -80,10 +83,10 @@ namespace ZDY.DMS.Services.WorkFlowService
         }
 
         [HttpPost]
-        public async Task<Models.WorkFlow> SaveAs(Guid id, string name, string designJson)
+        public async Task<WorkFlow> SaveAs(Guid id, string name, string designJson)
         {
             var original = await this.FindByKey(id);
-            var entity = JsonConvert.DeserializeObject<Models.WorkFlow>(JsonConvert.SerializeObject(original));
+            var entity = JsonConvert.DeserializeObject<WorkFlow>(JsonConvert.SerializeObject(original));
 
             entity.Id = this.KeyGenerator.Generate(entity);
             entity.Name = name;
@@ -94,7 +97,7 @@ namespace ZDY.DMS.Services.WorkFlowService
             await this.Repository.AddAsync(entity);
             await this.RepositoryContext.CommitAsync();
 
-            return new Models.WorkFlow { Id = entity.Id };
+            return new WorkFlow { Id = entity.Id };
         }
 
         [HttpPost]
@@ -107,17 +110,9 @@ namespace ZDY.DMS.Services.WorkFlowService
                 throw new InvalidOperationException("只有设计中的流程才可以安装！");
             }
 
-            //var workFlowInstalled = WorkFlowDefinition.Parse(runtimeJson);
+            var definition = WorkFlowDefinition.Parse(runtimeJson);
 
-            //var messages = WorkFlowAnalyzing.CheckFlow(workFlowInstalled);
-
-            var messages = new System.Collections.Generic.List<string>();
-
-            if (messages.Count() > 0)
-            {
-                return Ok(new { IsInstallSuccess = false, Messages = messages });
-            }
-            else
+            if (definition.Valid(out List<Tuple<Guid, string, string, string>> results))
             {
                 original.DesignJson = designJson;
                 original.RuntimeJson = runtimeJson;
@@ -132,7 +127,11 @@ namespace ZDY.DMS.Services.WorkFlowService
                 //安装流程
                 this.eventPublisher.Publish(new WorkFlowInstalledEvent(original.CompanyId, original.Id, original.Name));
 
-                return Ok(new { IsInstallSuccess = true, Messages = messages });
+                return Ok(new { IsInstallSuccess = true, Messages = results });
+            }
+            else
+            {
+                return Ok(new { IsInstallSuccess = false, Messages = results });
             }
         }
 

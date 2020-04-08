@@ -25,29 +25,29 @@ namespace ZDY.DMS.Services.WorkFlowService.Core
         /// 执行自定义方法
         /// </summary>
         /// <returns></returns>
-        public static TResult ExecuteCustomMethod<TArgs, TResult>(string name, TArgs args)
+        public static void ExecuteMethod<TArgs, TResult>(string methodAssembly, TArgs args, out TResult result)
         {
-            var reflection = name.Split(',');
+            var reflection = methodAssembly.Split(',');
             var dllName = reflection[0];
             var typeName = System.IO.Path.GetFileNameWithoutExtension(reflection[1]);
             var methodName = System.IO.Path.GetExtension(reflection[1]).Substring(1);
 
             var assembly = Assembly.Load(dllName);
-            var type = assembly.GetType(typeName, true);
+            Type type = assembly.GetType(typeName, true);
             var instance = Activator.CreateInstance(type, false);
             var method = type.GetMethod(methodName);
 
             if (method != null)
             {
-                var result = method.Invoke(instance, new object[] { args });
+                var r = method.Invoke(instance, new object[] { args });
 
-                if (result is TResult)
+                if (r is TResult)
                 {
-                    return (TResult)result;
+                    result = (TResult)r;
                 }
                 else
                 {
-                    throw new TypeUnloadedException($"{name} 提供的返回值类型不符合规定");
+                    throw new TypeUnloadedException($"{methodAssembly} 提供的返回值类型不符合规定");
                 }
             }
             else

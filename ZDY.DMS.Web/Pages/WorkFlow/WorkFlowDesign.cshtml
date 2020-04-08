@@ -311,31 +311,31 @@
                             </note>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <text-box field="SubmitBeforeEvent" name="步骤提交前事件"></text-box>
+                                    <text-box field="BeforeSubmitInterceptor" name="步骤提交前事件"></text-box>
                                 </div>
                                 <div class="col-md-6">
-                                    <text-box field="SubmitAfterEvent" name="步骤提交后事件"></text-box>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <text-box field="BackBeforeEvent" name="步骤退回前事件"></text-box>
-                                </div>
-                                <div class="col-md-6">
-                                    <text-box field="BackAfterEvent" name="步骤退回后事件"></text-box>
+                                    <text-box field="AfterSubmitInterceptor" name="步骤提交后事件"></text-box>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <text-box field="SubFlowActivationBeforeEvent" name="子流程激活前事件"></text-box>
+                                    <text-box field="BeforeBackInterceptor" name="步骤退回前事件"></text-box>
                                 </div>
                                 <div class="col-md-6">
-                                    <text-box field="SubFlowActivationAfterEvent" name="子流程激活后事件"></text-box>
+                                    <text-box field="AfterBackInterceptor" name="步骤退回后事件"></text-box>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <text-box field="SubFlowFinishedEvent" name="子流程完成事件"></text-box>
+                                    <text-box field="BeforeSubFlowActivationInterceptor" name="子流程激活前事件"></text-box>
+                                </div>
+                                <div class="col-md-6">
+                                    <text-box field="AfterSubFlowActivationInterceptor" name="子流程激活后事件"></text-box>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <text-box field="SubFlowFinishedInterceptor" name="子流程完成事件"></text-box>
                                 </div>
                                 <div class="col-md-6"></div>
                             </div>
@@ -468,14 +468,14 @@
                 this.CountersignaturePercentage = 100
                 this.SubFlowId = ""
                 this.SubFlowTactic = 0
-                //步骤事件
-                this.SubmitBeforeEvent = ""
-                this.SubmitAfterEvent = ""
-                this.BackBeforeEvent = ""
-                this.BackAfterEvent = ""
-                this.SubFlowActivationBeforeEvent = ""
-                this.SubFlowActivationAfterEvent = ""
-                this.SubFlowFinishedEvent = ""
+                //步骤拦截方法
+                this.BeforeSubmitInterceptor = ""
+                this.AfterSubmitInterceptor = ""
+                this.BeforeBackInterceptor = ""
+                this.AfterBackInterceptor = ""
+                this.BeforeSubFlowActivationInterceptor = ""
+                this.AfterSubFlowActivationInterceptor = ""
+                this.SubFlowFinishedInterceptor = ""
             }
 
             var Transit = function (unit) {

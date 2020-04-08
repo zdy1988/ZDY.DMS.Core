@@ -50,7 +50,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Extensions
             {
                 var condition = transit.ConditionValue.Trim();
 
-                isPassed = WorkFlowConstant.ExecuteCustomMethod<object, bool>(condition, data);
+                WorkFlowConstant.ExecuteMethod<object, bool>(condition, data, out isPassed);
             }
             catch (Exception e)
             {

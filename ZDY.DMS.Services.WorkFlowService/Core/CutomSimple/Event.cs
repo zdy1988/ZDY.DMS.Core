@@ -1,45 +1,43 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ZDY.DMS.Services.WorkFlowService.Core.Events;
+using ZDY.DMS.Services.WorkFlowService.Core.Aspects;
 
 namespace ZDY.DMS.Services.WorkFlowService.CutomSimple
 {
-    public class Event
+    public class Interceptor
     {
-        public ExecuteSubmitBeforeEventResults SubmitBefore(WorkFlowCustomEventArgs data)
+        public WorkFlowInterceptorResults SubmitBefore(WorkFlowInterceptorArgs args)
         {
-            return new ExecuteSubmitBeforeEventResults();
+            return new WorkFlowInterceptorResults();
         }
 
-        public ExecuteSubmitAfterEventResults SubmitAfter(WorkFlowCustomEventArgs data)
+        public WorkFlowInterceptorResults SubmitAfter(WorkFlowInterceptorArgs args)
         {
-            return new ExecuteSubmitAfterEventResults();
+            return new WorkFlowInterceptorResults();
         }
 
-        public ExecuteBackBeforeEventResults BackBefore(WorkFlowCustomEventArgs data)
+        public WorkFlowInterceptorResults BackBefore(WorkFlowInterceptorArgs args)
         {
-            return new ExecuteBackBeforeEventResults();
+            return new WorkFlowInterceptorResults();
         }
 
-        public ExecuteBackAfterEventResults BackAfter(WorkFlowCustomEventArgs data)
+        public WorkFlowInterceptorResults BackAfter(WorkFlowInterceptorArgs args)
         {
-            return new ExecuteBackAfterEventResults();
+            return new WorkFlowInterceptorResults();
         }
 
-        public WorkFlowCustomEventResults SubFlowActivationBefore(WorkFlowCustomEventArgs data)
+        public WorkFlowInterceptorResults SubFlowActivationBefore(WorkFlowInterceptorArgs args)
         {
-            return new WorkFlowCustomEventResults();
+            return new WorkFlowInterceptorResults();
         }
 
-        public WorkFlowCustomEventResults SubFlowActivationAfter(WorkFlowCustomEventArgs data)
+        public WorkFlowInterceptorResults SubFlowActivationAfter(WorkFlowInterceptorArgs args)
         {
-            return new WorkFlowCustomEventResults();
+            return new WorkFlowInterceptorResults();
         }
 
-        public WorkFlowCustomEventResults SubFlowFinished(WorkFlowCustomEventArgs data)
+        public WorkFlowInterceptorResults SubFlowFinished(WorkFlowInterceptorArgs args)
         {
-            return new WorkFlowCustomEventResults();
+            return new WorkFlowInterceptorResults();
         }
     }
 }

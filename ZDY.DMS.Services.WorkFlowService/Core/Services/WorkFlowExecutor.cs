@@ -5,8 +5,8 @@ using System.Reflection;
 using System.Threading.Tasks;
 using System.Transactions;
 using Newtonsoft.Json.Linq;
+using ZDY.DMS.Services.WorkFlowService.Core.Aspects;
 using ZDY.DMS.Services.WorkFlowService.Core.Comparers;
-using ZDY.DMS.Services.WorkFlowService.Core.Events;
 using ZDY.DMS.Services.WorkFlowService.Core.Extensions;
 using ZDY.DMS.Services.WorkFlowService.Core.Interfaces;
 using ZDY.DMS.Services.WorkFlowService.Core.Models;
@@ -88,15 +88,15 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
 
             if (execute.IsSubmit())
             {
-                ExecuteSubmitBeforeEvent(execution.Task, execution.Step);
+                ExecuteInterceptor(execution.Step.BeforeSubmitInterceptor, execution.Task);
                 await ExecuteSubmit(execution);
-                ExecuteSubmitAfterEvent(execution.Task, execution.Step);
+                ExecuteInterceptor(execution.Step.AfterSubmitInterceptor, execution.Task);
             }
             else if (execute.IsBack())
             {
-                ExecuteBackBeforeEvent(execution.Task, execution.Step);
+                ExecuteInterceptor(execution.Step.BeforeBackInterceptor, execution.Task);
                 await ExecuteBack(execution);
-                ExecuteBackAfterEvent(execution.Task, execution.Step);
+                ExecuteInterceptor(execution.Step.AfterBackInterceptor, execution.Task);
             }
             else if (execute.IsRedirect())
             {
@@ -264,11 +264,39 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
             //如果有临时任务，直接删除掉
             await RemoveTemporaryTask(instance.Id);
 
-            //执行子流程完成事件
-            await ExecuteSubFlowFinishedEvent(endStepTask, instance);
+            //如果当前任务如果是个包含子流程任务的任务
+            await HandleSubFlowFinished(endStepTask);
 
             //发送消息
             SendMessage(instance.Title, $"<b>{instance.Title}</b>审批结束！", instance.CreaterId);
+        }
+
+        /// <summary>
+        /// 子流程结束
+        /// </summary>
+        /// <returns></returns>
+        private async Task HandleSubFlowFinished(WorkFlowTask subflowEndStepTask)
+        {
+            // 寻找出发子流程的根任务
+            var rootInstanceTask = await this.persistenceProvider.GetRootInstanceTaskAsync(subflowEndStepTask.InstanceId, subflowEndStepTask.GroupId);
+
+            // 执行子流程完成后事件
+            if (rootInstanceTask != null)
+            {
+                var rootInstance = await HandleGetWorkFlowInstanceAsync(rootInstanceTask.InstanceId);
+
+                var rootWorkFlowDefinition = WorkFlowDefinition.Parse(rootInstance.FlowRuntimeJson);
+
+                if (rootWorkFlowDefinition != null)
+                {
+                    var rootInstanceTaskStep = rootWorkFlowDefinition.GetStep(rootInstanceTask.StepId);
+
+                    if (rootInstanceTaskStep != null && rootInstanceTaskStep.IsSubFlowStep())
+                    {
+                        ExecuteInterceptor(rootInstanceTaskStep.SubFlowFinishedInterceptor, rootInstanceTask);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -916,22 +944,19 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                 Title = $"因任务【{subflowTask.Title}】创建的子流程审批",
                 FlowId = Guid.Parse(subflowStep.SubFlowId),
                 CreaterId = sender.Id,
-                CreaterName = sender.Name
+                CreaterName = sender.Name,
+                CompanyId = subflowTask.CompanyId,
+                IsDisabled = false
             };
 
-            //执行子流程触发前事件，可影响子流程创建
-            var result = ExecuteSubFlowActivationBeforeEvent(subflowTask, subflowStep, subflowInstance);
-
-            subflowInstance = result.SubFlowInstance;
-
-            subflowInstance.CompanyId = subflowTask.CompanyId;
-            subflowInstance.IsDisabled = false;
+            //执行子流程开启前
+            ExecuteInterceptor(subflowStep.BeforeSubFlowActivationInterceptor, subflowTask);
 
             //执行启动子流程
             await ExecuteStartAsync(subflowInstance, subflowTask.GroupId);
 
-            //执行子流程触发后事件
-            ExecuteSubFlowActivationAfterEvent(subflowTask, subflowStep, subflowInstance);
+            //执行子流程开启后
+            ExecuteInterceptor(subflowStep.AfterSubFlowActivationInterceptor, subflowTask);
         }
 
         /// <summary>
@@ -1798,268 +1823,21 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
 
         #endregion
 
-        #region 自定义事件
+        #region 拦截器执行
 
-        /// <summary>
-        /// 执行自定义方法
-        /// </summary>
-        /// <returns></returns>
-        private TResult ExecuteCustomMethod<TArgs, TResult>(string name, TArgs args)
+        private WorkFlowInterceptorResults ExecuteInterceptor(string interceptorAssembly, WorkFlowTask task)
         {
-            var reflection = name.Split(',');
-            var dllName = reflection[0];
-            var typeName = System.IO.Path.GetFileNameWithoutExtension(reflection[1]);
-            var methodName = System.IO.Path.GetExtension(reflection[1]).Substring(1);
-
-            var assembly = Assembly.Load(dllName);
-            Type type = assembly.GetType(typeName, true);
-            var instance = System.Activator.CreateInstance(type, false);
-            var method = type.GetMethod(methodName);
-
-            if (method != null)
+            if (!string.IsNullOrWhiteSpace(interceptorAssembly))
             {
-                var result = method.Invoke(instance, new object[] { args });
+                var method = interceptorAssembly.Trim();
 
-                if (result is TResult)
+                var args = new WorkFlowInterceptorArgs(task);
+
+                WorkFlowConstant.ExecuteMethod(method, args, out WorkFlowInterceptorResults result);
+
+                if (!result.IsPassed)
                 {
-                    return (TResult)result;
-                }
-                else
-                {
-                    throw new TypeUnloadedException($"{name} 提供的返回值类型不符合规定");
-                }
-            }
-            else
-            {
-                throw new MissingMethodException(typeName, methodName);
-            }
-        }
-
-        /// <summary>
-        /// 激活子流程前事件
-        /// </summary>
-        /// <returns></returns>
-        private SubFlowActivationBeforeEventResults ExecuteSubFlowActivationBeforeEvent(WorkFlowTask subflowTask, WorkFlowStep subflowStep, WorkFlowInstance subflowInstance)
-        {
-            if (!string.IsNullOrEmpty(subflowStep.SubFlowActivationBeforeEvent))
-            {
-                var eventName = subflowStep.SubFlowActivationBeforeEvent.Trim();
-                var eventArgs = new SubFlowActivationBeforeEventArgs()
-                {
-                    FlowId = subflowTask.FlowId,
-                    GroupId = subflowTask.GroupId,
-                    InstanceId = subflowTask.InstanceId,
-                    StepId = subflowTask.StepId,
-                    TaskId = subflowTask.Id,
-                    SubFlowInstance = subflowInstance
-                };
-                var result = ExecuteCustomMethod<SubFlowActivationBeforeEventArgs, SubFlowActivationBeforeEventResults>(eventName, eventArgs);
-
-                if (result.IsError)
-                {
-                    throw new InvalidOperationException(result.ErrorMessage);
-                }
-
-                return result;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// 激活子流程后事件
-        /// </summary>
-        /// <returns></returns>
-        private SubFlowActivationAfterEventResults ExecuteSubFlowActivationAfterEvent(WorkFlowTask subflowTask, WorkFlowStep subflowStep, WorkFlowInstance subflowInstance)
-        {
-            if (!string.IsNullOrEmpty(subflowStep.SubFlowActivationAfterEvent))
-            {
-                var eventName = subflowStep.SubFlowActivationAfterEvent.Trim();
-                var eventArgs = new SubFlowActivationAfterEventArgs()
-                {
-                    FlowId = subflowTask.FlowId,
-                    GroupId = subflowTask.GroupId,
-                    InstanceId = subflowTask.InstanceId,
-                    StepId = subflowTask.StepId,
-                    TaskId = subflowTask.Id,
-                    SubFlowInstance = subflowInstance
-                };
-                var result = ExecuteCustomMethod<SubFlowActivationAfterEventArgs, SubFlowActivationAfterEventResults>(eventName, eventArgs);
-
-                if (result.IsError)
-                {
-                    throw new InvalidOperationException(result.ErrorMessage);
-                }
-
-                return result;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// 执行子流程完成后事件
-        /// </summary>
-        /// <returns></returns>
-        private async Task<SubFlowFinishedEventResults> ExecuteSubFlowFinishedEvent(WorkFlowTask subflowEndStepTask, WorkFlowInstance subflowInstance)
-        {
-            // 寻找出发子流程的根任务
-            var rootInstanceTask = await this.persistenceProvider.GetRootInstanceTaskAsync(subflowEndStepTask.InstanceId, subflowEndStepTask.GroupId);
-
-            // 执行子流程完成后事件
-            if (rootInstanceTask != null)
-            {
-                var rootInstance = await HandleGetWorkFlowInstanceAsync(rootInstanceTask.InstanceId);
-
-                var rootWorkFlowDefinition = WorkFlowDefinition.Parse(rootInstance.FlowRuntimeJson);
-
-                if (rootWorkFlowDefinition != null)
-                {
-                    var rootInstanceTaskStep = rootWorkFlowDefinition.GetStep(rootInstanceTask.StepId);
-
-                    if (rootInstanceTaskStep != null && rootInstanceTaskStep.IsSubFlowStep() && !string.IsNullOrEmpty(rootInstanceTaskStep.SubFlowFinishedEvent))
-                    {
-                        var eventArgs = new SubFlowFinishedEventArgs
-                        {
-                            FlowId = rootInstanceTask.FlowId,
-                            GroupId = rootInstanceTask.GroupId,
-                            InstanceId = rootInstanceTask.InstanceId,
-                            StepId = rootInstanceTask.StepId,
-                            TaskId = rootInstanceTask.Id,
-                            SubFlowInstance = subflowInstance
-                        };
-
-                        var eventName = rootInstanceTaskStep.SubFlowFinishedEvent.Trim();
-
-                        var result = ExecuteCustomMethod<SubFlowFinishedEventArgs, SubFlowFinishedEventResults>(eventName, eventArgs);
-
-                        if (result.IsError)
-                        {
-                            throw new InvalidOperationException(result.ErrorMessage);
-                        }
-
-                        return result;
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// 执行提交操作之前
-        /// </summary>
-        /// <returns></returns>
-        private ExecuteSubmitBeforeEventResults ExecuteSubmitBeforeEvent(WorkFlowTask task, WorkFlowStep step)
-        {
-            if (!string.IsNullOrEmpty(step.SubmitBeforeEvent))
-            {
-                var eventName = step.SubmitBeforeEvent.Trim();
-                var eventArgs = new ExecuteSubmitBeforeEventArgs()
-                {
-                    FlowId = task.FlowId,
-                    GroupId = task.GroupId,
-                    InstanceId = task.InstanceId,
-                    StepId = task.StepId,
-                    TaskId = task.Id
-                };
-                var result = ExecuteCustomMethod<ExecuteSubmitBeforeEventArgs, ExecuteSubmitBeforeEventResults>(eventName, eventArgs);
-
-                if (result.IsError)
-                {
-                    throw new InvalidOperationException(result.ErrorMessage);
-                }
-
-                return result;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// 执行提交操作之后
-        /// </summary>
-        /// <param name="task"></param>
-        /// <param name="instance"></param>
-        /// <returns></returns>
-        private ExecuteSubmitAfterEventResults ExecuteSubmitAfterEvent(WorkFlowTask task, WorkFlowStep step)
-        {
-            if (!string.IsNullOrEmpty(step.SubmitAfterEvent))
-            {
-                var eventName = step.SubmitAfterEvent.Trim();
-                var eventArgs = new ExecuteSubmitAfterEventArgs()
-                {
-                    FlowId = task.FlowId,
-                    GroupId = task.GroupId,
-                    InstanceId = task.InstanceId,
-                    StepId = task.StepId,
-                    TaskId = task.Id
-                };
-                var result = ExecuteCustomMethod<ExecuteSubmitAfterEventArgs, ExecuteSubmitAfterEventResults>(eventName, eventArgs);
-
-                if (result.IsError)
-                {
-                    throw new InvalidOperationException(result.ErrorMessage);
-                }
-
-                return result;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// 执行提交操作之前
-        /// </summary>
-        /// <returns></returns>
-        private ExecuteBackBeforeEventResults ExecuteBackBeforeEvent(WorkFlowTask task, WorkFlowStep step)
-        {
-            if (!string.IsNullOrEmpty(step.BackBeforeEvent))
-            {
-                var eventName = step.BackBeforeEvent.Trim();
-                var eventArgs = new ExecuteBackBeforeEventArgs()
-                {
-                    FlowId = task.FlowId,
-                    GroupId = task.GroupId,
-                    InstanceId = task.InstanceId,
-                    StepId = task.StepId,
-                    TaskId = task.Id
-                };
-                var result = ExecuteCustomMethod<ExecuteBackBeforeEventArgs, ExecuteBackBeforeEventResults>(eventName, eventArgs);
-
-                if (result.IsError)
-                {
-                    throw new InvalidOperationException(result.ErrorMessage);
-                }
-
-                return result;
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// 执行提交操作之后
-        /// </summary>
-        /// <returns></returns>
-        private ExecuteBackAfterEventResults ExecuteBackAfterEvent(WorkFlowTask task, WorkFlowStep step)
-        {
-            if (!string.IsNullOrEmpty(step.BackAfterEvent))
-            {
-                var eventName = step.BackAfterEvent.Trim();
-                var eventArgs = new ExecuteBackAfterEventArgs()
-                {
-                    FlowId = task.FlowId,
-                    GroupId = task.GroupId,
-                    InstanceId = task.InstanceId,
-                    StepId = task.StepId,
-                    TaskId = task.Id
-                };
-                var result = ExecuteCustomMethod<ExecuteBackAfterEventArgs, ExecuteBackAfterEventResults>(eventName, eventArgs);
-
-                if (result.IsError)
-                {
-                    throw new InvalidOperationException(result.ErrorMessage);
+                    throw new InvalidOperationException(result.Message);
                 }
 
                 return result;
