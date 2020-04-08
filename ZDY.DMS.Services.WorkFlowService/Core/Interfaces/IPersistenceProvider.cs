@@ -31,18 +31,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Interfaces
 
         Task UpdateTaskAsync(WorkFlowTask task);
 
-        Task<List<WorkFlowTask>> GetDistributionTaskAsync(Guid stepId, Guid flowId, Guid instanceId, Guid groupId, int sort);
-
-        Task<List<WorkFlowTask>> GetNewestDistributionTaskAsync(Guid stepId, Guid flowId, Guid instanceId, Guid groupId);
-
-        Task<List<WorkFlowTask>> GetNotExecuteDistributionTaskAsync(Guid[] stepArray, Guid flowId, Guid instanceId, Guid groupId);
-
-        Task<bool> IsTheReceiverHasNotExecuteTask(Guid flowId, Guid instanceId, Guid stepId, Guid groupId, Guid userId);
-
-        Task<List<WorkFlowTask>> GetTemporaryTaskAsync(Guid instanceId);
-
-        Task<List<WorkFlowTask>> GetTemporaryTaskAsync(Guid instanceId, params Guid[] stepArray);
-
         Task<List<WorkFlowTask>> GetAllTaskAsync(Guid instanceId);
     }
 }

@@ -11,17 +11,17 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Interfaces
         /// <summary>
         /// 获取某些步骤在某阶段分发的任务
         /// </summary>
-        Task<List<WorkFlowTask>> GetAllStepDistributionTaskAsync(Guid instanceId, int sort, params Guid[] stepArray);
+        Task<List<WorkFlowTask>> GetDistributionTaskAsync(Guid instanceId, int sort, params Guid[] stepArray);
 
         /// <summary>
         /// 获取某些步骤最新分发的任务
         /// </summary>
-        Task<List<WorkFlowTask>> GetAllStepDistributionNewestTaskAsync(Guid instanceId, params Guid[] stepArray);
+        Task<List<WorkFlowTask>> GetNewestDistributionTaskAsync(Guid instanceId, params Guid[] stepArray);
 
         /// <summary>
         /// 获取某些步骤没有处理过的任务
         /// </summary>
-        Task<List<WorkFlowTask>> GetAllStepDistributionNotExecuteTaskAsync(Guid instanceId, params Guid[] stepArray);
+        Task<List<WorkFlowTask>> GetNotExecuteDistributionTaskAsync(Guid instanceId, params Guid[] stepArray);
 
         /// <summary>
         /// 获取某个实例下所有的临时任务

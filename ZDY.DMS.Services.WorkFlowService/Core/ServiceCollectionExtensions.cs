@@ -16,6 +16,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IPersistenceProvider, PersistenceProvider>();
 
+            services.AddSingleton<ITaskProvider, TaskProvider>();
+
             services.AddSingleton<IWorkFlowExecutor, WorkFlowExecutor>();
 
             return services;

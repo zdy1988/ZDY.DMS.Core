@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ZDY.DMS.AspNetCore.Module;
+using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 using ZDY.DMS.Events;
 using ZDY.DMS.Repositories;
 

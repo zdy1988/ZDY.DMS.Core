@@ -22,6 +22,8 @@ using ZDY.DMS.Services.PermissionService;
 using ZDY.DMS.Services.UserService;
 using ZDY.DMS.Services.WorkFlowService;
 using ZDY.DMS.Web.Repositories.EntityFramework;
+using ZDY.DMS.Querying.DataTableGateway;
+using ZDY.DMS.Querying.DataTableGateway.MySQL;
 
 namespace ZDY.DMS.Web
 {
@@ -74,10 +76,14 @@ namespace ZDY.DMS.Web
                 options.SerializerSettings.ContractResolver = new NullToEmptyStringResolver();
             });
 
-            services.AddDbContext<DMSDbContext>(options => options.UseMySql(@"server=localhost;userid=root;pwd=1234;port=3306;database=test;sslmode=none;", b => b.MigrationsAssembly("ZDY.DMS.Web")));
+            string conn = @"server=localhost;userid=root;pwd=1234;port=3306;database=test;sslmode=none;";
+
+            services.AddDbContext<DMSDbContext>(options => options.UseMySql(conn, b => b.MigrationsAssembly("ZDY.DMS.Web")));
 
             //仓储
             services.AddScoped<IRepositoryContext>(sp => new EntityFrameworkRepositoryContext(sp.GetService<DMSDbContext>()));
+
+            services.AddScoped<IDataTableGateway>(sp => new MySqlDataTableGateway(conn));
 
             //工作流
             services.AddWorkflow();
@@ -90,7 +96,7 @@ namespace ZDY.DMS.Web
                 config.AddService<OrganizationServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
                 config.AddService<PermissionServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
                 config.AddService<UserServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
-                config.AddService<WorkFlowServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>());
+                config.AddService<WorkFlowServiceModule>().WithRepository(sp => sp.GetService<IRepositoryContext>()).WithDataTableGateway(sp => sp.GetService<IDataTableGateway>());
 
                 config.UseEventBus();
             });

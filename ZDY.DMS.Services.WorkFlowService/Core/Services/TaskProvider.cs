@@ -22,7 +22,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <summary>
         /// 获取某些步骤在某阶段分发的任务
         /// </summary>
-        public async Task<List<WorkFlowTask>> GetAllStepDistributionTaskAsync(Guid instanceId, int sort, params Guid[] stepArray)
+        public async Task<List<WorkFlowTask>> GetDistributionTaskAsync(Guid instanceId, int sort, params Guid[] stepArray)
         {
             var list = await this.persistenceProvider.GetAllTaskAsync(instanceId);
 
@@ -32,7 +32,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <summary>
         /// 获取某些步骤最新分发的任务
         /// </summary>
-        public async Task<List<WorkFlowTask>> GetAllStepDistributionNewestTaskAsync(Guid instanceId, params Guid[] stepArray)
+        public async Task<List<WorkFlowTask>> GetNewestDistributionTaskAsync(Guid instanceId, params Guid[] stepArray)
         {
             var list = await this.persistenceProvider.GetAllTaskAsync(instanceId);
 
@@ -44,7 +44,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
         /// <summary>
         /// 获取某些步骤没有处理过的任务
         /// </summary>
-        public async Task<List<WorkFlowTask>> GetAllStepDistributionNotExecuteTaskAsync(Guid instanceId, params Guid[] stepArray)
+        public async Task<List<WorkFlowTask>> GetNotExecuteDistributionTaskAsync(Guid instanceId, params Guid[] stepArray)
         {
             var list = await this.persistenceProvider.GetAllTaskAsync(instanceId);
 

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using ZDY.DMS.AspNetCore.Module;
+using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
 
-namespace ZDY.DMS.AspNetCore.Service
+namespace ZDY.DMS.AspNetCore.Bootstrapper.Service
 {
     public abstract class ServiceBase<TServiceModule> : IServiceBase
         where TServiceModule : IServiceModule

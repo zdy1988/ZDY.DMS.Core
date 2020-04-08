@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using ZDY.DMS.AspNetCore.Messaging;
-using ZDY.DMS.AspNetCore.Module;
+using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 using ZDY.DMS.Commands;
 using ZDY.DMS.Events;
 using ZDY.DMS.EventStore.AdoNet;
@@ -13,6 +13,7 @@ using ZDY.DMS.Messaging.Simple;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Serialization.Json;
 using ZDY.DMS.Snapshots;
+using ZDY.DMS.Querying.DataTableGateway;
 
 namespace ZDY.DMS.AspNetCore
 {
@@ -22,22 +23,46 @@ namespace ZDY.DMS.AspNetCore
 
         private readonly ServiceBootstrapperConfigurator config;
 
-        private readonly ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>> serviceModuleRegistrations;
+        private readonly ConcurrentDictionary<Type, Type> serviceModuleRegistrations;
 
-        public ServiceBootstrapper(IServiceCollection services)
+        private readonly ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>> serviceRepositoryRegistrations;
+
+        private readonly ConcurrentDictionary<Type, Func<IServiceProvider, IDataTableGateway>> serviceDataTableGatewayRegistrations;
+
+        internal ServiceBootstrapper(IServiceCollection services)
         {
             this.services = services;
 
             this.config = new ServiceBootstrapperConfigurator(this);
 
-            this.serviceModuleRegistrations = new ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>>();
+            this.serviceModuleRegistrations = new ConcurrentDictionary<Type, Type>();
+                  
+            this.serviceRepositoryRegistrations = new ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>>();
+
+            this.serviceDataTableGatewayRegistrations = new ConcurrentDictionary<Type, Func<IServiceProvider, IDataTableGateway>>();
         }
 
-        internal ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>> ServiceModules
+        internal ConcurrentDictionary<Type, Type> ServiceModules
         {
             get
             {
                 return this.serviceModuleRegistrations;
+            }
+        }
+
+        internal ConcurrentDictionary<Type, Func<IServiceProvider, IRepositoryContext>> ServiceRepositories
+        {
+            get
+            {
+                return this.serviceRepositoryRegistrations;
+            }
+        }
+
+        internal ConcurrentDictionary<Type, Func<IServiceProvider, IDataTableGateway>> ServiceDataTableGatewaies
+        {
+            get
+            {
+                return this.serviceDataTableGatewayRegistrations;
             }
         }
 
@@ -54,19 +79,35 @@ namespace ZDY.DMS.AspNetCore
                 }
 
                 // Register RepositoryContext Owner Of The Module
-                services.AddScoped(implementationFactory =>
+                services.AddScoped(repositoryContextFactory =>
                 {
-                    IRepositoryContext factory(Type serviceModuleType)
+                    IRepositoryContext factory(Type serviceModule)
                     {
-                        if (serviceModuleRegistrations.TryGetValue(serviceModuleType, out Func<IServiceProvider, IRepositoryContext> registryRepositoryContextFactory))
+                        if (serviceRepositoryRegistrations.TryGetValue(serviceModule, out Func<IServiceProvider, IRepositoryContext> registryRepositoryContextFactory))
                         {
-                            return registryRepositoryContextFactory.Invoke(implementationFactory);
+                            return registryRepositoryContextFactory.Invoke(repositoryContextFactory);
                         }
 
-                        throw new InvalidOperationException($"Unable to resolve repository context for module '{serviceModuleType}'");
+                        throw new InvalidOperationException($"Unable to resolve repository context for module '{serviceModule}'");
                     }
 
                     return (Func<Type, IRepositoryContext>)factory;
+                });
+
+                // Register DataTableGateway Owner Of The Module
+                services.AddScoped(dataTableGatewayFactory =>
+                {
+                    IDataTableGateway factory(Type serviceModule)
+                    {
+                        if (serviceDataTableGatewayRegistrations.TryGetValue(serviceModule, out Func<IServiceProvider, IDataTableGateway> registryDataTableGatewayFactory))
+                        {
+                            return registryDataTableGatewayFactory.Invoke(dataTableGatewayFactory);
+                        }
+
+                        throw new InvalidOperationException($"Unable to resolve data table gateway for module '{serviceModule}'");
+                    }
+
+                    return (Func<Type, IDataTableGateway>)factory;
                 });
             }
         }

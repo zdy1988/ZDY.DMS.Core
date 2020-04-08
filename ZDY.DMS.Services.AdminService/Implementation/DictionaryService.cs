@@ -5,7 +5,7 @@ using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.AdminService.Enums;
 using ZDY.DMS.Services.Common.ServiceContracts;
 using ZDY.DMS.AspNetCore.Dictionary;
-using ZDY.DMS.AspNetCore.Service;
+using ZDY.DMS.AspNetCore.Bootstrapper.Service;
 using ZDY.DMS.Services.AdminService.Models;
 
 namespace ZDY.DMS.Services.AdminService.Implementation

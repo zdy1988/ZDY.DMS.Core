@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using ZDY.DMS.AspNetCore;
 using ZDY.DMS.AspNetCore.Dictionary;
-using ZDY.DMS.AspNetCore.Service;
+using ZDY.DMS.AspNetCore.Bootstrapper.Service;
 using ZDY.DMS.Caching;
 using ZDY.DMS.Caching.InMemory;
 using ZDY.DMS.Querying.DataTableGateway;
@@ -42,9 +42,6 @@ namespace Microsoft.Extensions.DependencyInjection
             //加密方式
             //services.TryAddSingleton<IStringEncryption, MD5StringEncryption>();
             services.TryAddSingleton<IStringEncryption, NoStringEncryption>();
-
-            //注入DataTableGateway
-            services.TryAddSingleton<IDataTableGateway, MySqlDataTableGateway>();
 
             //注入AppSetting
             services.TryAddSingleton<IAppSettingProvider, AppSettingProvider>();

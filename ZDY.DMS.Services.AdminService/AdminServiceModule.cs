@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.AspNetCore.Events;
-using ZDY.DMS.AspNetCore.Module;
+using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 using ZDY.DMS.Events;
 using ZDY.DMS.Services.AdminService.Enums;
 using ZDY.DMS.Services.AdminService.EventHandlers;

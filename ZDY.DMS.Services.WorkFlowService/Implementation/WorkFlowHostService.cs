@@ -8,7 +8,7 @@ using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 using ZDY.DMS.Services.WorkFlowService.Models;
 using ZDY.DMS.Tools;
 using ZDY.DMS.Services.WorkFlowService.Enums;
-using ZDY.DMS.AspNetCore.Service;
+using ZDY.DMS.AspNetCore.Bootstrapper.Service;
 using ZDY.DMS.Services.WorkFlowService.Core.Interfaces;
 
 namespace ZDY.DMS.Services.WorkFlowService.Implementation

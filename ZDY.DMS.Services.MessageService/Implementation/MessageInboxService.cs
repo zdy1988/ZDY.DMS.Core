@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
-using ZDY.DMS.AspNetCore.Service;
+using ZDY.DMS.AspNetCore.Bootstrapper.Service;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.MessageService.Models;
 using ZDY.DMS.Services.MessageService.ServiceContracts;

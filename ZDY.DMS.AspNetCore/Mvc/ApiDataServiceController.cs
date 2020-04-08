@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using ZDY.DMS.DataPermission;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.AspNetCore.Module;
+using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 
 namespace ZDY.DMS.AspNetCore.Mvc
 {

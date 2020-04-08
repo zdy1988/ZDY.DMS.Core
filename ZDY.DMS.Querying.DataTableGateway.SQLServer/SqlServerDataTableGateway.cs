@@ -6,6 +6,17 @@ namespace ZDY.DMS.Querying.DataTableGateway.SQLServer
 {
     public class SqlServerDataTableGateway : AdoNetDataTableGateway
     {
+        public SqlServerDataTableGateway()
+        {
+
+        }
+
+        public SqlServerDataTableGateway(string connectionString)
+            : base(connectionString)
+        {
+
+        }
+
         protected override IDbConnection CreateDatabaseConnection(string connectionString)
         {
             return new SqlConnection(connectionString);

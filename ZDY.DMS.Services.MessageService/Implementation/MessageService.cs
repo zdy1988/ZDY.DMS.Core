@@ -1,6 +1,6 @@
 ﻿using System;
 using ZDY.DMS.AspNetCore.Dictionary;
-using ZDY.DMS.AspNetCore.Service;
+using ZDY.DMS.AspNetCore.Bootstrapper.Service;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.MessageService.Models;
 using ZDY.DMS.Services.MessageService.ServiceContracts;

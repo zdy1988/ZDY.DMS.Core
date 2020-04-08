@@ -5,7 +5,7 @@ using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.Commands;
 using ZDY.DMS.Events;
 
-namespace ZDY.DMS.AspNetCore.Module
+namespace ZDY.DMS.AspNetCore.Bootstrapper.Module
 {
     public abstract class ServiceModule : DisposableObject, IServiceModule
     {

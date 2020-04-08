@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ZDY.DMS.AspNetCore.Dictionary;
-using ZDY.DMS.AspNetCore.Module;
+using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 using ZDY.DMS.Events;
 using ZDY.DMS.Services.Common.Events;
 using ZDY.DMS.Services.WorkFlowService.Enums;

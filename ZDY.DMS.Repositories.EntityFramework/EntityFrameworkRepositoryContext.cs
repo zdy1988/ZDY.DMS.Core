@@ -23,7 +23,7 @@ namespace ZDY.DMS.Repositories.EntityFramework
         }
 
         public override async Task CommitAsync(CancellationToken cancellationToken = default(CancellationToken))
-        {
+        {       
             await this.Session.SaveChangesAsync(cancellationToken);
         }
 

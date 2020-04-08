@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ZDY.DMS.AspNetCore.Module
+namespace ZDY.DMS.AspNetCore.Bootstrapper.Module
 {
     public interface IServiceModule : IDisposable
     {
