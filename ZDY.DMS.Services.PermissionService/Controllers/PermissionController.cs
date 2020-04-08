@@ -15,8 +15,7 @@ namespace ZDY.DMS.Services.PermissionService.Controllers
         private readonly IRepository<Guid, UserGroupPagePermission> userGroupPagePermissionRepository;
         private readonly IRepository<Guid, UserGroupActionPermission> userGroupActionPermissionRepository;
 
-        public PermissionController(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory)
+        public PermissionController()
         {
             this.userGroupMemberRepository = this.RepositoryContext.GetRepository<Guid, UserGroupMember>();
             this.userGroupPagePermissionRepository = this.RepositoryContext.GetRepository<Guid, UserGroupPagePermission>();

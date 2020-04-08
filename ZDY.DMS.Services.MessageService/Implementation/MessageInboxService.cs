@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using ZDY.DMS.AspNetCore.Bootstrapper.Service;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.MessageService.Models;
 using ZDY.DMS.Services.MessageService.ServiceContracts;
 using ZDY.DMS.Services.MessageService.DataTransferObjects;
-using System.Threading.Tasks;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Querying;
 using ZDY.DMS.Querying.SearchModel.Model;
@@ -20,8 +19,8 @@ namespace ZDY.DMS.Services.MessageService.Implementation
     {
         private readonly IMapper mapper;
 
-        public MessageInboxService(Func<Type, IRepositoryContext> repositoryContextFactory, IMapper mapper) 
-            : base(repositoryContextFactory, new GuidKeyGenerator())
+        public MessageInboxService(IMapper mapper)
+            : base(new GuidKeyGenerator())
         {
             this.mapper = mapper;
         }

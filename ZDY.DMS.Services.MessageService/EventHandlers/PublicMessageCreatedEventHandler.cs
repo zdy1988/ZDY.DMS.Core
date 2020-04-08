@@ -10,8 +10,8 @@ namespace ZDY.DMS.Services.MessageService.EventHandlers
 {
     public class PublicMessageCreatedEventHandler : MessageCreatedEventHandler<PublicMessageCreatedEvent>
     {
-        public PublicMessageCreatedEventHandler(Func<Type, IRepositoryContext> repositoryContextFactory, IMessageInboxService messageInboxService)
-            : base(repositoryContextFactory, messageInboxService, MessageKinds.Public)
+        public PublicMessageCreatedEventHandler(IMessageInboxService messageInboxService)
+            : base(messageInboxService, MessageKinds.Public)
         {
 
         }

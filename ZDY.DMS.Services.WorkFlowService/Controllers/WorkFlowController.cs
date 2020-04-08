@@ -6,7 +6,6 @@ using Newtonsoft.Json;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.Events;
 using ZDY.DMS.KeyGeneration;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.Events;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
@@ -17,8 +16,8 @@ namespace ZDY.DMS.Services.WorkFlowService
     {
         private readonly IEventPublisher eventPublisher;
 
-        public WorkFlowController(Func<Type, IRepositoryContext> repositoryContextFactory, IEventPublisher eventPublisher)
-            : base(repositoryContextFactory, new GuidKeyGenerator())
+        public WorkFlowController(IEventPublisher eventPublisher)
+            : base(new GuidKeyGenerator())
         {
             this.eventPublisher = eventPublisher;
         }

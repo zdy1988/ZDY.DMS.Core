@@ -14,8 +14,7 @@ namespace ZDY.DMS.Services.AdminService.Implementation
         private IRepository<Guid, File> fileRepository;
         private IAppSettingProvider appSettingProvider;
 
-        public FileService(Func<Type, IRepositoryContext> repositoryContextFactory,
-            IAppSettingProvider appSettingProvider) : base(repositoryContextFactory)
+        public FileService(IAppSettingProvider appSettingProvider)
         {
             this.fileRepository = this.GetRepository<Guid, File>();
             this.appSettingProvider = appSettingProvider;

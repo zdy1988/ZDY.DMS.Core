@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 using ZDY.DMS.KeyGeneration;
+using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Repositories;
 
 namespace ZDY.DMS.AspNetCore.Bootstrapper.Service
@@ -12,9 +11,9 @@ namespace ZDY.DMS.AspNetCore.Bootstrapper.Service
     {
         private readonly IRepositoryContext repositoryContext;
 
-        public ServiceBase(Func<Type, IRepositoryContext> repositoryContextFactory)
+        public ServiceBase()
         {
-            this.repositoryContext = repositoryContextFactory.Invoke(typeof(TServiceModule));
+            this.repositoryContext = ServiceLocator.GetService<Func<Type, IRepositoryContext>>().Invoke(typeof(TServiceModule));
         }
 
         protected IRepositoryContext RepositoryContext => this.repositoryContext;
@@ -24,6 +23,11 @@ namespace ZDY.DMS.AspNetCore.Bootstrapper.Service
             where TEntity : class, IEntity<TKey>
         {
             return this.RepositoryContext.GetRepository<TKey, TEntity>();
+        }
+
+        protected IDataTableGateway GetDataTableGateway()
+        {
+            return ServiceLocator.GetService<Func<Type, IDataTableGateway>>().Invoke(typeof(TServiceModule));
         }
     }
 
@@ -35,8 +39,7 @@ namespace ZDY.DMS.AspNetCore.Bootstrapper.Service
         private readonly IRepository<TKey, TEntity> repository;
         private readonly IKeyGenerator<TKey, TEntity> keyGenerator;
 
-        public ServiceBase(Func<Type, IRepositoryContext> repositoryContextFactory, IKeyGenerator<TKey, TEntity> keyGenerator)
-            : base(repositoryContextFactory)
+        public ServiceBase(IKeyGenerator<TKey, TEntity> keyGenerator)
         {
             this.repository = this.GetRepository<TKey, TEntity>();
             this.keyGenerator = keyGenerator;

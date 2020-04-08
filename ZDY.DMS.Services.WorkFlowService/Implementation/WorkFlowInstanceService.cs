@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Bootstrapper.Service;
 using ZDY.DMS.Repositories;
@@ -13,8 +11,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
     {
         private readonly IRepository<Guid, WorkFlowInstance> workFlowInstanceRepository;
 
-        public WorkFlowInstanceService(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory)
+        public WorkFlowInstanceService()
         {
             this.workFlowInstanceRepository = this.GetRepository<Guid, WorkFlowInstance>();
         }

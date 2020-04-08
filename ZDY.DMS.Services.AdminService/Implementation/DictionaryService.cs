@@ -16,8 +16,7 @@ namespace ZDY.DMS.Services.AdminService.Implementation
         private readonly IRepository<Guid, DictionaryValue> dictionaryValueRepository;
         private readonly IDictionaryProvider dictionaryProvider;
 
-        public DictionaryService(Func<Type, IRepositoryContext> repositoryContextFactory,
-            IDictionaryProvider dictionaryProvider) : base(repositoryContextFactory)
+        public DictionaryService(IDictionaryProvider dictionaryProvider)
         {
             this.dictionaryProvider = dictionaryProvider;
             this.dictionaryKeyRepository = this.GetRepository<Guid, DictionaryKey>();

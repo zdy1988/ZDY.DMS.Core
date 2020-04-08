@@ -8,8 +8,8 @@ namespace ZDY.DMS.Services.MessageService.EventHandlers
 {
     public class GlobalMessageCreatedEventHandler : MessageCreatedEventHandler<GlobalMessageCreatedEvent>
     {
-        public GlobalMessageCreatedEventHandler(Func<Type, IRepositoryContext> repositoryContextFactory, IMessageInboxService messageInboxService)
-            : base(repositoryContextFactory, messageInboxService, MessageKinds.Global)
+        public GlobalMessageCreatedEventHandler(IMessageInboxService messageInboxService)
+            : base(messageInboxService, MessageKinds.Global)
         {
 
         }

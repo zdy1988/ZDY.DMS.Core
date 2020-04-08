@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using ZDY.DMS.AspNetCore.Bootstrapper.Module;
+﻿using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 using ZDY.DMS.Events;
-using ZDY.DMS.Repositories;
 
 namespace ZDY.DMS.AspNetCore.Messaging
 {
@@ -12,10 +8,5 @@ namespace ZDY.DMS.AspNetCore.Messaging
         where TEvent : IEvent
     {
 
-        public EventHandlerBase(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory)
-        {
-
-        }
     }
 }

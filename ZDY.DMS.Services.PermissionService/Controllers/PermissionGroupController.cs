@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.DataPermission;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.PermissionService.Models;
@@ -14,8 +11,8 @@ namespace ZDY.DMS.Services.PermissionService.Controllers
         private readonly IRepository<Guid, UserGroupMember> userGroupMemberRepository;
         private readonly IRepository<Guid, UserGroupPagePermission> userGroupPagePermissionRepository;
 
-        public PermissionGroupController(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory, new GuidKeyGenerator())
+        public PermissionGroupController()
+            : base(new GuidKeyGenerator())
         {
             userGroupMemberRepository = this.RepositoryContext.GetRepository<Guid, UserGroupMember>();
             userGroupPagePermissionRepository = this.RepositoryContext.GetRepository<Guid, UserGroupPagePermission>();

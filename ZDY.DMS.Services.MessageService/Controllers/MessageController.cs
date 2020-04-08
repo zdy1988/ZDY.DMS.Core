@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.DataPermission;
+using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.MessageService.Models;
 
@@ -12,8 +13,8 @@ namespace ZDY.DMS.Services.MessageService.Controllers
     {
         private readonly IRepository<Guid, Message> messageRepository;
 
-        public MessageController(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory)
+        public MessageController() 
+            : base(new GuidKeyGenerator())
         {
             this.messageRepository = this.RepositoryContext.GetRepository<Guid, Message>();
         }

@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ZDY.DMS.AspNetCore.Bootstrapper.Service;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.PermissionService.Models;
 using ZDY.DMS.Services.PermissionService.ServiceContracts;
 
@@ -11,8 +10,7 @@ namespace ZDY.DMS.Services.PermissionService.Implementation
 {
     public class PagePermissionService : ServiceBase<PermissionServiceModule>, IPagePermissionService
     {
-        public PagePermissionService(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory)
+        public PagePermissionService()
         {
 
         }

@@ -20,11 +20,10 @@ namespace ZDY.DMS.AspNetCore.Mvc
         private readonly IKeyGenerator<TKey, TEntity> keyGenerator;
 
         public ApiDataServiceController(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : this(repositoryContextFactory, new NullKeyGenerator<TKey>())
+            : this(new NullKeyGenerator<TKey>())
         { }
 
-        public ApiDataServiceController(Func<Type, IRepositoryContext> repositoryContextFactory, IKeyGenerator<TKey, TEntity> keyGenerator)
-            : base(repositoryContextFactory)
+        public ApiDataServiceController(IKeyGenerator<TKey, TEntity> keyGenerator)
         {
             this.repository = this.GetRepository<TKey, TEntity>();
             this.keyGenerator = keyGenerator;

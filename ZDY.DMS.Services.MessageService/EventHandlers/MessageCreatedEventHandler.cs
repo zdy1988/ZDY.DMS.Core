@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Messaging;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.Common.Events;
 using ZDY.DMS.Services.MessageService.Enums;
 using ZDY.DMS.Services.MessageService.Models;
@@ -17,8 +16,7 @@ namespace ZDY.DMS.Services.MessageService.EventHandlers
 
         private readonly MessageKinds messageKinds;
 
-        public MessageCreatedEventHandler(Func<Type, IRepositoryContext> repositoryContextFactory, IMessageInboxService messageInboxService, MessageKinds messageKinds)
-            : base(repositoryContextFactory)
+        public MessageCreatedEventHandler(IMessageInboxService messageInboxService, MessageKinds messageKinds)
         {
             this.messageInboxService = messageInboxService;
 

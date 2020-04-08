@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.KeyGeneration;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
 
@@ -12,8 +11,8 @@ namespace ZDY.DMS.Services.WorkFlowService
 {
     public class WorkFlowFormController : ApiDataServiceController<Guid, WorkFlowForm, WorkFlowServiceModule>
     {
-        public WorkFlowFormController(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory, new GuidKeyGenerator())
+        public WorkFlowFormController()
+            : base(new GuidKeyGenerator())
         {
 
         }

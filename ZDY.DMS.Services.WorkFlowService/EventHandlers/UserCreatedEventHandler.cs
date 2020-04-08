@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Messaging;
@@ -14,8 +12,7 @@ namespace ZDY.DMS.Services.WorkFlowService.EventHandlers
     {
         private readonly IRepository<Guid, WorkFlowSignature> workFlowSignatureRepository;
 
-        public UserCreatedEventHandler(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory)
+        public UserCreatedEventHandler()
         {
             this.workFlowSignatureRepository = this.GetRepository<Guid, WorkFlowSignature>();
         }

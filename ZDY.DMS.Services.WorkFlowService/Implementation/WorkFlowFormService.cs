@@ -13,8 +13,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
     {
         private readonly IRepository<Guid, WorkFlowForm> workFlowFormRepository;
 
-        public WorkFlowFormService(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory)
+        public WorkFlowFormService()
         {
             this.workFlowFormRepository = this.GetRepository<Guid, WorkFlowForm>();
         }

@@ -3,15 +3,14 @@ using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.DataPermission;
 using ZDY.DMS.KeyGeneration;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService
 {
     public class WorkFlowTaskController : ApiDataServiceController<Guid, WorkFlowTask, WorkFlowServiceModule>
     {
-        public WorkFlowTaskController(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory, new GuidKeyGenerator())
+        public WorkFlowTaskController()
+            : base(new GuidKeyGenerator())
         {
 
         }

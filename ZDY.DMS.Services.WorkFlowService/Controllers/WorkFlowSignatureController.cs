@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.KeyGeneration;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.WorkFlowService.Models;
 using ZDY.DMS.StringEncryption;
 
@@ -13,9 +10,8 @@ namespace ZDY.DMS.Services.WorkFlowService.Controllers
     {
         private readonly IStringEncryption stringEncryption;
 
-        public WorkFlowSignatureController(Func<Type, IRepositoryContext> repositoryContextFactory,
-            IStringEncryption stringEncryption)
-            : base(repositoryContextFactory, new GuidKeyGenerator())
+        public WorkFlowSignatureController(IStringEncryption stringEncryption)
+            : base(new GuidKeyGenerator())
         {
             this.stringEncryption = stringEncryption;
         }

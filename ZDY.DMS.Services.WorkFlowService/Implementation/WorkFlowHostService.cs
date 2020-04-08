@@ -19,8 +19,7 @@ namespace ZDY.DMS.Services.WorkFlowService.Implementation
 
         private readonly IRepository<Guid, WorkFlowTask> workFlowTaskRepository;
 
-        public WorkFlowHostService(Func<Type, IRepositoryContext> repositoryContextFactory, IWorkFlowExecutor workFlowExecutor) 
-            : base(repositoryContextFactory)
+        public WorkFlowHostService(IWorkFlowExecutor workFlowExecutor) 
         {
             this.workFlowExecutor = workFlowExecutor;
 

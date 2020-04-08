@@ -78,12 +78,12 @@ namespace ZDY.DMS.Web
 
             string conn = @"server=localhost;userid=root;pwd=1234;port=3306;database=test;sslmode=none;";
 
-            services.AddDbContext<DMSDbContext>(options => options.UseMySql(conn, b => b.MigrationsAssembly("ZDY.DMS.Web")));
+            services.AddDbContext<DMSDbContext>(options => options.UseMySql(conn, b => b.MigrationsAssembly("ZDY.DMS.Web")), ServiceLifetime.Transient, ServiceLifetime.Transient);
 
             //仓储
-            services.AddScoped<IRepositoryContext>(sp => new EntityFrameworkRepositoryContext(sp.GetService<DMSDbContext>()));
+            services.AddTransient<IRepositoryContext>(sp => new EntityFrameworkRepositoryContext(sp.GetService<DMSDbContext>()));
 
-            services.AddScoped<IDataTableGateway>(sp => new MySqlDataTableGateway(conn));
+            services.AddTransient<IDataTableGateway>(sp => new MySqlDataTableGateway(conn));
 
             //工作流
             services.AddWorkflow();

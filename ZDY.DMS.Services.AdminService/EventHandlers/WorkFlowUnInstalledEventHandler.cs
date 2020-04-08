@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Messaging;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.AdminService.Models;
 using ZDY.DMS.Services.Common.Events;
 
@@ -12,8 +9,7 @@ namespace ZDY.DMS.Services.AdminService.EventHandlers
 {
     public class WorkFlowUnInstalledEventHandler : EventHandlerBase<AdminServiceModule, WorkFlowUnInstalledEvent>
     {
-        public WorkFlowUnInstalledEventHandler(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory)
+        public WorkFlowUnInstalledEventHandler()
         {
 
         }

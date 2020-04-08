@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 using ZDY.DMS.Messaging;
+using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Repositories;
 
 namespace ZDY.DMS.AspNetCore.Messaging
@@ -13,9 +12,9 @@ namespace ZDY.DMS.AspNetCore.Messaging
     {
         private readonly IRepositoryContext repositoryContext;
 
-        public MessageHandlerBase(Func<Type, IRepositoryContext> repositoryContextFactory)
+        public MessageHandlerBase()
         {
-            this.repositoryContext = repositoryContextFactory.Invoke(typeof(TServiceModule));
+            this.repositoryContext = ServiceLocator.GetService<Func<Type, IRepositoryContext>>().Invoke(typeof(TServiceModule));
         }
 
         protected IRepositoryContext RepositoryContext => this.repositoryContext;
@@ -25,6 +24,11 @@ namespace ZDY.DMS.AspNetCore.Messaging
             where TEntity : class, IEntity<TKey>
         {
             return this.RepositoryContext.GetRepository<TKey, TEntity>();
+        }
+
+        protected IDataTableGateway GetDataTableGateway()
+        {
+            return ServiceLocator.GetService<Func<Type, IDataTableGateway>>().Invoke(typeof(TServiceModule));
         }
     }
 }

@@ -138,7 +138,7 @@
                                     <div class="mt-comment-body">
                                         <div class="mt-comment-info">
                                             <span class="mt-comment-author" data-bind="text:Title">Michael Baker</span>
-                                            <span class="mt-comment-date" data-bind="text:SenderTime">26 Feb, 10:30AM</span>
+                                            <span class="mt-comment-date" data-bind="text:TimeStamp">26 Feb, 10:30AM</span>
                                         </div>
                                         <div class="mt-comment-text">
                                             <!-- ko text: StepName --><!-- /ko -->
@@ -174,7 +174,7 @@
                                     <div class="mt-comment-body">
                                         <div class="mt-comment-info">
                                             <span class="mt-comment-author" data-bind="text:Title">Michael Baker</span>
-                                            <span class="mt-comment-date" data-bind="text:SenderTime">26 Feb, 10:30AM</span>
+                                            <span class="mt-comment-date" data-bind="text:TimeStamp">26 Feb, 10:30AM</span>
                                         </div>
                                         <div class="mt-comment-text">
                                             <!-- ko text: StepName --><!-- /ko -->
@@ -273,7 +273,7 @@
                     fields: [
                         { field: 'State', value: [-1, 0, 1], method: zdy.querymethod.in }
                     ],
-                    defaultOrderBy: "Id",
+                    defaultOrderBy: "TimeStamp",
                     dataQueryUrl: 'WorkFlowTask/Search',
                     pageSize: 10
                 }).import(function () {
@@ -286,7 +286,7 @@
                     fields: [
                         { field: 'State', value: [2, 3, 4, 5], method: zdy.querymethod.in }
                     ],
-                    defaultOrderBy: "Id",
+                    defaultOrderBy: "TimeStamp",
                     dataQueryUrl: 'WorkFlowTask/Search'
                 }).import(function () {
 
@@ -294,14 +294,14 @@
 
                 }).bind("execute-task").load();
 
-                var messages = zdy.table().options({
-                    defaultOrderBy: "PushTime",
-                    dataQueryUrl: 'Message/Pull'
-                }).import(function () {
+                //var messages = zdy.table().options({
+                //    defaultOrderBy: "PushTime",
+                //    dataQueryUrl: 'Message/Pull'
+                //}).import(function () {
 
-                    this.dic(dictionary)
+                //    this.dic(dictionary)
 
-                }).bind("messages").load();
+                //}).bind("messages").load();
 
             })
     </script>

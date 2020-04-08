@@ -1,7 +1,5 @@
-﻿using System;
-using ZDY.DMS.AspNetCore.Bootstrapper.Module;
+﻿using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 using ZDY.DMS.Commands;
-using ZDY.DMS.Repositories;
 
 namespace ZDY.DMS.AspNetCore.Messaging
 {
@@ -9,10 +7,6 @@ namespace ZDY.DMS.AspNetCore.Messaging
         where TServiceModule : IServiceModule
         where TCommand : ICommand
     {
-        public CommandHandlerBase(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory)
-        {
 
-        }
     }
 }

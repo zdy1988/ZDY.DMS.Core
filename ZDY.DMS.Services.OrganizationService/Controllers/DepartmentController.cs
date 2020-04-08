@@ -1,18 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.DataPermission;
 using ZDY.DMS.KeyGeneration;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.OrganizationService.Models;
 
 namespace ZDY.DMS.Services.OrganizationService.Controllers
 {
     public class DepartmentController : ApiDataServiceController<Guid, Department, OrganizationServiceModule>
     {
-        public DepartmentController(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory, new GuidKeyGenerator())
+        public DepartmentController()
+            : base(new GuidKeyGenerator())
         {
 
         }

@@ -1,9 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.DataPermission;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.AdminService.Models;
@@ -13,10 +9,10 @@ namespace ZDY.DMS.Services.AdminService.Controllers
     //[Authorize(Roles = "Administrator")]
     public class DictionaryKeyController : ApiDataServiceController<Guid, DictionaryKey, AdminServiceModule>
     {
-        IRepository<Guid, DictionaryValue> dictionaryValueRepository;
+        private readonly IRepository<Guid, DictionaryValue> dictionaryValueRepository;
 
-        public DictionaryKeyController(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory, new GuidKeyGenerator())
+        public DictionaryKeyController() 
+            : base(new GuidKeyGenerator())
         {
             dictionaryValueRepository = this.RepositoryContext.GetRepository<Guid, DictionaryValue>();
         }

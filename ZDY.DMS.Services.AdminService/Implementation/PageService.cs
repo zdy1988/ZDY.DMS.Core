@@ -16,8 +16,7 @@ namespace ZDY.DMS.Services.AdminService.Implementation
         private readonly IMapper mapper;
         private readonly IRepository<Guid, Page> pageRepository;
 
-        public PageService(IMapper mapper, Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory)
+        public PageService(IMapper mapper)
         {
             this.mapper = mapper;
             this.pageRepository = this.GetRepository<Guid, Page>();

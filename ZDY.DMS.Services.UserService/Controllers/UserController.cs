@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.KeyGeneration;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.StringEncryption;
 using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.Events;
@@ -15,9 +13,8 @@ namespace ZDY.DMS.Services.UserService.Controllers
         private readonly IStringEncryption stringEncryption;
         private readonly IEventPublisher eventPublisher;
 
-        public UserController(Func<Type, IRepositoryContext> repositoryContextFactory,
-            IStringEncryption stringEncryption, IEventPublisher eventPublisher)
-            : base(repositoryContextFactory, new GuidKeyGenerator())
+        public UserController(IStringEncryption stringEncryption, IEventPublisher eventPublisher)
+            : base(new GuidKeyGenerator())
         {
             this.stringEncryption = stringEncryption;
             this.eventPublisher = eventPublisher;

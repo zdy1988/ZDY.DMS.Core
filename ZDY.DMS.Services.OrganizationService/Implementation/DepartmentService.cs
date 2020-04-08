@@ -12,8 +12,7 @@ namespace ZDY.DMS.Services.OrganizationService.Implementation
     {
         private readonly IRepository<Guid, Department> departmentFlowRepository;
 
-        public DepartmentService(Func<Type, IRepositoryContext> repositoryContextFactory)
-            : base(repositoryContextFactory)
+        public DepartmentService()
         {
             this.departmentFlowRepository = this.GetRepository<Guid, Department>();
         }

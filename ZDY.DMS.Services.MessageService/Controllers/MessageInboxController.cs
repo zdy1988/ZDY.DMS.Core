@@ -1,12 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.DataPermission;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.MessageService.DataTransferObjects;
 using ZDY.DMS.Services.MessageService.ServiceContracts;
 
@@ -16,8 +13,7 @@ namespace ZDY.DMS.Services.MessageService.Controllers
     {
         private readonly IMessageInboxService messageInboxService;
 
-        public MessageInboxController(Func<Type, IRepositoryContext> repositoryContextFactory, IMessageInboxService messageInboxService)
-            : base(repositoryContextFactory)
+        public MessageInboxController(IMessageInboxService messageInboxService)
         {
             this.messageInboxService = messageInboxService;
         }

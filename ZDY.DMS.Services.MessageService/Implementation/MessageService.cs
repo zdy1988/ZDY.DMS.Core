@@ -12,8 +12,7 @@ namespace ZDY.DMS.Services.MessageService.Implementation
         private readonly IRepository<Guid, Message> messageRepository;
         private readonly IDictionaryProvider dictionaryProvider;
 
-        public MessageService(Func<Type, IRepositoryContext> repositoryContextFactory,
-            IDictionaryProvider dictionaryProvider) : base(repositoryContextFactory)
+        public MessageService(IDictionaryProvider dictionaryProvider)
         {
             this.dictionaryProvider = dictionaryProvider;
             this.messageRepository = this.GetRepository<Guid, Message>();

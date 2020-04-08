@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ZDY.DMS.AspNetCore.Mvc;
-using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.WorkFlowService.Core.Models;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
@@ -14,8 +13,7 @@ namespace ZDY.DMS.Services.WorkFlowService
     {
         private readonly IWorkFlowHostService workFlowHostService;
 
-        public WorkFlowHostController(Func<Type, IRepositoryContext> repositoryContextFactory, IWorkFlowHostService workFlowHostService)
-            :base(repositoryContextFactory)
+        public WorkFlowHostController(IWorkFlowHostService workFlowHostService)
         {
             this.workFlowHostService = workFlowHostService;
         }

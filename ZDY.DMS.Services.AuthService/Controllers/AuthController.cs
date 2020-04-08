@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.Events;
@@ -23,10 +23,9 @@ namespace ZDY.DMS.Services.AuthService.Controllers
         private readonly IEventPublisher eventPublisher;
         private readonly IRepository<Guid, User> userRepository;
 
-        public AuthController(Func<Type, IRepositoryContext> repositoryContextFactory,
-            IHttpContextAccessor httpContextAccessor,
+        public AuthController(IHttpContextAccessor httpContextAccessor,
             IEventPublisher eventPublisher,
-            IStringEncryption stringEncryption) : base(repositoryContextFactory)
+            IStringEncryption stringEncryption)
         {
             this.httpContextAccessor = httpContextAccessor;
             this.stringEncryption = stringEncryption;
