@@ -12,6 +12,7 @@ using ZDY.DMS.Services.WorkFlowService.Core.Models;
 using ZDY.DMS.Services.WorkFlowService.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
+using ZDY.Metronic.UI;
 
 namespace ZDY.DMS.Web.Pages.WorkFlow
 {
@@ -39,7 +40,7 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
 
         public Dictionary<string, IEnumerable<KeyValuePaired>> Dictionary { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> UserOptions { get; set; }
+        public List<SelectOption> UserOptions { get; set; }
 
         public WorkFlowInstance Instance { get; set; }
         public WorkFlowTask CurrentTask { get; set; }

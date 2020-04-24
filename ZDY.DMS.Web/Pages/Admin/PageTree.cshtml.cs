@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.AspNetCore.Auth;
-using ZDY.DMS.Metronic.TagHelpers.Tree;
 using ZDY.DMS.Services.AdminService.ServiceContracts;
 
 namespace ZDY.DMS.Web.Pages.Admin
@@ -17,20 +16,20 @@ namespace ZDY.DMS.Web.Pages.Admin
             this.pageService = pageService;
         }
 
-        public List<TreeNode> TreeData { get; set; }
+        //public List<TreeNode> TreeData { get; set; }
 
         public void OnGet()
         {
             var userIdentity = this.HttpContext.GetUserIdentity();
 
-            TreeData = pageService.GetAllPages(userIdentity.CompanyId).Select(t => new TreeNode
-            {
-                Data = t,
-                Id = t.Id,
-                Name = t.PageName,
-                Order = t.Order,
-                ParentId = t.ParentId
-            }).ToList();
+            //TreeData = pageService.GetAllPages(userIdentity.CompanyId).Select(t => new TreeNode
+            //{
+            //    Data = t,
+            //    Id = t.Id,
+            //    Name = t.PageName,
+            //    Order = t.Order,
+            //    ParentId = t.ParentId
+            //}).ToList();
         }
     }
 }

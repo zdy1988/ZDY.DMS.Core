@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.Metronic.UI;
 
 namespace ZDY.DMS.Web.Pages.WorkFlow
 {
@@ -23,23 +24,23 @@ namespace ZDY.DMS.Web.Pages.WorkFlow
 
         public Dictionary<string, IEnumerable<KeyValuePaired>> Dictionary { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowKinds { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowState { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowSignatureKinds { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowControlKinds { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowHandlerKinds { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowBackTactic { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowHandleTactic { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowBackKinds { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowCountersignatureTactic { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowSubFlowTactic { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowTransitConditionKinds { get; set; }
+        public List<SelectOption> WorkFlowKinds { get; set; }
+        public List<SelectOption> WorkFlowState { get; set; }
+        public List<SelectOption> WorkFlowSignatureKinds { get; set; }
+        public List<SelectOption> WorkFlowControlKinds { get; set; }
+        public List<SelectOption> WorkFlowHandlerKinds { get; set; }
+        public List<SelectOption> WorkFlowBackTactic { get; set; }
+        public List<SelectOption> WorkFlowHandleTactic { get; set; }
+        public List<SelectOption> WorkFlowBackKinds { get; set; }
+        public List<SelectOption> WorkFlowCountersignatureTactic { get; set; }
+        public List<SelectOption> WorkFlowSubFlowTactic { get; set; }
+        public List<SelectOption> WorkFlowTransitConditionKinds { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> UserOptions { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> DepartmentOptions { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> UserGroupOptions { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowInstalledFlowOptions { get; set; }
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowPublishedFormOptions { get; set; }
+        public List<SelectOption> UserOptions { get; set; }
+        public List<SelectOption> DepartmentOptions { get; set; }
+        public List<SelectOption> UserGroupOptions { get; set; }
+        public List<SelectOption> WorkFlowInstalledFlowOptions { get; set; }
+        public List<SelectOption> WorkFlowPublishedFormOptions { get; set; }
 
         public async void OnGet()
         {

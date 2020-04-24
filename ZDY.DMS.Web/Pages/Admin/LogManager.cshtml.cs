@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.Metronic.UI;
 
 namespace ZDY.DMS.Web.Pages.Admin
 {
@@ -23,7 +24,7 @@ namespace ZDY.DMS.Web.Pages.Admin
 
         public Dictionary<string, IEnumerable<KeyValuePaired>> Dictionary { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> LogKinds { get; set; }
+        public List<SelectOption> LogKinds { get; set; }
 
         public void OnGet()
         {

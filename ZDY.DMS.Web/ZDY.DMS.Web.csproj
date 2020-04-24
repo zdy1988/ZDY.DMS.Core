@@ -23,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ZDY.DMS.AspNetCore\ZDY.DMS.AspNetCore.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Extensions.DependencyInjection.Autofac\ZDY.DMS.ServiceProvider.Autofac.csproj" />
-    <ProjectReference Include="..\ZDY.DMS.Metronic.TagHelpers\ZDY.DMS.Metronic.TagHelpers.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Repositories.EntityFramework\ZDY.DMS.Repositories.EntityFramework.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.AdminService\ZDY.DMS.Services.AdminService.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.AuthService\ZDY.DMS.Services.AuthService.csproj" />
@@ -34,6 +33,7 @@
     <ProjectReference Include="..\ZDY.DMS.Services.WorkFlowService\ZDY.DMS.Services.WorkFlowService.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Tools\ZDY.DMS.Tools.csproj" />
     <ProjectReference Include="..\ZDY.DMS\ZDY.DMS.csproj" />
+    <ProjectReference Include="..\ZDY.Metronic.UI\ZDY.Metronic.UI.csproj" />
   </ItemGroup>
 
 

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.Metronic.UI;
 
 namespace ZDY.DMS.Web.Pages.Home
 {
@@ -23,17 +24,17 @@ namespace ZDY.DMS.Web.Pages.Home
 
         public Guid UserId { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> Genders { get; set; }
+        public List<SelectOption> Genders { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> DepartmentOptions { get; set; }
+        public List<SelectOption> DepartmentOptions { get; set; }
 
         public async Task OnGetAsync()
         {
             UserId = this.HttpContext.GetUserIdentity().Id;
 
-            Genders = new List<KeyValuePair<string, string>> {
-                new KeyValuePair<string, string>("男", "男"),
-                new KeyValuePair<string, string>("女", "女")
+            Genders = new List<SelectOption> {
+                new SelectOption{Value= "男",Name= "男" },
+                new SelectOption{Value="女",Name= "女" }
             };
 
             DepartmentOptions = await this.selectOptionsFactory.GetSelectDepartmentOptions();

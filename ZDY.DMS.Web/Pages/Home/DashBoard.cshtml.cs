@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.Metronic.UI;
 
 namespace ZDY.DMS.Web.Pages.Home
 {
@@ -23,7 +24,7 @@ namespace ZDY.DMS.Web.Pages.Home
 
         public Dictionary<string, IEnumerable<KeyValuePaired>> Dictionary { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> WorkFlowTaskStates { get; set; }
+        public List<SelectOption> WorkFlowTaskStates { get; set; }
 
         public void OnGet()
         {

@@ -4,20 +4,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ZDY.Metronic.UI;
 
 namespace ZDY.DMS.Web.Pages.Admin
 {
     public class PageManagerModel : PageModel
     {
-        public IEnumerable<KeyValuePair<string, string>> PageKinds { get; set; }
+        public List<SelectOption> PageKinds { get; set; }
 
-        public IEnumerable<KeyValuePair<string, string>> IconSource { get; set; }
+        public List<SelectOption> IconSource { get; set; }
 
         public void OnGet()
         {
-            PageKinds = new List<KeyValuePair<string, string>> {
-                new KeyValuePair<string, string>("P", "页面"),
-                new KeyValuePair<string, string>("N", "节点")
+            PageKinds = new List<SelectOption> {
+                new SelectOption{Value="P",Name= "页面" },
+                new SelectOption{Value="N",Name= "节点" }
             };
 
             IconSource = (new string[] {  "icon-user-female"
@@ -181,7 +182,7 @@ namespace ZDY.DMS.Web.Pages.Admin
                                         , "icon-volume-1"
                                         , "icon-volume-2"
                                         , "icon-volume-off"
-                                        , "icon-users"}).OrderBy(t => t).Select(t => new KeyValuePair<string, string>(t, t));
+                                        , "icon-users"}).OrderBy(t => t).Select(t => new SelectOption { Value = t, Name = t }).ToList();
         }
     }
 }

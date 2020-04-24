@@ -100,6 +100,17 @@ namespace ZDY.DMS.Web
 
                 config.UseEventBus();
             });
+
+            //UI
+            services.AddMetronicUI(setting => {
+
+                setting.TextBoxPlaceholderFormat = "请输入{0}...";
+
+                setting.SelectBoxPlaceholderFormat = "请选择{0}...";
+
+                setting.IsFormBoxHelpTextDestroyed = true;
+
+            });
         }
 
         public void ConfigureContainer(ContainerBuilder builder)

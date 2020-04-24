@@ -257,52 +257,38 @@
     <script type="text/javascript">
         var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Model.Dictionary)) ')
 
-        require([
-            "jquery",
-            "ko",
-            "zdy",
-            "app",
-            "bootstrap",
-            ui], function ($, ko, zdy, app) {
+        var pendingTask = zdy.table().options({
+            fields: [
+                { field: 'State', value: [-1, 0, 1], method: zdy.querymethod.in }
+            ],
+            defaultOrderBy: "TimeStamp",
+            dataQueryUrl: 'WorkFlowTask/Search',
+            pageSize: 10
+        }).import(function () {
 
-                var ui = arguments[arguments.length - 1];
-                ui.init();
+            this.dic(dictionary)
 
+        }).bind("pending-tasks").load();
 
-                var pendingTask = zdy.table().options({
-                    fields: [
-                        { field: 'State', value: [-1, 0, 1], method: zdy.querymethod.in }
-                    ],
-                    defaultOrderBy: "TimeStamp",
-                    dataQueryUrl: 'WorkFlowTask/Search',
-                    pageSize: 10
-                }).import(function () {
+        var executeTask = zdy.table().options({
+            fields: [
+                { field: 'State', value: [2, 3, 4, 5], method: zdy.querymethod.in }
+            ],
+            defaultOrderBy: "TimeStamp",
+            dataQueryUrl: 'WorkFlowTask/Search'
+        }).import(function () {
 
-                    this.dic(dictionary)
+            this.dic(dictionary)
 
-                }).bind("pending-tasks").load();
+        }).bind("execute-task").load();
 
-                var executeTask = zdy.table().options({
-                    fields: [
-                        { field: 'State', value: [2, 3, 4, 5], method: zdy.querymethod.in }
-                    ],
-                    defaultOrderBy: "TimeStamp",
-                    dataQueryUrl: 'WorkFlowTask/Search'
-                }).import(function () {
+        //var messages = zdy.table().options({
+        //    defaultOrderBy: "PushTime",
+        //    dataQueryUrl: 'Message/Pull'
+        //}).import(function () {
 
-                    this.dic(dictionary)
+        //    this.dic(dictionary)
 
-                }).bind("execute-task").load();
-
-                //var messages = zdy.table().options({
-                //    defaultOrderBy: "PushTime",
-                //    dataQueryUrl: 'Message/Pull'
-                //}).import(function () {
-
-                //    this.dic(dictionary)
-
-                //}).bind("messages").load();
-
-            })
+        //}).bind("messages").load();
     </script>
 }
