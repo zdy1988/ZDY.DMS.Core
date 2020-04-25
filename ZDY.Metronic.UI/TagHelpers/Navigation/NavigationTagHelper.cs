@@ -20,11 +20,14 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         public virtual bool IsToggled { get; set; } = false;
 
+        public virtual bool IsCollapsed { get; set; } = false;
+
         public virtual NavigationBullet Bullet { get; set; } = NavigationBullet.Icon;
 
         protected virtual string Classes
         {
-            get {
+            get
+            {
                 return CssClassBuilder.Build(
                     new CssClass("kt-nav", true),
                     new CssClass("kt-nav--bold", Space == Size.Lg),
@@ -41,7 +44,7 @@ namespace ZDY.Metronic.UI.TagHelpers
             {
                 await output.GetChildContentAsync();
 
-                if (Navs.Any())
+                if (Navs.IsNotNull() && Navs.Any())
                 {
                     output.TagName = "ul";
 
@@ -128,6 +131,16 @@ namespace ZDY.Metronic.UI.TagHelpers
 
             link.AddCssClass("kt-nav__link");
 
+            if (IsToggled && IsCollapsed)
+            {
+                link.AddCssClass("collapsed");
+            }
+
+            if (!String.IsNullOrWhiteSpace(navigationItem.JsonData))
+            {
+                link.Attributes.Add("data-nav", navigationItem.JsonData);
+            }
+
             link.InnerHtml.AppendHtml(BuildLinkBullet(navigationItem));
 
             if (!string.IsNullOrWhiteSpace(navigationItem.Text))
@@ -144,7 +157,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 
             var subNavId = $"nav-sub-{Guid.NewGuid()}";
 
-            if (navigationItem.Navs.Any() && IsToggled)
+            if (navigationItem.Navs.IsNotNull() && navigationItem.Navs.Any() && IsToggled)
             {
                 link.Attributes.Add("data-toggle", "collapse");
 
@@ -159,7 +172,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 
             item.InnerHtml.AppendHtml(link);
 
-            if (navigationItem.Navs.Any())
+            if (navigationItem.Navs.IsNotNull() && navigationItem.Navs.Any())
             {
                 var subNavigation = new TagBuilder("ul");
 
@@ -171,7 +184,12 @@ namespace ZDY.Metronic.UI.TagHelpers
 
                     subNavigation.Attributes.Add("data-parent", $"#{Id}");
 
-                    subNavigation.AddCssClass("collapse show");
+                    subNavigation.AddCssClass("collapse");
+
+                    if (!IsCollapsed)
+                    {
+                        subNavigation.AddCssClass("show");
+                    }
                 }
 
                 foreach (var subItem in navigationItem.Navs)

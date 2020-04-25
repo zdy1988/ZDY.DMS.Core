@@ -34,6 +34,17 @@ namespace ZDY.Metronic.UI.TagHelpers
             }
         }
 
+        protected override string DataBindValue
+        {
+            get
+            {
+                return StringBuilder.Build(
+                  (Rows > 0 ? $"selectedOptions:{Field}" : $"value:{Field}", !String.IsNullOrWhiteSpace(Field)),
+                  (Bind, !String.IsNullOrWhiteSpace(Bind))
+                );
+            }
+        }
+
         public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context.TryAddContext<SelectBoxContext, SelectBoxTagHelper>(out SelectBoxContext selectBoxContext) &&
@@ -59,6 +70,16 @@ namespace ZDY.Metronic.UI.TagHelpers
                     select.Attributes.Add("id", Id);
                     select.Attributes.Add("name", Field);
                     select.Attributes.Add("class", InputClasses);
+
+                    if (!String.IsNullOrWhiteSpace(DataRuleValue))
+                    {
+                        select.Attributes.Add("data-rule", DataRuleValue);
+                    }
+
+                    if (!String.IsNullOrWhiteSpace(DataBindValue))
+                    {
+                        select.Attributes.Add("data-bind", DataBindValue);
+                    }
 
                     if (IsDisabled)
                     {

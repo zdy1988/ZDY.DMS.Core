@@ -4,26 +4,24 @@
 <div class="row">
     <div class="col-md-12">
         <portlet title="查询条件" is-form="true" is-fit="true" data-model="list">
-            <form-builder>
-                <div class="row">
-                    <div class="col-md-3">
-                        <text-box field="Message" name="关键字"></text-box>
-                    </div>
-                    <div class="col-md-3">
-                        <select-box field="Type" name="类型" options="@Model.LogKinds"></select-box>
-                    </div>
-                    <div class="col-md-3">
-                        <text-box field="TimeStamp_Start" is-date-time-picker="true" name="时间范围(开始)"></text-box>
-                    </div>
-                    <div class="col-md-3">
-                        <text-box field="TimeStamp_End" is-date-time-picker="true" name="时间范围(结束)"></text-box>
-                    </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <text-box field="Message" name="关键字"></text-box>
                 </div>
-                <form-actions>
-                    <button type="reset" class="btn default" data-bind="click:reset">重置条件</button>
-                    <button type="button" class="btn green" data-bind="click:firstPage">点击查询</button>
-                </form-actions>
-            </form-builder>
+                <div class="col-md-3">
+                    <select-box field="Type" name="类型" options="@Model.LogKinds"></select-box>
+                </div>
+                <div class="col-md-3">
+                    <text-box field="TimeStamp_Start" is-date-time-picker="true" name="时间范围(开始)"></text-box>
+                </div>
+                <div class="col-md-3">
+                    <text-box field="TimeStamp_End" is-date-time-picker="true" name="时间范围(结束)"></text-box>
+                </div>
+            </div>
+            <portlet-footer-action-container align="Right">
+                <button size="Sm" data-bind="click:reset">重置条件</button>
+                <button size="Sm" state="Success" data-bind="click:firstPage">点击查询</button>
+            </portlet-footer-action-container>
         </portlet>
     </div>
 </div>
@@ -32,16 +30,16 @@
     <div class="col-md-12">
         <portlet title="日志列表" is-fit="true" data-model="list">
             <data-table is-show-checkbox-column="false">
-                <td data-bind="text:Message" style="width: 100%;"></td>
-                <td data-bind="text:TimeStamp"></td>
-                <td>
+                <cell filed="Message" style="width: 100%;"></cell>
+                <cell filed="TimeStamp"></cell>
+                <cell>
                     <lable data-bind="state: $root.dic('LogKinds', Type, true)"></lable>
-                </td>
-                <td>
-                    <button size="Xs" color="BlueDark" icon="Search" data-bind="click:$root.detail" bs-toggle-modal="modal-detail">
+                </cell>
+                <cell>
+                    <button size="Sm" state="Brand" is-only-icon="true" icon="Search" data-bind="click:$root.detail" modal-target="modal-detail">
                         查看
                     </button>
-                </td>
+                </cell>
             </data-table>
 
             <pager></pager>
@@ -53,7 +51,7 @@
     <modal title="日志信息" id="modal-detail">
         <modal-body>
             <p data-bind="html:Message"></p>
-            <p>时间：<!-- ko text: EnterDate --><!-- /ko --></p>
+            <p>时间：<!-- ko text: TimeStamp --><!-- /ko --></p>
             <p>类型：<!-- ko text: TypeName --><!-- /ko --></p>
         </modal-body>
         <modal-footer dismiss-text="关闭"></modal-footer>
@@ -64,56 +62,45 @@
     <script type="text/javascript">
         var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Model.Dictionary)) ')
 
-        require([
-            "jquery",
-            "ko",
-            "zdy",
-            "bootstrap",
-            "bootstrap-datetimepicker",
-            ui], function ($, ko, zdy) {
-                var ui = arguments[arguments.length - 1];
-                ui.init();
+        var table = zdy.table().options({
+                fields: [
+                    { field: 'Message', value: ko.observable(), method: zdy.querymethod.contains },
+                    { field: 'TimeStamp_Start', value: ko.observable(), method: zdy.querymethod.greaterThanOrEqual },
+                    { field: 'TimeStamp_End', value: ko.observable(), method: zdy.querymethod.lessThanOrEqual },
+                    { field: 'Type', value: ko.observable(), method: zdy.querymethod.equal }
+                ],
+                headers: [
+                    { text: '信息', field: 'Message', width: 'auto' },
+                    { text: '时间', field: 'TimeStamp', width: 'auto' },
+                    { text: '类型', field: 'Type', width: 'auto' }
+                ],
+                pageSize: 20,
+                defaultOrderBy: "TimeStamp",
+                dataQueryUrl: 'Log/Search'
+            }).import(function () {
 
-                var table = zdy.table().options({
-                    fields: [
-                        { field: 'Message', value: ko.observable(), method: zdy.querymethod.contains },
-                        { field: 'TimeStamp_Start', value: ko.observable(), method: zdy.querymethod.greaterThanOrEqual },
-                        { field: 'TimeStamp_End', value: ko.observable(), method: zdy.querymethod.lessThanOrEqual },
-                        { field: 'Type', value: ko.observable(), method: zdy.querymethod.equal }
-                    ],
-                    headers: [
-                        { text: '信息', field: 'Message', width: 'auto' },
-                        { text: '时间', field: 'TimeStamp', width: 'auto' },
-                        { text: '类型', field: 'Type', width: 'auto' }
-                    ],
-                    pageSize: 20,
-                    defaultOrderBy: "TimeStamp",
-                    dataQueryUrl: 'Log/Search'
-                }).import(function () {
+            this.dic(dictionary)
 
-                    this.dic(dictionary)
+            this.detail = function (data) {
+                form.load(data)
+            }
 
-                    this.detail = function (data) {
-                        form.load(data)
-                    }
+        }).bind("list").load();
 
-                }).bind("list").load();
+        var form = zdy.form().options({
+            fields: [
+                { field: 'Message', value: ko.observable() },
+                { field: 'TimeStamp', value: ko.observable() },
+                { field: 'Type', value: ko.observable() }
+            ]
+        }).import(function () {
 
-                var form = zdy.form().options({
-                    fields: [
-                        { field: 'Message', value: ko.observable() },
-                        { field: 'EnterDate', value: ko.observable() },
-                        { field: 'Type', value: ko.observable() }
-                    ]
-                }).import(function () {
+            this.dic(dictionary)
 
-                    this.dic(dictionary)
+            this.TypeName = ko.computed(function () {
+                return this.dic("LogKinds", this.Type())
+            }, this)
 
-                    this.TypeName = ko.computed(function () {
-                        return this.dic("LogKinds", this.Type())
-                    }, this)
-
-                }).bind("form")
-            })
+        }).bind("form")
     </script>
 }

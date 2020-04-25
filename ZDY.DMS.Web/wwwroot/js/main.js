@@ -83,7 +83,7 @@ window.openWindow = function (page, isRefresh) {
 
     if ($page.length === 0) {
         window.showLoading();
-        $page = $('<div class="page" id="{pageId}"><iframe src="{pageSrc}" style="width:100%; min-height:1000px; border:none; visibility:hidden;" scrolling="no" frameborder="0"></iframe></div>'.replace("{pageId}", pageId).replace("{pageSrc}", pageSrc));
+        $page = $('<div class="page" id="{pageId}"><iframe src="{pageSrc}" style="width:100%; border:none; visibility:hidden;" scrolling="no" frameborder="0"></iframe></div>'.replace("{pageId}", pageId).replace("{pageSrc}", pageSrc));
         $page.find('iframe').on("load", function () {
             this.style.visibility = "";
             window.hideLoading();

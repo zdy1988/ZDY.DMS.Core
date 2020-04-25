@@ -20,5 +20,7 @@ namespace ZDY.Metronic.UI
         public bool IsActived { get; set; } = false;
 
         public int Order { get; set; } = 0;
+
+        public string JsonData { get; set; }
     }
 }

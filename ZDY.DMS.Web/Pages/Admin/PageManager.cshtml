@@ -2,223 +2,156 @@
 @model ZDY.DMS.Web.Pages.Admin.PageManagerModel
 
 <div class="row">
-    <div class="col-md-4">
-        <portlet title="所有页面" is-fit="true" data-url="/Admin/PageTree" id="pages-tree-portlet" data-model="tree">
+    <div class="col-md-6">
+        <portlet title="所有页面" data-model="navs">
+            <portlet-header-action-container>
+                <button size="Sm" state="Brand" icon="Plus" data-bind="click:newBrother, visible:CurrentNav()">
+                    同级
+                </button>
+                <button size="Sm" state="Dark" icon="Plus" data-bind="click:newChild, visible:CurrentNav()">
+                    子级
+                </button>
+            </portlet-header-action-container>
 
-        </portlet>
-        <div id="tree-context-menu">
-            <ul class="dropdown-menu pull-left" role="menu">
-                <li>
-                    <a href="javascript:;" data-action="newChild">
-                        <i class="fa fa-plus"></i> 新增子级页面
-                    </a>
-                </li>
-                <li>
-                    <a href="javascript:;" data-action="newBrother">
-                        <i class="fa fa-plus-square"></i> 新增同级页面
-                    </a>
-                </li>
-                <li class="divider"> </li>
-                <li>
-                    <a href="javascript:;" data-action="removeThis">
-                        <i class="fa fa-remove"></i> 删除当前节点
-                    </a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <portlet title="页面信息" is-fit="true" is-form="true" data-model="form">
-            <form-builder>
-                <div class="row">
-                    <div class="col-md-12">
-                        <text-box field="PageName" name="页面名称" is-required="true"></text-box>
-                    </div>
-                    <div class="col-md-12">
-                        <text-box field="PageCode" name="页面代码" is-required="true"></text-box>
-                    </div>
-                    <div class="col-md-12">
-                        <text-box field="Level" name="页面等级" text-box-type="Number"></text-box>
-                    </div>
-                    <div class="col-md-12">
-                        <select-box field="Type" name="页面类型" options="@Model.PageKinds" is-required="true"></select-box>
-                    </div>
-                    <div class="col-md-12">
-                        <check-box field="IsInMenu" name="加入菜单？"></check-box>
-                    </div>
-                    <div class="col-md-12">
-                        <text-box field="MenuName" name="菜单名称" is-required="true"></text-box>
-                    </div>
-                    <div class="col-md-12">
-                        <text-box field="Src" name="菜单链接" is-required="true"></text-box>
-                    </div>
-                    <div class="col-md-12">
-                        <select-box field="Icon" options="@Model.IconSource" name="菜单图标" is-use-place-holder="false" bind="select2:{templateResult: select2Template, templateSelection: select2Template, width: '100%', value: Icon()}"></select-box>
-                    </div>
-                    <div class="col-md-12">
-                        <text-box field="Order" name="页面排序(数值越小越靠前)" text-box-type="Number" is-required="true"></text-box>
-                    </div>
-                    <div class="col-md-6">
-                        <check-box field="IsPassed" name="是否不检查权限？"></check-box>
-                    </div>
-                    <div class="col-md-6">
-                        <check-box field="IsDisabled" name="是否禁用？"></check-box>
-                    </div>
+            <section mode="Border" is-fit="true">
+                <div class="kt-scroll" data-scroll="true" data-height="600">
+                    <div id="navs-container"></div>
                 </div>
-                <form-actions>
-                    <button type="reset" class="btn default" data-bind="click:reset">重置</button>
-                    <button type="button" class="btn green" data-bind="click:update, visible:Id()">修改</button>
-                    <button type="button" class="btn green" data-bind="click:add, visible:!Id()">提交</button>
-                </form-actions>
-            </form-builder>
+            </section>
+        </portlet>
+    </div>
+    <div class="col-md-6">
+        <portlet title="页面信息" data-model="form" is-height-fluid="true">
+            <div class="row">
+                <div class="col-md-12">
+                    <text-box field="PageName" name="页面名称" is-required="true"></text-box>
+                </div>
+                <div class="col-md-12">
+                    <text-box field="MenuName" name="菜单名称" is-required="true"></text-box>
+                </div>
+                <div class="col-md-12">
+                    <text-box field="Src" name="菜单链接" is-required="true"></text-box>
+                </div>
+                <div class="col-md-12">
+                    <select-box field="Icon" options="@Model.IconSource" name="菜单图标" is-use-place-holder="false" bind="select2:{templateResult: select2Template, templateSelection: select2Template, width: '100%', value: Icon()}"></select-box>
+                </div>
+                <div class="col-md-12">
+                    <text-box field="Order" name="页面排序(数值越小越靠前)" text-box-type="Number" is-required="true"></text-box>
+                </div>
+                <div class="col-md-6">
+                    <check-box field="IsInMenu" name="加入菜单？" text="是否在用户菜单中显示此页面"></check-box>
+                </div>
+                <div class="col-md-6">
+                    <check-box field="IsDisabled" name="禁用页面？" text="是否将此页面在所有用户菜单中移除"></check-box>
+                </div>
+            </div>
+            <portlet-footer-action-container align="Right">
+                <button size="Sm" data-bind="click:reset">重置</button>
+                <button size="Sm" state="Danger" data-bind="click:$root.delete, visible:Id()">删除</button>
+                <button size="Sm" state="Success" data-bind="click:update, visible:Id()">修改</button>
+                <button size="Sm" state="Success" data-bind="click:add, visible:!Id()">提交</button>
+            </portlet-footer-action-container>
         </portlet>
     </div>
 </div>
 
 @section Scripts{
     <script type="text/javascript">
-        require([
-            "jquery",
-            "ko",
-            "zdy",
-            "bootstrap",
-            "bootstrap-contextmenu",
-            "jquery-select2",
-            "jstree",
-            ui], function ($, ko, zdy) {
-                var ui = arguments[arguments.length - 1];
-                ui.init();
 
-                $("#pages-tree-portlet").on("portlet.onload", function () {
-                    tree.init()
-                    tree.initContextMenu()
-                })
+        var navs = zdy.module().import(function () {
 
-                var tree = zdy.module().import(function () {
+            this.CurrentNav = ko.observable()
 
-                    this.ContextMenuData = ko.observable()
+            this.newChild = function () {
+                form.reset()
+                form.ParentId(this.CurrentNav().Id)
+            }
 
-                    this.refresh = function () {
+            this.newBrother = function () {
+                form.reset()
+                form.ParentId(this.CurrentNav().ParentId)
+            }
 
-                    }
+            this.load = function () {
+                this.CurrentNav(undefined);
 
-                    this.reload = function () {
-                        $("#pages-tree-portlet > .portlet-title > .tools > a.reload").trigger("click")
-                        return this
-                    }
+                $.ajax({
+                    type: "GET",
+                    cache: false,
+                    url: "/Admin/PageTree",
+                    dataType: "html",
+                    success: function (res) {
+                        $("#navs-container").html(res);
 
-                    this.init = function () {
-                        $('#pages-tree').jstree({
-                            "core": {
-                                "themes": {
-                                    "dots" : true
-                                }
-                            },
-                            "types": {
-                                "default": {
-                                    "icon": "fa fa-folder icon-state-warning icon-lg"
-                                }
-                            },
-                            "plugins": ["types"]
-                        });
+                        $(".kt-nav__link").click(function () {
+                            $(".kt-nav__item--active").removeClass("kt-nav__item--active");
+                            $(this).parent().addClass("kt-nav__item--active");
 
-                        $('#pages-tree').on('select_node.jstree', function (e, data) {
-                            var json = data.node.li_attr["data-json"]
-                            var model = JSON.parse(json)
-                            form.load(model)
-                        });
-
-                        $('#pages-tree').jstree(true).open_all()
-                    }
-
-                    this.initContextMenu = function () {
-                        $('#pages-tree').contextmenu({
-                            target: '#tree-context-menu',
-                            before: function (e) {
-                                e.preventDefault();
-                                if (e.target.tagName.toLowerCase() !== 'a') {
-                                    e.preventDefault();
-                                    this.closemenu();
-                                    return false;
-                                }
-
-                                var $currentTreeNode = $(e.target).parent()
-                                tree.ContextMenuData({
-                                    data: $currentTreeNode.data("json")
-                                })
-
-                                return true;
-                            },
-                            onItem: function (ctx, e) {
-                                var action = $(e.target).data("action")
-                                if (action) {
-                                    form[action](tree.ContextMenuData())
-                                }
+                            var data = $(this).data("nav")
+                            if (data) {
+                                form.load(data) 
+                                navs.CurrentNav(data)
                             }
-                        });
+                        })
+                    },
+                    error: function () {
+                        zdy.toastr.error("加载内容出现错误。请检查您的连接,再试一次！");
                     }
+                });
 
-                }).bind("tree").reload()
+                return this;
+            }
 
-                var form = zdy.form().options({
-                    fields: [
-                        { field: 'Id', value: ko.observable() },
-                        { field: 'ParentId', value: ko.observable() },
-                        { field: 'PageName', value: ko.observable() },
-                        { field: 'PageCode', value: ko.observable() },
-                        { field: 'Level', value: ko.observable() },
-                        { field: 'Type', value: ko.observable() },
-                        { field: 'IsInMenu', value: ko.observable(true) },
-                        { field: 'MenuName', value: ko.observable() },
-                        { field: 'Src', value: ko.observable() },
-                        { field: 'Icon', value: ko.observable() },
-                        { field: 'Order', value: ko.observable(0) },
-                        { field: 'IsPassed', value: ko.observable(false) },
-                        { field: 'IsDisabled', value: ko.observable(false) }
-                    ],
-                    dataAddUrl: 'Page/Add',
-                    dataUpdateUrl: 'Page/Update',
-                    dataDeleteUrl: 'Page/Delete'
-                }).import(function () {
+        }).bind("navs").load()
 
-                    this.afterAdd = function (data) {
-                        tree.reload()
-                        this.reset()
-                    }
+        var form = zdy.form().options({
+            fields: [
+                { field: 'Id', value: ko.observable() },
+                { field: 'ParentId', value: ko.observable() },
+                { field: 'PageName', value: ko.observable() },
+                { field: 'PageCode', value: ko.observable() },
+                { field: 'Level', value: ko.observable() },
+                { field: 'Type', value: ko.observable() },
+                { field: 'IsInMenu', value: ko.observable(true) },
+                { field: 'MenuName', value: ko.observable() },
+                { field: 'Src', value: ko.observable() },
+                { field: 'Icon', value: ko.observable() },
+                { field: 'Order', value: ko.observable(0) },
+                { field: 'IsPassed', value: ko.observable(false) },
+                { field: 'IsDisabled', value: ko.observable(false) }
+            ],
+            dataAddUrl: 'Page/Add',
+            dataUpdateUrl: 'Page/Update',
+            dataDeleteUrl: 'Page/Delete'
+        }).import(function () {
 
-                    this.afterUpdate = function (data) {
-                        tree.reload()
-                        this.reset()
-                    }
+            this.afterAdd = function (data) {
+                navs.load()
+                this.reset()
+            }
 
-                    this.afterDelete = function () {
-                        tree.reload()
-                        this.reset()
-                    }
+            this.afterUpdate = function (data) {
+                navs.load()
+                this.reset()
+            }
 
-                    this.newChild = function (data) {
-                        this.reset()
-                        this.ParentId(data.data.Id)
-                    }
+            this.afterDelete = function () {
+                navs.load()
+                this.reset()
+            }
 
-                    this.newBrother = function (data) {
-                        this.reset()
-                        this.ParentId(data.data.ParentId)
-                    }
+            this.removeThis = function (data) {
+                this.load(data.data)
+                this.delete()
+            }
 
-                    this.removeThis = function (data) {
-                        this.load(data.data)
-                        this.delete()
-                    }
+            this.select2Template = function (state) {
+                var $state = $(
+                    "<span><i class='" + state.text + "'></i> ." + state.text + "</span>"
+                );
+                return $state;
+            }
 
-                    this.select2Template = function (state) {
-                        var $state = $(
-                            "<span><i class='" + state.text + "'></i> ." + state.text + "</span>"
-                        );
-                        return $state;
-                    }
-
-                }).bind("form")
-            });
+        }).bind("form")
     </script>
 }

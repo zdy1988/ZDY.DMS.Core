@@ -13,7 +13,6 @@ namespace ZDY.DMS.Services.Common.Models
     {
         [Required(ErrorMessage = "账号是必须的，不能为空")]
         public string UserName { get; set; }
-        [Required(ErrorMessage = "密码是必须的，不能为空")]
         public string Password { get; set; }
         public Guid Avatar { get; set; }
         public string AvatarUrl { get; set; }

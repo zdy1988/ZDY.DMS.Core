@@ -957,26 +957,19 @@ var zdy = function () {
             return rst;
         };
         var highlight = function (element, errorMessage) {
-            $(element).closest("div.form-group").addClass("has-error");
-            var $error = $("<span class='help-block help-block-error'>" + errorMessage + "</span>");
-            errorPlacement($error, element);
-        };
-        var errorPlacement = function (error, element) {
-            if (element.closest(".form-group").find(".help-block-error").length === 0) {
-                if (element.is(':checkbox')) {
-                    error.insertAfter(element.closest('.md-checkbox-list, .md-checkbox-inline, .checkbox-list, .checkbox-inline'));
-                } else if (element.is(':radio')) {
-                    error.insertAfter(element.closest('.md-radio-list, .md-radio-inline, .radio-list,.radio-inline'));
-                } else {
-                    error.insertAfter(element);
-                }
+            $(element).closest("div.form-group").addClass("validated");
+            if ($(element).is("input") || $(element).is("select")) {
+                $(element).addClass("is-invalid");
             }
+            var $error = $("<span class='invalid-feedback'>" + errorMessage + "</span>");
+            $(element).closest("div.form-group").append($error);
         };
         var unhighlight = function () {
             $("div.form-group").each(function () {
-                $(this).removeClass("has-error");
-                $(this).find(".help-block-error").remove();
+                $(this).removeClass("validated");
+                $(this).find(".invalid-feedback").remove();
             });
+            $(".is-invalid").removeClass("is-invalid");
         };
 
         var valid = function (container) {
@@ -1728,10 +1721,11 @@ ko.bindingHandlers.state = {
         } else {
             var index = value.Index;
             var name = value.Name;
-            $(el).text(name).css(_.states[index]);
-        }
-        if ($(el).parent()[0].tagName.toLowerCase() === 'td') {
-            $(el).parent().css({ "width": "1%", "text-align": "center" });
+            $(el).html("");
+            var $dot = $("<span class='kt-badge kt-badge--dot'></span>").css(zdy.states[index]);
+            var $txt = $("<span class='kt-font-bold'> " + name + "</span>").css({ "color": zdy.states[index]["background-color"] });
+
+            $(el).html("").append($dot).append($txt);
         }
     }
 };

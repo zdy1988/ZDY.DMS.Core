@@ -65,22 +65,22 @@
 
                     <form-actions class="margin-top-20">
 
-                        <button icon="HandPointLeft" color="BlueHoki" bs-toggle-modal="model-redirect-task">转交</button>
+                        <button icon="HandOLeft" color="BlueHoki" bs-toggle-modal="model-redirect-task">转交</button>
 
                         @if (!Model.CurrentStep.IsBackTacticBy(WorkFlowBackTacticKinds.UnableToReturn))
                         {
 
-                            <button icon="Handshake" color="Red" data-bind="click:handleBack">退回</button>
+                            <button icon="HandStopO" color="Red" data-bind="click:handleBack">退回</button>
 
                         }
 
                         @if (Model.NextSteps.Count() > 0)
                         {
-                            <button icon="Handshake" color="GreenJungle" bs-toggle-modal="modal-next-steps">处理</button>
+                            <button icon="HandODown" color="GreenJungle" bs-toggle-modal="modal-next-steps">处理</button>
                         }
                         else
                         {
-                            <button icon="Handshake" color="GreenJungle" data-bind="click:handleComplate">同意</button>
+                            <button icon="HandPaperO" color="GreenJungle" data-bind="click:handleComplate">同意</button>
                         }
 
                     </form-actions>

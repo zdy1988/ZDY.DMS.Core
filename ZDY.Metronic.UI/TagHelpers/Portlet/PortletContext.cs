@@ -16,5 +16,9 @@ namespace ZDY.Metronic.UI.TagHelpers
         internal IHtmlContent HanderActionContainer { get; set; }
 
         internal IHtmlContent FooterActionContainer { get; set; }
+
+        internal IHtmlContent TabNav { get; set; }
+
+        internal IHtmlContent TabContent { get; set; }
     }
 }

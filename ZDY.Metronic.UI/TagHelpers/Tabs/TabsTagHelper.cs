@@ -57,24 +57,36 @@ namespace ZDY.Metronic.UI.TagHelpers
 
                 if (tabsContext.TabPanes.Count > 0)
                 {
-                    output.TagName = "div";
+                    if (context.TryGetContext<PortletContext, PortletTagHelper>(out PortletContext portletContext))
+                    {
+                        TagBuilder navToolbar = new TagBuilder("div");
+                        navToolbar.AddCssClass("kt-portlet__head-toolbar");
+                        navToolbar.InnerHtml.AppendHtml(BuildTabNav(tabsContext));
 
-                    output.TagMode = TagMode.StartTagAndEndTag;
+                        portletContext.TabNav = navToolbar;
+                        portletContext.TabContent = BuildTabContent(tabsContext);
+                    }
+                    else
+                    {
+                        output.TagName = "div";
 
-                    output.Attributes.Add("id", Id);
+                        output.TagMode = TagMode.StartTagAndEndTag;
 
-                    output.Attributes.Add("role", "tablist");
+                        output.Attributes.Add("id", Id);
 
-                    output.Attributes.Add("class", Classes);
+                        output.Attributes.Add("role", "tablist");
 
-                    var content = $@"<div class='col-12'>
+                        output.Attributes.Add("class", Classes);
+
+                        var content = $@"<div class='col-12'>
                                          {BuildTabNav(tabsContext).ToHtml()}
                                          {BuildTabContent(tabsContext).ToHtml()} 
                                      </div>";
 
-                    output.Content.SetHtmlContent(content);
+                        output.Content.SetHtmlContent(content);
 
-                    return;
+                        return;
+                    }
                 }
             }
 

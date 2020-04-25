@@ -4,10 +4,10 @@
 
 
 
-@*@if (Model.TreeData.Count > 0)
+@if (Model.Navs.Count > 0)
 {
 
-    <tree tree-data="@Model.TreeData" id="pages-tree"></tree>
+    <navigation navs="@Model.Navs" bullet="Dot" />
 
 }
 else
@@ -15,5 +15,5 @@ else
 
     <h3 class="text-center demo-height">暂无部门数据！</h3>
 
-}*@
+}
 

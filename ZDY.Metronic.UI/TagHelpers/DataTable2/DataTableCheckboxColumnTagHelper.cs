@@ -18,7 +18,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             output.SuppressOutput();
 
-            if (context.TryGetContext<DataTableContext, DataTableTagHelper>(out DataTableContext dataTableContext))
+            if (context.TryGetContext<DataTableContext, DataTable2TagHelper>(out DataTableContext dataTableContext))
             {
                 dataTableContext.CheckboxColumns.Add(this);
             }

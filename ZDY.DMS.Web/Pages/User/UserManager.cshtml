@@ -3,59 +3,47 @@
 
 <div class="row">
     <div class="col-md-12">
-        <portlet title="查询条件" is-form="true" is-fit="true" data-model="list">
-            <form-builder>
-                <div class="row">
-                    <div class="col-md-3">
-                        <text-box field="UserName" name="账号"></text-box>
-                    </div>
-                    <div class="col-md-3">
-                        <text-box field="NickName" name="昵称"></text-box>
-                    </div>
-                    <div class="col-md-3">
-                        <text-box field="Name" name="姓名"></text-box>
-                    </div>
-                    <div class="col-md-3">
-                        <text-box field="Mobile" name="手机号码"></text-box>
-                    </div>
+        <portlet title="查询条件" data-model="list">
+            <div class="row">
+                <div class="col-md-3">
+                    <text-box field="UserName" name="账号"></text-box>
                 </div>
-                <form-actions>
-                    <button type="reset" color="Default" data-bind="click:reset">重置条件</button>
-                    <button type="button" color="Green" data-bind="click:firstPage">点击查询</button>
-                </form-actions>
-            </form-builder>
+                <div class="col-md-3">
+                    <text-box field="NickName" name="昵称"></text-box>
+                </div>
+                <div class="col-md-3">
+                    <text-box field="Name" name="姓名"></text-box>
+                </div>
+                <div class="col-md-3">
+                    <text-box field="Mobile" name="手机号码"></text-box>
+                </div>
+            </div>
+            <portlet-footer-action-container align="Right">
+                <button size="Sm" data-bind="click:reset">重置条件</button>
+                <button state="Success" size="Sm" data-bind="click:firstPage">点击查询</button>
+            </portlet-footer-action-container>
         </portlet>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <portlet title="用户列表" is-fit="true" data-model="list">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="btn-group pull-right">
-                        <button icon="Plus" color="Blue" data-bind="click:$root.goto, attr: {'data-url': '/User/UserDetail'}">
-                            新增用户
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <portlet title="用户列表" data-model="list">
+            <portlet-header-action-container>
+                <button state="Brand" icon="UserPlus" size="Sm" data-bind="click:$root.goto, attr: {'data-url': '/User/UserDetail'}">新增用户</button>
+            </portlet-header-action-container>
+
             <data-table is-show-checkbox-column="false">
-                <td data-bind="text:UserName" style="font-weight:bold"></td>
-                <td data-bind="text:NickName"></td>
-                <td data-bind="text:Name"></td>
-                <td data-bind="text:Gender"></td>
-                <td data-bind="text:Mobile" style="font-weight:bold"></td>
-                <td data-bind="text:Email"></td>
-                <td data-bind="text:LastLoginIp"></td>
-                <td data-bind="text:LastLoginTime"></td>
-                <td style="width:1%; text-align:center;">
-                </td>
-                <td>
-                    <button size="Xs" color="GreenSeagreen" icon="Edit" data-bind="click:$root.goto, attr: {'data-url': '/User/UserDetail?id=' + Id}">
-                        编辑
-                    </button>
-                </td>
+                <cell filed="UserName" />
+                <cell filed="NickName" />
+                <cell filed="Name" />
+                <cell filed="Gender" />
+                <cell filed="Mobile" />
+                <cell filed="Email" />
+                <cell />
+                <cell align="Center">
+                    <button size="Sm" state="Brand" is-only-icon="true" icon="Search" data-bind="click:$root.goto, attr: {'data-url': '/User/UserDetail?id=' + Id}" />
+                </cell>
             </data-table>
             <pager></pager>
         </portlet>
@@ -64,39 +52,26 @@
 
 @section Scripts{
     <script type="text/javascript">
-        require([
-            "jquery",
-            "ko",
-            "zdy",
-            "bootstrap",
-            ui], function ($, ko, zdy) {
-                var ui = arguments[arguments.length - 1];
-                ui.init();
+        var table = zdy.table().options({
+            fields: [
+                { field: 'UserName', value: ko.observable(), method: zdy.querymethod.contains },
+                { field: 'NickName', value: ko.observable(), method: zdy.querymethod.contains },
+                { field: 'Name', value: ko.observable(), method: zdy.querymethod.contains },
+                { field: 'Mobile', value: ko.observable(), method: zdy.querymethod.contains }
+            ],
+            headers: [
+                { text: '账号', field: 'UserName' },
+                { text: '昵称', field: 'NickName' },
+                { text: '姓名', field: 'Name' },
+                { text: '性别', field: 'Gender' },
+                { text: '手机号码', field: 'Mobile' },
+                { text: '电子邮箱', field: 'Email' },
+                { text: '用户状态', field: 'IsDisabled' }
+            ],
+            defaultOrderBy: "TimeStamp",
+            dataQueryUrl: 'User/Search'
+        }).import(function () {
 
-                var table = zdy.table().options({
-                    fields: [
-                        { field: 'UserName', value: ko.observable(), method: zdy.querymethod.contains },
-                        { field: 'NickName', value: ko.observable(), method: zdy.querymethod.contains },
-                        { field: 'Name', value: ko.observable(), method: zdy.querymethod.contains },
-                        { field: 'Mobile', value: ko.observable(), method: zdy.querymethod.contains }
-                    ],
-                    headers: [
-                        { text: '账号', field: 'UserName' },
-                        { text: '昵称', field: 'NickName' },
-                        { text: '姓名', field: 'Name' },
-                        { text: '性别', field: 'Gender' },
-                        { text: '手机号码', field: 'Mobile' },
-                        { text: '电子邮箱', field: 'Email' },
-                        { text: '登录IP', field: 'LastLoginIp' },
-                        { text: '登录时间', field: 'LastLoginTime' },
-                        { text: '用户状态', field: 'IsDisabled' }
-                    ],
-                    defaultOrderBy: "TimeStamp",
-                    dataQueryUrl: 'User/Search'
-                }).import(function () {
-               
-                }).bind("list").load();
-
-            })
+        }).bind("list").load();
     </script>
 }

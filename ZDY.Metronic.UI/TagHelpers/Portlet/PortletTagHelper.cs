@@ -119,20 +119,20 @@ namespace ZDY.Metronic.UI.TagHelpers
 						output.Attributes.Add("data-portlet", "true");
 					}
 
-					var toolbar = portletContext.HanderToolbar ?? portletContext.HanderActionContainer;
+					var toolbar = portletContext.TabNav ?? (portletContext.HanderToolbar ?? portletContext.HanderActionContainer);
 
 					var icon = Icon.IsUsed() ? $"<span class='{IconClasses}'>{Icon.ToIconContent()}</span>" : "";
 
 					var head = $@"<div class='{HeadClasses}'>
-						  		 <div class='kt-portlet__head-label'>
-						  	 		{icon}
-						  	 		<h3 class='{TitleClasses}'>
-						  	 			{Title}
-										<small>{SubTitle}</small>
-						  	 		</h3>
-						  		 </div>
-								 {Use(toolbar)}
-							  </div>";
+						  			 <div class='kt-portlet__head-label'>
+						  	 			{icon}
+						  	 			<h3 class='{TitleClasses}'>
+						  	 				{Title}
+											<small>{SubTitle}</small>
+						  	 			</h3>
+						  			 </div>
+									 {Use(toolbar)}
+								  </div>";
 
 					output.Content.AppendHtml(head);
 				}
@@ -141,15 +141,22 @@ namespace ZDY.Metronic.UI.TagHelpers
 
 				body.Attributes.Add("class", BodyClasses);
 
-				if (BodyHeight > 0)
+				if (portletContext.TabContent.IsNotNull())
 				{
-					body.InnerHtml.AppendHtml($@"<div class='kt-scroll' data-scroll='true' data-height='{BodyHeight}' data-scrollbar-shown='true'>
-												   {childContent.GetContent()}
-												 </div>");
+					body.InnerHtml.AppendHtml(portletContext.TabContent);
 				}
 				else
 				{
-					body.InnerHtml.AppendHtml(childContent.GetContent());
+					if (BodyHeight > 0)
+					{
+						body.InnerHtml.AppendHtml($@"<div class='kt-scroll' data-scroll='true' data-height='{BodyHeight}' data-scrollbar-shown='true'>
+													   {childContent.GetContent()}
+													 </div>");
+					}
+					else
+					{
+						body.InnerHtml.AppendHtml(childContent.GetContent());
+					}
 				}
 
 				output.Content.AppendHtml(body);

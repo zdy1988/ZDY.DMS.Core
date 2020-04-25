@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.Services.AdminService.ServiceContracts;
+using ZDY.Metronic.UI;
+using Newtonsoft.Json;
 
 namespace ZDY.DMS.Web.Pages.Admin
 {
@@ -16,20 +18,39 @@ namespace ZDY.DMS.Web.Pages.Admin
             this.pageService = pageService;
         }
 
-        //public List<TreeNode> TreeData { get; set; }
+        public List<NavigationItem> Navs { get; set; }
 
         public void OnGet()
         {
-            var userIdentity = this.HttpContext.GetUserIdentity();
+            var identity = this.HttpContext.GetUserIdentity();
 
-            //TreeData = pageService.GetAllPages(userIdentity.CompanyId).Select(t => new TreeNode
-            //{
-            //    Data = t,
-            //    Id = t.Id,
-            //    Name = t.PageName,
-            //    Order = t.Order,
-            //    ParentId = t.ParentId
-            //}).ToList();
+            var pages = pageService.GetAllPages(identity.CompanyId).ToList();
+
+            Navs = BuildNavs(pages, default);
+        }
+
+        public List<NavigationItem> BuildNavs(List<Services.AdminService.Models.Page> pages, Guid parentId)
+        {
+            var childs = pages.Where(t => t.ParentId == parentId).OrderBy(t => t.Order);
+
+            List<NavigationItem> navs = null;
+
+            if (childs.Count() > 0)
+            {
+                navs = new List<NavigationItem>();
+
+                foreach (var child in childs)
+                {
+                    navs.Add(new NavigationItem
+                    {
+                        Text = child.MenuName,
+                        JsonData = JsonConvert.SerializeObject(child),
+                        Navs = BuildNavs(pages, child.Id)
+                    });
+                }
+            }
+
+            return navs;
         }
     }
 }

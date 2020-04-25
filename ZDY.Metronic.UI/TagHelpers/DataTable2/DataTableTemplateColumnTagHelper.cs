@@ -9,7 +9,7 @@ using ZDY.Metronic.UI.Untils;
 
 namespace ZDY.Metronic.UI.TagHelpers
 {
-    [HtmlTargetElement("template-column", ParentTag = "data-table", TagStructure = TagStructure.NormalOrSelfClosing)]
+    [HtmlTargetElement("template-column", ParentTag = "data-table2", TagStructure = TagStructure.NormalOrSelfClosing)]
     public class DataTableTemplateColumnTagHelper : HelperBase
     {
         public virtual int Index { get; set; } = -1;
@@ -30,7 +30,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            if (context.TryGetContext<DataTableContext, DataTableTagHelper>(out DataTableContext dataTableContext))
+            if (context.TryGetContext<DataTableContext, DataTable2TagHelper>(out DataTableContext dataTableContext))
             {
                 var childContent = await output.GetChildContentAsync();
 
