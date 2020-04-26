@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ZDY.Metronic.UI
 {
-    public class DataField
+    public class DataTableField
     {
         public string DisplayName { get; set; }
 

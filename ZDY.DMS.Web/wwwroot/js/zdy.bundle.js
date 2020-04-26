@@ -131,7 +131,12 @@ var zdy = function () {
                 }
             };
             this.goto = function (data, e) {
-                var url = $(e.target).data("url");
+                var url;
+                if ($(e.target).is("i")) {
+                    url = $(e.target).parent().data("url");
+                } else {
+                    url = $(e.target).data("url");
+                }
                 if (url !== undefined) {
                     _.gotoPage(url);
                 }

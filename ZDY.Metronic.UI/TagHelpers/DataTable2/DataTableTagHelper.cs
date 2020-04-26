@@ -14,7 +14,7 @@ namespace ZDY.Metronic.UI.TagHelpers
     {
         public virtual Object Dataset { get; set; }
 
-        public virtual List<DataField> Fields { get; set; }
+        public virtual List<DataTableField> Fields { get; set; }
 
         public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
@@ -53,7 +53,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             if (Fields.IsNull())
             {
-                Fields = Dataset.GetType().GetProperty("Item").PropertyType.GetProperties().Select(t => new DataField { Name = t.Name }).ToList();
+                Fields = Dataset.GetType().GetProperty("Item").PropertyType.GetProperties().Select(t => new DataTableField { Name = t.Name }).ToList();
             }
 
             var thead = new TagBuilder("thead");
@@ -123,7 +123,7 @@ namespace ZDY.Metronic.UI.TagHelpers
             return row;
         }
 
-        internal TagBuilder BuildCell(string tagName, DataField field)
+        internal TagBuilder BuildCell(string tagName, DataTableField field)
         {
             var cell = new TagBuilder(tagName);
 
@@ -137,7 +137,7 @@ namespace ZDY.Metronic.UI.TagHelpers
             return cell;
         }
 
-        internal void AppendDataTableCell(TagBuilder row, DataTableContext dataTableContext, DataField field, string tagName, string value, int columnIndex)
+        internal void AppendDataTableCell(TagBuilder row, DataTableContext dataTableContext, DataTableField field, string tagName, string value, int columnIndex)
         {
             var checkboxColumn = dataTableContext.CheckboxColumns.FirstOrDefault(t => t.FieldName == field.Name);
 
@@ -163,7 +163,7 @@ namespace ZDY.Metronic.UI.TagHelpers
             row.InnerHtml.AppendHtml(cell);
         }
 
-        internal void AppendTemplateCellByIndex(TagBuilder row, DataTableContext dataTableContext, DataField field, string tagName, int columnIndex)
+        internal void AppendTemplateCellByIndex(TagBuilder row, DataTableContext dataTableContext, DataTableField field, string tagName, int columnIndex)
         {
             var templateColumn2 = dataTableContext.TemplateColumns.FirstOrDefault(t => t.Item1.Index == columnIndex && String.IsNullOrWhiteSpace(t.Item1.FieldName));
 
@@ -194,7 +194,7 @@ namespace ZDY.Metronic.UI.TagHelpers
             }
         }
 
-        internal void BuildDataTableTextCell(TagBuilder cell, DataField field, string value)
+        internal void BuildDataTableTextCell(TagBuilder cell, DataTableField field, string value)
         {
             if (!field.IsAutoHide)
             {
