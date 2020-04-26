@@ -11,7 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             configure?.Invoke(Settings.GetInstance());
 
-            services.AddSingleton<IMetronicUI, MetronicUI>();
+            services.AddSingleton<IMetronic, Metronic>();
         }
     }
 }

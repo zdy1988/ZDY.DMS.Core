@@ -17,21 +17,19 @@ namespace ZDY.DMS.Web.Pages.Home
     {
         private readonly IPageService pageService;
         private readonly IPagePermissionService pagePermissionService;
-        private readonly IMetronicUI metronicUI;
+        private readonly IMetronic metronic;
 
         public MainModel(IPageService pageService,
             IPagePermissionService pagePermissionService,
-            IMetronicUI metronicUI)
+            IMetronic metronic)
         {
             this.pageService = pageService;
             this.pagePermissionService = pagePermissionService;
 
-            this.metronicUI = metronicUI;
+            this.metronic = metronic;
         }
 
         public IEnumerable<MultiLevelPageDTO> Pages { get; set; }
-
-        private Random random = new Random();
 
         public async Task OnGetAsync()
         {
@@ -119,11 +117,12 @@ namespace ZDY.DMS.Web.Pages.Home
                 }
                 else
                 {
-                    var icon = (SvgIcon)random.Next(1, 600);
+                    if (Enum.TryParse<SvgIcon>(page.Icon, out SvgIcon icon))
+                    {
+                        var iconContent = metronic.GetIconContent(icon);
 
-                    var iconContent = metronicUI.GetIconContent(icon);
-
-                    link.InnerHtml.AppendHtml($"<span class='kt-menu__link-icon'>{iconContent}</span>");
+                        link.InnerHtml.AppendHtml($"<span class='kt-menu__link-icon'>{iconContent}</span>");
+                    }
                 }
 
                 link.InnerHtml.AppendHtml($"<span class='kt-menu__link-text'>{page.MenuName}</span>");

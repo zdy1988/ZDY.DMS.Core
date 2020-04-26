@@ -33,10 +33,10 @@
                     <text-box field="Src" name="菜单链接" is-required="true"></text-box>
                 </div>
                 <div class="col-md-12">
-                    <select-box field="Icon" options="@Model.IconSource" name="菜单图标" is-use-place-holder="false" bind="select2:{templateResult: select2Template, templateSelection: select2Template, width: '100%', value: Icon()}"></select-box>
+                    <select-box field="Icon" options="@Model.IconSource" name="菜单图标" is-place-holder-destroyed="true" bind="select2:{templateResult: select2Template, templateSelection: select2Template, width: '100%', value: Icon()}"></select-box>
                 </div>
                 <div class="col-md-12">
-                    <text-box field="Order" name="页面排序(数值越小越靠前)" text-box-type="Number" is-required="true"></text-box>
+                    <text-box field="Order" name="页面排序(数值越小越靠前)" kind="Number" is-required="true"></text-box>
                 </div>
                 <div class="col-md-6">
                     <check-box field="IsInMenu" name="加入菜单？" text="是否在用户菜单中显示此页面"></check-box>
@@ -146,10 +146,12 @@
             }
 
             this.select2Template = function (state) {
-                var $state = $(
-                    "<span><i class='" + state.text + "'></i> ." + state.text + "</span>"
-                );
-                return $state;
+                if (state.id !== undefined) {
+                    var $state = $(
+                        "<span><img style='width: 20px; height: 20px; margin-top: -2px; margin-right: 8px;' src='/media/icons/svg/" + state.text + "'/> " + state.id + "</span>"
+                    );
+                    return $state;
+                }
             }
 
         }).bind("form")
