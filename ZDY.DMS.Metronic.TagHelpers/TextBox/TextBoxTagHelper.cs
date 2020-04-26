@@ -23,7 +23,7 @@ namespace ZDY.DMS.Metronic.TagHelpers.TextBox
         public bool IsMultiple { get; set; } = false;
         public int MultipleRows { get; set; } = 3;
         public bool IsDatePicker { get; set; } = false;
-        public bool IsDateTimePicker { get; set; } = false;
+        public bool IsDatetimePicker { get; set; } = false;
         public string Bind { get; set; }
         public string Rule { get; set; }
         public string ClassNames { get; set; }
@@ -52,7 +52,7 @@ namespace ZDY.DMS.Metronic.TagHelpers.TextBox
             var inputClasses = CssClassBuilder.Build(
                 new CssClassName("form-control", true),
                 new CssClassName("date-picker", IsDatePicker),
-                new CssClassName("date-time-picker", !IsDatePicker && IsDateTimePicker));
+                new CssClassName("date-time-picker", !IsDatePicker && IsDatetimePicker));
 
             var dataRule = DataRuleBuilder.Build(
                 new DataRuleName("required", IsRequired),

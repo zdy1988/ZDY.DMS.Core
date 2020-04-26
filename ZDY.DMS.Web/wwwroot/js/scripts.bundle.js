@@ -8,6 +8,28 @@ var KTApp = function() {
     /** @type {object} colors State colors **/
     var colors = {};
 
+    var initDatePicker = function () {
+        if ($().datepicker) {
+            $('.date-picker').datepicker({
+                rtl: KTUtil.isRTL(),
+                orientation: "left",
+                autoclose: true,
+                language: "zh-CN",
+                format: "yyyy-mm-dd"
+            });
+        }
+
+        if ($().datetimepicker) {
+            $(".date-time-picker").datetimepicker({
+                autoclose: true,
+                isRTL: KTUtil.isRTL(),
+                format: "yyyy-mm-dd hh:ii",
+                fontAwesome: true,
+                pickerPosition: KTUtil.isRTL() ? "bottom-left" : "bottom-right"
+            });
+        }
+    }
+
     var initTooltip = function(el) {
         var skin = el.data('skin') ? 'tooltip-' + el.data('skin') : '';
         var width = el.data('width') == 'auto' ? 'tooltop-auto-width' : '';
@@ -176,6 +198,7 @@ var KTApp = function() {
 
         initComponents: function() {
             initScroll();
+            initDatePicker();
             initTooltips();
             initPopovers();
             initAlerts();
@@ -183,6 +206,10 @@ var KTApp = function() {
             initFileInput();
             initSticky();
             initAbsoluteDropdowns();
+        },
+
+        initDatePicker: function () {
+            initDatePicker();
         },
 
         initTooltips: function() {

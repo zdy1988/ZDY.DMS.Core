@@ -30,6 +30,10 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         public virtual string AppendText { get; set; }
 
+        public bool IsUseDatePicker { get; set; } = false;
+
+        public bool IsUseDatetimePicker { get; set; } = false;
+
         public virtual string Bind { get; set; }
 
         public virtual string Rule { get; set; }
@@ -72,7 +76,9 @@ namespace ZDY.Metronic.UI.TagHelpers
             {
                 return CssClassBuilder.Build(
                     new CssClass("form-control", true),
-                    new CssClass($"form-control-{Size.ToValue()}", Size.IsUsed())
+                    new CssClass($"form-control-{Size.ToValue()}", Size.IsUsed()),
+                    new CssClass("date-picker", IsUseDatePicker),
+                    new CssClass("date-time-picker", IsUseDatetimePicker)
                 );
             }
         }

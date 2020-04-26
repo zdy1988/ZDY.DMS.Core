@@ -14,7 +14,7 @@ namespace ZDY.Metronic.UI.TagHelpers
     {
         public virtual bool IsCloseDestroyed { get; set; } = false;
 
-        public virtual string CloseText { get; set; } = "Close";
+        public virtual string DismissText { get; set; } = "Close";
 
         public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
@@ -30,7 +30,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 
                 if (!IsCloseDestroyed)
                 {
-                    footer.InnerHtml.AppendHtml($"<button type='button' class='btn btn-secondary' data-dismiss='modal'>{CloseText}</button>");
+                    footer.InnerHtml.AppendHtml($"<button type='button' class='btn btn-secondary' data-dismiss='modal'>{DismissText}</button>");
                 }
 
                 if (!childContent.IsEmptyOrWhiteSpace)

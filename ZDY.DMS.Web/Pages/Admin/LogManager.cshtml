@@ -12,10 +12,10 @@
                     <select-box field="Type" name="类型" options="@Model.LogKinds"></select-box>
                 </div>
                 <div class="col-md-3">
-                    <text-box field="TimeStamp_Start" is-date-time-picker="true" name="时间范围(开始)"></text-box>
+                    <text-box field="TimeStamp_Start" is-use-datetime-picker="true" name="时间范围(开始)"></text-box>
                 </div>
                 <div class="col-md-3">
-                    <text-box field="TimeStamp_End" is-date-time-picker="true" name="时间范围(结束)"></text-box>
+                    <text-box field="TimeStamp_End" is-use-datetime-picker="true" name="时间范围(结束)"></text-box>
                 </div>
             </div>
             <portlet-footer-action-container align="Right">
@@ -36,7 +36,7 @@
                     <lable data-bind="state: $root.dic('LogKinds', Type, true)"></lable>
                 </cell>
                 <cell>
-                    <button size="Sm" state="Brand" is-only-icon="true" icon="Search" data-bind="click:$root.detail" modal-target="modal-detail">
+                    <button size="Sm" state="Brand" is-only-icon="true" icon="Search" data-bind="click:$root.detail">
                         查看
                     </button>
                 </cell>
@@ -82,9 +82,9 @@
             this.dic(dictionary)
 
             this.detail = function (data) {
-                form.load(data)
+                form.load(data);
+                zdy.modal.show("modal-detail");
             }
-
         }).bind("list").load();
 
         var form = zdy.form().options({

@@ -1267,23 +1267,48 @@ var zdy = function () {
         }).promise();
     };
 
-    _.showModal = function (id) {
-        return $.Deferred(function (defer) {
-            $('#' + id).modal({
-                backdrop: 'static',
-                keyboard: false
-            }).on("shown.bs.modal", function () {
-                defer.resolve();
-            });
-        }).promise();
-    };
+    _.modal = {
+        show: function (id) {
+            var $modal;
 
-    _.hideModal = function (id) {
-        return $.Deferred(function (defer) {
-            $('#' + id).modal('hide').on("hidden.bs.modal", function () {
-                defer.resolve();
-            });
-        }).promise();
+            if (window.parent.$) {
+                $(window.top.document.body).append($("#" + id).clone(true));
+                $modal = window.parent.$("#" + id);
+
+            } else {
+                $modal = $("#" + id);
+            }
+
+            $.Deferred(function (defer) {
+                $modal.modal({
+                    show: true,
+                    keyboard: false,
+                    backdrop: 'static'
+                }).one("shown.bs.modal", function () {
+                    defer.resolve();
+                }).one("hidden.bs.modal", function () {
+                    if (window.parent.$) {
+                        window.parent.$("#" + id).remove();
+                    }
+                });
+            }).promise();
+        },
+        hide: function (id) {
+            var $modal;
+
+            if (window.parent.$) {
+                $modal = window.parent.$("#" + id);
+
+            } else {
+                $modal = $("#" + id);
+            }
+
+            return $.Deferred(function (defer) {
+                $modal.modal('hide').one("hidden.bs.modal", function () {
+                    defer.resolve();
+                });
+            }).promise();
+        }
     };
 
     _.openWindow = function (page) {
