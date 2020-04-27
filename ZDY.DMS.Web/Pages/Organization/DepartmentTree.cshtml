@@ -2,28 +2,23 @@
 @model ZDY.DMS.Web.Pages.Organization.DepartmentTreeModel
 @{ Layout = null;}
 
-@if (Model.DepartmentData.Count() > 0)
+@if (Model.Departments.Count() > 0)
 {
 
-    @*<tree-table tree-table-head-data="@Model.TreeTableHeads" tree-table-body-data="@Model.TreeTableItems">
-        <tree-table-action class="">
-            <button size="Xs" color="YellowCasablanca" icon="Plus" data-action="newBrother">
-                同级
-            </button>
-            <button size="Xs" color="BlueDark" icon="Plus" data-action="newChild">
-                子级
-            </button>
-            <button size="Xs" color="GreenSeagreen" icon="Edit" data-action="detailThis">
-                编辑
-            </button>
-        </tree-table-action>
-    </tree-table>*@
+    <tree-table fields="@Model.Fields" dataset="@Model.Departments">
+        <tree-table-template-column display-name="排序" field-name="Order" is-centered="true">
+            <badge state="Warning" text="{0}" />
+        </tree-table-template-column>
+        <tree-table-template-column display-name="编辑">
+            <button size="Sm" state="Brand" is-only-icon="true" icon="Edit" class-names="department-edit" />
+        </tree-table-template-column>
+    </tree-table>
 
 }
 else
 {
 
-    <div class="text-center demo-height">暂无部门数据！</div>
+    <h3 class="text-center mt-5">暂无部门数据！</h3>
 
 }
 

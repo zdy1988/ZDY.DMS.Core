@@ -4,16 +4,26 @@
 
 
 
-@if (Model.Navs.Count > 0)
+@if (Model.Pages.Count > 0)
 {
 
-    <navigation navs="@Model.Navs" bullet="Dot" />
+    <tree-table fields="@Model.Fields" dataset="@Model.Pages">
+        <tree-table-template-column display-name="排序" field-name="Order" is-centered="true">
+            <badge state="Warning" text="{0}" />
+        </tree-table-template-column>
+        <tree-table-template-column display-name="加入菜单？" field-name="IsInMenu" is-centered="true">
+            <badge state="Success" text="{0}" />
+        </tree-table-template-column>
+        <tree-table-template-column display-name="编辑">
+            <button size="Sm" state="Brand" is-only-icon="true" icon="Edit" class-names="page-edit" />
+        </tree-table-template-column>
+    </tree-table>
 
 }
 else
 {
 
-    <h3 class="text-center demo-height">暂无部门数据！</h3>
+    <h3 class="text-center mt-5">暂无页面数据！</h3>
 
 }
 

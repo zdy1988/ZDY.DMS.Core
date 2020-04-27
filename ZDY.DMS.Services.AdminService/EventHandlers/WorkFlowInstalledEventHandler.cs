@@ -36,10 +36,8 @@ namespace ZDY.DMS.Services.AdminService.EventHandlers
                     MenuName = message.FlowName,
                     Icon = "icon-share",
                     IsInMenu = true,
-                    IsPassed = true,
-                    Level = 0,
+                    IsPermissionRequired = false,
                     Order = 0,
-                    Type = "P",
                     Src = $"WorkFlow/WorkFlowStartUp?id={message.FlowId}",
                     IsDisabled = false
                 };

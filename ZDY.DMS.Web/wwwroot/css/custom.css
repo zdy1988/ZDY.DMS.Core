@@ -97,8 +97,49 @@ h1, h2, h3, h4, h5, h6,
 
 /*#endregion*/
 
-/*#region radio*/
+/*#region table*/
 
+    .table.table-tree {
+    }
+
+        .table.table-tree svg {
+            margin-top: -2px;
+            margin-right: 6px;
+            transition: all .3s;
+        }
+
+        .table.table-tree .table-row-slide.collapsed svg {
+            transform: rotate(-90deg);
+        }
+
+        .table.table-tree > tbody > tr.table-row-level-1 td:first-child {
+            padding-left: 38px;
+        }
+
+        .table.table-tree > tbody > tr.table-row-level-2 td:first-child {
+            padding-left: 66px;
+        }
+
+        .table.table-tree > tbody > tr.table-row-level-3 td:first-child {
+            padding-left: 94px;
+        }
+
+        .table.table-tree > tbody > tr.table-row-level-4 td:first-child {
+            padding-left: 122px;
+        }
+
+        .table.table-tree > tbody > tr.table-row-level-5 td:first-child {
+            padding-left: 150px;
+        }
+
+        .table.table-tree > tbody > tr.table-row-level-6 td:first-child {
+            padding-left: 178px;
+        }
+
+
+/*#endregion*/
+
+/*#region radio*/
 .kt-radio-inline {
     height: 38.4px;
     padding: 8px 0;

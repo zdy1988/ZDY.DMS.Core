@@ -15,6 +15,6 @@ namespace ZDY.DMS.Services.AdminService.ServiceContracts
 
         Task<IEnumerable<MultiLevelPageDTO>> GetChildLevelPagesAsync(Guid parentId);
 
-        IEnumerable<Page> GetAllPages(Guid companyId);
+        Task<IEnumerable<Page>> GetAllPagesAsync(Guid companyId);
     }
 }

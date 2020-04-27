@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.Services.AdminService.ServiceContracts;
 using ZDY.Metronic.UI;
-using Newtonsoft.Json;
 
 namespace ZDY.DMS.Web.Pages.Admin
 {
@@ -18,39 +18,27 @@ namespace ZDY.DMS.Web.Pages.Admin
             this.pageService = pageService;
         }
 
-        public List<NavigationItem> Navs { get; set; }
+        public List<TreeTableField> Fields { get; set; }
 
-        public void OnGet()
+        public List<TreeTableItem> Pages { get; set; }
+
+        public async Task OnGetAsync()
         {
             var identity = this.HttpContext.GetUserIdentity();
 
-            var pages = pageService.GetAllPages(identity.CompanyId).ToList();
+            Fields = new List<TreeTableField> {
+                new TreeTableField{ DisplayName = "页面名称", FieldName ="PageName" },
+                new TreeTableField{ DisplayName = "菜单名称", FieldName ="MenuName" },
+                new TreeTableField{ DisplayName = "页面路径", FieldName ="Src" }
+            };
 
-            Navs = BuildNavs(pages, default);
-        }
-
-        public List<NavigationItem> BuildNavs(List<Services.AdminService.Models.Page> pages, Guid parentId)
-        {
-            var childs = pages.Where(t => t.ParentId == parentId).OrderBy(t => t.Order);
-
-            List<NavigationItem> navs = null;
-
-            if (childs.Count() > 0)
+            Pages = (await pageService.GetAllPagesAsync(identity.CompanyId)).Select(t => new TreeTableItem
             {
-                navs = new List<NavigationItem>();
-
-                foreach (var child in childs)
-                {
-                    navs.Add(new NavigationItem
-                    {
-                        Text = child.MenuName,
-                        JsonData = JsonConvert.SerializeObject(child),
-                        Navs = BuildNavs(pages, child.Id)
-                    });
-                }
-            }
-
-            return navs;
+                Id = t.Id,
+                ParentId = t.ParentId,
+                Data = t,
+                Order = t.Order
+            }).ToList();
         }
     }
 }

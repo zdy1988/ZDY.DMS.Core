@@ -26,17 +26,13 @@ namespace ZDY.DMS.Services.AdminService.Implementation
         {
             var companies = new Guid[] { default, companyId };
 
-            var page1 = await pageRepository.FindAllAsync(t => t.IsDisabled == false && t.IsPassed == false && companies.Contains(t.CompanyId) && pageIdRanges.Contains(t.Id));
-            var page2 = await pageRepository.FindAllAsync(t => t.IsDisabled == false && t.IsPassed == true && companies.Contains(t.CompanyId));
+            var pages = await pageRepository.FindAllAsync(t => t.IsDisabled == false && t.IsPermissionRequired == true && companies.Contains(t.CompanyId) && pageIdRanges.Contains(t.Id));
 
-            var pages = new List<Page>();
+            var pages2 = await pageRepository.FindAllAsync(t => t.IsDisabled == false && t.IsPermissionRequired == false && companies.Contains(t.CompanyId));
 
-            pages.AddRange(page1);
-            pages.AddRange(page2);
+            var levelPages = this.mapper.Map<IEnumerable<Page>, IEnumerable<MultiLevelPageDTO>>(pages.Union(pages2).OrderBy(t => t.Order));
 
-            var levelPages = this.mapper.Map<List<Page>, List<MultiLevelPageDTO>>(pages.Distinct().ToList());
-
-            return GetChildLevelPages(levelPages.OrderBy(t => t.Order).ToList(), default);
+            return GetChildLevelPages(levelPages, default);
         }
 
         public async Task<IEnumerable<MultiLevelPageDTO>> GetMultiLevelPagesAsync()
@@ -48,7 +44,7 @@ namespace ZDY.DMS.Services.AdminService.Implementation
         {
             var pages = await pageRepository.FindAllAsync(t => t.ParentId == parentId, "Order", true);
 
-            var levelPages = this.mapper.Map<List<Page>, List<MultiLevelPageDTO>>(pages.ToList());
+            var levelPages = this.mapper.Map<IEnumerable<Page>, IEnumerable<MultiLevelPageDTO>>(pages);
 
             foreach (var page in levelPages)
             {
@@ -58,21 +54,23 @@ namespace ZDY.DMS.Services.AdminService.Implementation
             return levelPages;
         }
 
-        private IEnumerable<MultiLevelPageDTO> GetChildLevelPages(List<MultiLevelPageDTO> pages, Guid parentId)
+        private IEnumerable<MultiLevelPageDTO> GetChildLevelPages(IEnumerable<MultiLevelPageDTO> pages, Guid parentId)
         {
-            var childPages = pages.Where(t => t.ParentId == parentId).ToList();
+            var childPages = pages.Where(t => t.ParentId == parentId);
+
             foreach (var page in childPages)
             {
                 page.ChildLevelPages = GetChildLevelPages(pages, page.Id);
             }
+
             return childPages;
         }
 
-        public IEnumerable<Page> GetAllPages(Guid companyId)
+        public async Task<IEnumerable<Page>> GetAllPagesAsync(Guid companyId)
         {
             var companies = new Guid[] { default, companyId };
 
-            return this.pageRepository.FindAll(t => companies.Contains(t.CompanyId));
+            return await this.pageRepository.FindAllAsync(t => companies.Contains(t.CompanyId));
         }
     }
 }

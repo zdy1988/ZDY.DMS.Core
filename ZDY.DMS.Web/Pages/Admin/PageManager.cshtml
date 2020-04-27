@@ -2,25 +2,23 @@
 @model ZDY.DMS.Web.Pages.Admin.PageManagerModel
 
 <div class="row">
-    <div class="col-md-6">
-        <portlet title="所有页面" data-model="navs">
+    <div class="col-md-8">
+        <portlet title="所有页面" data-model="pages">
             <portlet-header-action-container>
-                <button size="Sm" state="Brand" icon="Plus" data-bind="click:newBrother, visible:CurrentNav()">
+                <button size="Sm" state="Brand" icon="Plus" data-bind="click:newBrother, visible:CurrentPage()">
                     同级
                 </button>
-                <button size="Sm" state="Dark" icon="Plus" data-bind="click:newChild, visible:CurrentNav()">
+                <button size="Sm" state="Dark" icon="Plus" data-bind="click:newChild, visible:CurrentPage()">
                     子级
                 </button>
             </portlet-header-action-container>
 
-            <section mode="Border" is-fit="true">
-                <div class="kt-scroll" data-scroll="true" data-height="600">
-                    <div id="navs-container"></div>
-                </div>
-            </section>
+            <div class="kt-scroll" data-scroll="true" data-height="660">
+                <div id="pages-container"></div>
+            </div>
         </portlet>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-4">
         <portlet title="页面信息" data-model="form" is-height-fluid="true">
             <div class="row">
                 <div class="col-md-12">
@@ -55,54 +53,42 @@
     </div>
 </div>
 
-@section Scripts{
+@section scripts{
     <script type="text/javascript">
 
-        var navs = zdy.module().import(function () {
+        var pages = zdy.module().import(function () {
 
-            this.CurrentNav = ko.observable()
+            this.CurrentPage = ko.observable()
 
             this.newChild = function () {
                 form.reset()
-                form.ParentId(this.CurrentNav().Id)
+                form.ParentId(this.CurrentPage().Id)
             }
 
             this.newBrother = function () {
                 form.reset()
-                form.ParentId(this.CurrentNav().ParentId)
+                form.ParentId(this.CurrentPage().ParentId)
             }
 
             this.load = function () {
-                this.CurrentNav(undefined);
+                this.CurrentPage(undefined);
 
-                $.ajax({
-                    type: "GET",
-                    cache: false,
-                    url: "/Admin/PageTree",
-                    dataType: "html",
-                    success: function (res) {
-                        $("#navs-container").html(res);
+                zdy.loadPage("/Admin/PageTree").done(function (res) {
+                    $("#pages-container").html(res);
 
-                        $(".kt-nav__link").click(function () {
-                            $(".kt-nav__item--active").removeClass("kt-nav__item--active");
-                            $(this).parent().addClass("kt-nav__item--active");
-
-                            var data = $(this).data("nav")
-                            if (data) {
-                                form.load(data) 
-                                navs.CurrentNav(data)
-                            }
-                        })
-                    },
-                    error: function () {
-                        zdy.toastr.error("加载内容出现错误。请检查您的连接,再试一次！");
-                    }
-                });
+                    $(".page-edit").click(function () {
+                        var data = $(this).closest("tr").data("json")
+                        if (data) {
+                            form.load(data)
+                            pages.CurrentPage(data)
+                        }
+                    })
+                })
 
                 return this;
             }
 
-        }).bind("navs").load()
+        }).bind("pages").load()
 
         var form = zdy.form().options({
             fields: [
@@ -126,23 +112,18 @@
         }).import(function () {
 
             this.afterAdd = function (data) {
-                navs.load()
+                pages.load()
                 this.reset()
             }
 
             this.afterUpdate = function (data) {
-                navs.load()
+                pages.load()
                 this.reset()
             }
 
             this.afterDelete = function () {
-                navs.load()
+                pages.load()
                 this.reset()
-            }
-
-            this.removeThis = function (data) {
-                this.load(data.data)
-                this.delete()
             }
 
             this.select2Template = function (state) {

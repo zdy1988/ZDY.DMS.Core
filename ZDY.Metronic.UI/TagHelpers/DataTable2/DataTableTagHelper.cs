@@ -53,7 +53,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             if (Fields.IsNull())
             {
-                Fields = Dataset.GetType().GetProperty("Item").PropertyType.GetProperties().Select(t => new DataTableField { Name = t.Name }).ToList();
+                Fields = Dataset.GetType().GetProperty("Item").PropertyType.GetProperties().Select(t => new DataTableField { FieldName = t.Name }).ToList();
             }
 
             var thead = new TagBuilder("thead");
@@ -98,7 +98,7 @@ namespace ZDY.Metronic.UI.TagHelpers
                     {
                         var field = Fields[i];
 
-                        var value = type.GetProperty(field.Name).GetValue(item, null).ToString();
+                        var value = type.GetProperty(field.FieldName).GetValue(item, null).ToString();
 
                         AppendDataTableCell(row, dataTableContext, field, "td", value, i);
                     }
@@ -131,7 +131,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 
             if (field.IsNotNull())
             {
-                cell.Attributes.Add("data-field", field.Name);
+                cell.Attributes.Add("data-field", field.FieldName);
             }
 
             return cell;
@@ -139,9 +139,9 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         internal void AppendDataTableCell(TagBuilder row, DataTableContext dataTableContext, DataTableField field, string tagName, string value, int columnIndex)
         {
-            var checkboxColumn = dataTableContext.CheckboxColumns.FirstOrDefault(t => t.FieldName == field.Name);
+            var checkboxColumn = dataTableContext.CheckboxColumns.FirstOrDefault(t => t.FieldName == field.FieldName);
 
-            var templateColumn = dataTableContext.TemplateColumns.FirstOrDefault(t => t.Item1.FieldName == field.Name);
+            var templateColumn = dataTableContext.TemplateColumns.FirstOrDefault(t => t.Item1.FieldName == field.FieldName);
 
             var cell = BuildCell(tagName, field);
 
@@ -223,7 +223,7 @@ namespace ZDY.Metronic.UI.TagHelpers
             }
             else
             {
-                var name = String.IsNullOrWhiteSpace(field.DisplayName) ? field.Name : field.DisplayName;
+                var name = String.IsNullOrWhiteSpace(field.DisplayName) ? field.FieldName : field.DisplayName;
 
                 cell.InnerHtml.AppendHtml($@"<span>{name}</span>");
             }

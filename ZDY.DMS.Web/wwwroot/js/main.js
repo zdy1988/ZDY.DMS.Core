@@ -95,7 +95,7 @@ window.openWindow = function (page, isRefresh) {
 
     $page.show();
 
-    window.setActivePage(pageSrc);
+    window.setMenuActive(pageSrc);
 
     window.location = "/Home/Main#" + pageSrc;
 };
@@ -153,10 +153,10 @@ window.gotoIndex = function () {
     window.location = "/Index";
 };
 
-window.setActivePage = function (url) {
-    var $link = $(".kt-menu__link[href='" + url + "']");
+window.setMenuActive = function (url) {
+    var $link = window.findMenuLink(url);
 
-    if ($link.length > 0) {
+    if ($link) {
         $(".kt-menu__item--active").removeClass('kt-menu__item--active');
         $(".kt-menu__item--open").removeClass("kt-menu__item--open");
 
@@ -171,7 +171,7 @@ window.setActivePage = function (url) {
     }
 };
 
-window.findPage = function (url) {
+window.findMenuLink = function (url) {
     if (url === undefined || url === "") {
         return false;
     }
@@ -179,25 +179,32 @@ window.findPage = function (url) {
     var href = info[0];
     var $link = $(".kt-menu__link[href='" + href + "']");
     if ($link.length > 0) {
+        return $link;
+    }
+    return undefined;
+};
+
+window.findMenuData = function (url) {
+    var $link = window.findMenuLink(url);
+    if ($link) {
         var data = $link.data("page");
         if (data !== undefined) {
             data.PageSrc = url;
-
             return data;
         }
     }
-    return this.undefined;
+    return undefined;
 };
 
 window.gotoPage = function (url) {
-    var data = window.findPage(url);
+    var data = window.findMenuData(url);
     if (data) {
         window.openWindow(data, true);
     }
 };
 
 window.closePage = function (url) {
-    var data = window.findPage(url);
+    var data = window.findMenuData(url);
     if (data) {
         window.closeWindow(data, true);
     }

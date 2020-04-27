@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ZDY.Metronic.UI
@@ -26,12 +27,7 @@ namespace ZDY.Metronic.UI
 
             if (matchs.Count > 1)
             {
-                foreach (Match match in matchs)
-                {
-                    input = input.Replace(match.Value, $"-{match.Value}");
-                }
-
-                input = input.Substring(1);
+                input = Regex.Replace(input, "[A-Z]", "-${0}").Substring(1);
             }
 
             return Regex.Replace(input, "_", "-");

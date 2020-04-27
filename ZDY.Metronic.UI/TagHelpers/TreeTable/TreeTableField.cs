@@ -4,20 +4,14 @@ using System.Text;
 
 namespace ZDY.Metronic.UI
 {
-    public class DataTableField
+    public class TreeTableField
     {
         public string DisplayName { get; set; }
 
         public string FieldName { get; set; }
 
-        public bool IsSort { get; set; }
-
-        public bool IsCenter { get; set; }
+        public bool IsCentered { get; set; }
 
         public int Width { get; set; }
-
-        public bool IsAutoWidth { get; set; } = false;
-
-        public bool IsAutoHide { get; set; } = true;
     }
 }

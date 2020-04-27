@@ -1264,9 +1264,9 @@ var zdy = function () {
 
             c.then(function (result) {
                 if (result.value) {
-                    defer.resolve(true);
-                } else if (result.dismiss === 'cancel') {
-                    defer.resolve(false);
+                    defer.resolve();
+                } else {
+                    defer.reject();
                 }
             });
         }).promise();
@@ -1277,7 +1277,7 @@ var zdy = function () {
             var $modal;
 
             if (window.parent.$) {
-                $(window.top.document.body).append($("#" + id).clone(true));
+                $(window.top.document.body).append($("#" + id).clone(true, true));
                 $modal = window.parent.$("#" + id);
 
             } else {
@@ -1352,6 +1352,25 @@ var zdy = function () {
     _.replacePage = function (url) {
         _.closePage();
         _.gotoPage(url);
+    };
+
+    _.loadPage = function (url) {
+        return $.ajax({
+            type: "GET",
+            cache: false,
+            url: url,
+            dataType: "html",
+            beforeSend: function (request) {
+                request.setRequestHeader("Authorization", _.token.get());
+                _.showLoading();
+            },
+            complete: function () {
+                _.hideLoading();
+            },
+            error: function () {
+                zdy.toastr.error("加载内容出现错误。请检查您的连接,再试一次！");
+            }
+        });
     };
 
     _.colors = [

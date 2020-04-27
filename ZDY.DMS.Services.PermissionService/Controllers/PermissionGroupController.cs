@@ -20,20 +20,22 @@ namespace ZDY.DMS.Services.PermissionService.Controllers
 
         protected override void BeforeAdd(UserGroup entity)
         {
-            if (this.Repository.Exists(t => t.CompanyId == entity.CompanyId && (t.GroupName == entity.GroupName || t.GroupCode == entity.GroupCode)))
-            {
-                throw new InvalidOperationException("此权限组名称或代码已存在");
-            }
-
             entity.CompanyId = this.UserIdentity.CompanyId;
+
+            if (this.Repository.Exists(t => t.CompanyId == entity.CompanyId && t.GroupName == entity.GroupName))
+            {
+                throw new InvalidOperationException("此角色名称已存在");
+            }
         }
 
         protected override void BeforeUpdate(UserGroup original, UserGroup entity)
         {
-            if (this.Repository.Exists(t => t.CompanyId == entity.CompanyId && (t.GroupName == entity.GroupName || t.GroupCode == entity.GroupCode) && t.Id != entity.Id))
+            if (this.Repository.Exists(t => t.CompanyId == entity.CompanyId && t.GroupName == entity.GroupName && t.Id != entity.Id))
             {
-                throw new InvalidOperationException("此角色名称或代码已存在");
+                throw new InvalidOperationException("此角色名称已存在");
             }
+
+            base.BeforeUpdate(original, entity);
         }
 
         protected override void BeforeDelete(Guid id)

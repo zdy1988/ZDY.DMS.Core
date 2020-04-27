@@ -146,7 +146,7 @@
                 <span data-bind="text: LoginMessage"></span>
             </div>
             <text-box name="账号" icon="User" field="Account"/>
-            <text-box name="密码" kind="Password" icon="Lock" field="Password"/>
+            <text-box name="密码" kind="Password" icon="Lock" field="Password" bind="valueUpdate: 'afterkeydown'"/>
             <div class="form-actions">
                 <check-box text="记住账号" field="Remember"></check-box>
                 <button state="Success" size="Sm" class-names="pull-right" data-bind="{click:handleLogin}"> 登陆 </button>

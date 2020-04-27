@@ -80,7 +80,7 @@ namespace ZDY.Metronic.UI.TagHelpers
                                  {(IsShowHeader ? header : "")}
                                  <tbody>
                                      <!-- ko foreach: {SourceKey} -->
-                                        <tr class='odd gradeX' {(!String.IsNullOrEmpty(RowClickFuntion) ? rowClickFunctionBind : "")}>
+                                        <tr {(!String.IsNullOrEmpty(RowClickFuntion) ? rowClickFunctionBind : "")}>
                                             {(IsShowCheckboxColumn ? checkboxColumn2 : "")}
                                             {childContent.GetContent()}
                                         </tr>

@@ -12,6 +12,8 @@ namespace ZDY.Metronic.UI.TagHelpers
     [HtmlTargetElement("pager", TagStructure= TagStructure.NormalOrSelfClosing)]
     public class PagerTagHelper : TagHelper
     {
+        public virtual bool IsSimpled { get; set; } = false;
+
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             await output.GetChildContentAsync();
@@ -24,12 +26,20 @@ namespace ZDY.Metronic.UI.TagHelpers
 
             output.Attributes.Add("style", "margin: 5px;");
 
-            var content = @"<div class='kt-pagination__toolbar'>
-                                <div class='pagination__desc'>
-                                    显示 <span data-bind='text:$root.pageSizeStart'></span> - <span data-bind='text:$root.pageSizeEnd'></span> 条，每页 <select class='form-control kt-font-info' style='width: 60px; display: inline; margin: 0px;' data-bind='value:pageSize,event:{&quot;change&quot;:$root.firstPage}'><option value='10'>10</option><option value='20'>20</option><option value='50'>50</option><option value='100'>100</option><option value='1000000000'>全部</option></select> 条记录，共 <span data-bind='text:$root.count'></span> 条记录
-                                </div>
-                            </div>
-                            <div class='kt-pagination__links'>
+            if (IsSimpled)
+            {
+                output.Content.AppendHtml("<div></div>");
+            }
+            else
+            {
+                output.Content.AppendHtml(@"<div class='kt-pagination__toolbar'>
+                                                <div class='pagination__desc'>
+                                                    显示 <span data-bind='text:$root.pageSizeStart'></span> - <span data-bind='text:$root.pageSizeEnd'></span> 条，每页 <select class='form-control kt-font-info' style='width: 60px; display: inline; margin: 0px;' data-bind='value:pageSize,event:{&quot;change&quot;:$root.firstPage}'><option value='10'>10</option><option value='20'>20</option><option value='50'>50</option><option value='100'>100</option><option value='1000000000'>全部</option></select> 条记录，共 <span data-bind='text:$root.count'></span> 条记录
+                                                </div>
+                                            </div>");
+            }
+
+            var content = @"<div class='kt-pagination__links'>
                                 <ul class='pagination pagination-sm'>
                                     <!--ko if:showStartPagerDot-->
                                     <li class='kt-pagination__link--first' data-bind='click:firstPage'>
@@ -54,7 +64,7 @@ namespace ZDY.Metronic.UI.TagHelpers
                                     <!--/ko-->
                                 </ul>
                             </div>";
-            output.Content.SetHtmlContent(content);
+            output.Content.AppendHtml(content);
         }
     }
 }

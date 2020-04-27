@@ -3,136 +3,118 @@
 
 <div class="row">
     <div class="col-md-8">
-        <portlet title="所有部门" is-fit="true" data-url="/Organization/DepartmentTree?companyId=@Model.CompanyId" id="departments-tree-portlet" style="min-height:600px;">
+        <portlet title="所有部门" data-model="departments">
+            <portlet-header-action-container>
+                <button size="Sm" state="Brand" icon="Plus" data-bind="click:newBrother, visible:CurrentDepartment()">
+                    同级
+                </button>
+                <button size="Sm" state="Dark" icon="Plus" data-bind="click:newChild, visible:CurrentDepartment()">
+                    子级
+                </button>
+            </portlet-header-action-container>
+
+            <div class="kt-scroll" data-scroll="true" data-height="660">
+                <div id="departments-container"></div>
+            </div>
         </portlet>
     </div>
     <div class="col-md-4">
-        <portlet title="部门信息" is-fit="true" is-form="true" data-model="form" style="min-height:600px;">
-            <form-builder>
-                <div class="row">
-                    <div class="col-md-12" data-bind="visible:ParentDepartmentName()">
-                        <text-box field="ParentDepartmentName" name="上级部门" is-disabled="true"></text-box>
-                    </div>
-                    <div class="col-md-12">
-                        <text-box field="DepartmentName" name="部门名称" is-required="true"></text-box>
-                    </div>
-                    <div class="col-md-12">
-                        <text-box field="Phone" name="部门电话" is-required="true"></text-box>
-                    </div>
-                    <div class="col-md-12">
-                        <text-box field="Fax" name="传真"></text-box>
-                    </div>
-                    <div class="col-md-12">
-                        <text-box field="Order" name="排序(数值越小越靠前)" is-required="true"></text-box>
-                    </div>
-                    <div class="col-md-12">
-                        <text-box field="Note" name="备注" is-multiple="true"></text-box>
-                    </div>
+        <portlet title="部门信息" data-model="form" is-height-fluid="true">
+            <div class="row">
+                <div class="col-md-12">
+                    <text-box field="DepartmentName" name="部门名称" is-required="true"></text-box>
                 </div>
-                <form-actions>
-                    <button type="reset" color="Default" data-bind="click:reset">重置</button>
-                    <button type="button" color="RedMint" data-bind="click:$root.delete, visible:Id()">删除</button>
-                    <button type="button" color="Green" data-bind="click:update, visible:Id()">修改</button>
-                    <button type="button" color="Green" data-bind="click:add, visible:!Id()">提交</button>
-                </form-actions>
-            </form-builder>
+                <div class="col-md-12">
+                    <text-box field="Phone" name="部门电话" is-required="true"></text-box>
+                </div>
+                <div class="col-md-12">
+                    <text-box field="Fax" name="传真"></text-box>
+                </div>
+                <div class="col-md-12">
+                    <text-box field="Order" name="排序(数值越小越靠前)" kind="Number" is-required="true"></text-box>
+                </div>
+                <div class="col-md-12">
+                    <text-box field="Note" name="备注" kind="Textarea"></text-box>
+                </div>
+            </div>
+            <portlet-footer-action-container align="Right">
+                <button size="Sm" data-bind="click:reset">重置</button>
+                <button size="Sm" state="Danger" data-bind="click:$root.delete, visible:Id()">删除</button>
+                <button size="Sm" state="Success" data-bind="click:update, visible:Id()">修改</button>
+                <button size="Sm" state="Success" data-bind="click:add, visible:!Id()">提交</button>
+            </portlet-footer-action-container>
         </portlet>
     </div>
 </div>
 
-@section Scripts{
+@section scripts{
     <script type="text/javascript">
-        require([
-            "jquery",
-            "ko",
-            "zdy",
-            "bootstrap",
-            ui], function ($, ko, zdy) {
-                var ui = arguments[arguments.length - 1];
-                ui.init();
+        var departments = zdy.module().import(function () {
 
-                $("#departments-tree-portlet").on("portlet.onload", function () {
+            this.CurrentDepartment = ko.observable()
 
-                    ui.app.initTreeTable();
+            this.newChild = function () {
+                form.reset()
+                form.ParentId(this.CurrentDepartment().Id)
+            }
 
-                    $(".table-tree > tbody").delegate(".btn", "click", function () {
-                        var json = $(this).closest("tr").attr("data-json");
-                        var data = JSON.parse(json);
-                        var action = $(this).attr("data-action")
+            this.newBrother = function () {
+                form.reset()
+                form.ParentId(this.CurrentDepartment().ParentId)
+            }
 
-                        form.getInstance()[action](data)
-                    });
-                });
+            this.load = function () {
+                this.CurrentDepartment(undefined);
 
-                var LoadTree = function () {
-                    $("#departments-tree-portlet > .portlet-title > .tools > a.reload").trigger("click")
-                }
+                zdy.loadPage("/Organization/DepartmentTree?companyId=@Model.CompanyId").done(function (res) {
+                    $("#departments-container").html(res);
 
-                var GetParentDepartmentName = function (parentId) {
-                    var $ParentDepartmentNode = $(".table-tree > tbody tr td[data-id=" + parentId + "]");
-                    if ($ParentDepartmentNode) {
-                        return $ParentDepartmentNode.text();
-                    } else {
-                        return "";
-                    }
-                }
+                    $(".department-edit").click(function () {
+                        var data = $(this).closest("tr").data("json")
+                        if (data) {
+                            form.load(data)
+                            departments.CurrentDepartment(data)
+                        }
+                    })
+                })
 
-                LoadTree()
+                return this;
+            }
 
-                var form = zdy.form().options({
-                    fields: [
-                        { field: 'Id', value: ko.observable() },
-                        { field: 'CompanyId', value: ko.observable('@Model.CompanyId') },
-                        { field: 'DepartmentName', value: ko.observable() },
-                        { field: 'Phone', value: ko.observable() },
-                        { field: 'Fax', value: ko.observable() },
-                        { field: 'Note', value: ko.observable() },
-                        { field: 'Order', value: ko.observable(0) },
-                        { field: 'ParentId', value: ko.observable() }
-                    ],
-                    dataAddUrl: 'Department/Add',
-                    dataUpdateUrl: 'Department/Update',
-                    dataDeleteUrl: 'Department/Delete'
-                }).import(function () {
+        }).bind("departments").load();
 
-                    this.afterAdd = function (data) {
-                        LoadTree()
-                        this.reset()
-                    }
+        var form = zdy.form().options({
+            fields: [
+                { field: 'Id', value: ko.observable() },
+                { field: 'CompanyId', value: ko.observable('@Model.CompanyId') },
+                { field: 'DepartmentName', value: ko.observable() },
+                { field: 'Phone', value: ko.observable() },
+                { field: 'Fax', value: ko.observable() },
+                { field: 'Note', value: ko.observable() },
+                { field: 'Order', value: ko.observable(0) },
+                { field: 'ParentId', value: ko.observable() }
+            ],
+            dataAddUrl: 'Department/Add',
+            dataUpdateUrl: 'Department/Update',
+            dataDeleteUrl: 'Department/Delete'
+        }).import(function () {
 
-                    this.afterUpdate = function (data) {
-                        LoadTree()
-                        this.reset()
-                    }
+            this.afterAdd = function (data) {
+                departments.load()
+                this.reset()
+            }
 
-                    this.afterDelete = function () {
-                        LoadTree()
-                        this.reset()
-                    }
+            this.afterUpdate = function (data) {
+                departments.load()
+                this.reset()
+            }
 
-                    this.ParentDepartmentName = ko.observable()
+            this.afterDelete = function () {
+                departments.load()
+                this.reset()
+            }
 
-                    this.newChild = function (data) {
-                        this.reset()
-                        this.ParentId(data.Id)
-                        this.ParentDepartmentName(data.DepartmentName)
-                    }
-
-                    this.newBrother = function (data) {
-                        this.reset()
-                        this.ParentId(data.ParentId)
-                        this.ParentDepartmentName(GetParentDepartmentName(data.ParentId))
-                    }
-
-                    this.detailThis = function (data) {
-                        this.load(data)
-                        this.ParentDepartmentName(GetParentDepartmentName(data.ParentId))
-                    }
-
-
-
-                }).bind("form").load({})
-            });
+        }).bind("form").load({})
     </script>
 }
 

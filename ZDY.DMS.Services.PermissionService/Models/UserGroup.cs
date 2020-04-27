@@ -9,6 +9,5 @@ namespace ZDY.DMS.Services.PermissionService.Models
     {
         public Guid CompanyId { get; set; }
         public string GroupName { get; set; }
-        public string GroupCode { get; set; }
     }
 }
