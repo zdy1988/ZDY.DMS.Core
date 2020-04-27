@@ -13,7 +13,7 @@
                 </button>
             </portlet-header-action-container>
 
-            <div class="kt-scroll" data-scroll="true" data-height="660">
+            <div class="kt-scroll" data-scroll="true" data-height="750">
                 <div id="pages-container"></div>
             </div>
         </portlet>
@@ -23,6 +23,9 @@
             <div class="row">
                 <div class="col-md-12">
                     <text-box field="PageName" name="页面名称" is-required="true"></text-box>
+                </div>
+                <div class="col-md-12">
+                    <text-box field="PageCode" name="页面代码" is-required="true"></text-box>
                 </div>
                 <div class="col-md-12">
                     <text-box field="MenuName" name="菜单名称" is-required="true"></text-box>
@@ -96,14 +99,11 @@
                 { field: 'ParentId', value: ko.observable() },
                 { field: 'PageName', value: ko.observable() },
                 { field: 'PageCode', value: ko.observable() },
-                { field: 'Level', value: ko.observable() },
-                { field: 'Type', value: ko.observable() },
-                { field: 'IsInMenu', value: ko.observable(true) },
                 { field: 'MenuName', value: ko.observable() },
+                { field: 'IsInMenu', value: ko.observable(true) },
                 { field: 'Src', value: ko.observable() },
                 { field: 'Icon', value: ko.observable() },
                 { field: 'Order', value: ko.observable(0) },
-                { field: 'IsPassed', value: ko.observable(false) },
                 { field: 'IsDisabled', value: ko.observable(false) }
             ],
             dataAddUrl: 'Page/Add',
