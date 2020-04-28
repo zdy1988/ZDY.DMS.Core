@@ -154,7 +154,16 @@ namespace ZDY.Metronic.UI.TagHelpers
                             {
                                 var value = type.GetProperty(column.Item1.FieldName).GetValue(item.Item1.Data, null).ToString();
 
-                                cell.InnerHtml.AppendHtml(String.Format(column.Item2.ToHtml(), value));
+                                var html = column.Item2.ToHtml();
+
+                                if (!String.IsNullOrWhiteSpace(html))
+                                {
+                                    cell.InnerHtml.AppendHtml(String.Format(html, value));
+                                }
+                                else
+                                {
+                                    cell.InnerHtml.AppendHtml(value);
+                                }
                             }
                             else
                             {

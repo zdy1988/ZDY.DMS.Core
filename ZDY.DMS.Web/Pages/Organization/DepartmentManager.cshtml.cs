@@ -13,8 +13,8 @@ namespace ZDY.DMS.Web.Pages.Organization
         {
             if (companyId.Equals(default))
             {
-                var userIdentity = this.HttpContext.GetUserIdentity();
-                companyId = userIdentity.CompanyId;
+                var identity = this.HttpContext.GetUserIdentity();
+                companyId = identity.CompanyId;
             }
 
             CompanyId = companyId;

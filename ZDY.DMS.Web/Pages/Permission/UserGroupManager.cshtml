@@ -120,19 +120,9 @@
 
             this.handleSaveGroupMember = function () {
                 var groupId = userGroupTable.CurrentGroupId()
+                var members = userTable.selectData()
 
-                if (groupId == 0) {
-                    zdy.toastr.error("请先选择角色后再保存")
-                    return
-                }
-
-                var members = userTable.selectData().map(function (item) {
-                    return {
-                        UserId: item
-                    }
-                })
-
-                zdy.ajaxPost("Permission/AddUserGroupMember", {
+                zdy.ajaxPost("Permission/SaveUserGroupMember", {
                     groupId: groupId,
                     members: members
                 }).done(function () {
@@ -142,11 +132,9 @@
 
             this.handleLoadGroupMember = function () {
                 var groupId = userGroupTable.CurrentGroupId()
+
                 zdy.ajaxPost("Permission/FindUserGroupMember", { groupId: groupId }).done(function (data) {
-                    var rst = data.Data.map(function (item) {
-                        return item.UserId
-                    })
-                    userTable.selectData(rst)
+                    userTable.selectData(data.Data)
                 })
             }
 

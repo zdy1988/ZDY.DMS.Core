@@ -33,17 +33,17 @@ namespace ZDY.DMS.Web.Pages.Home
 
         public async Task OnGetAsync()
         {
-            var userIdentity = this.HttpContext.GetUserIdentity();
+            var identity = this.HttpContext.GetUserIdentity();
 
-            if (userIdentity.IsAdministrator)
+            if (identity.IsAdministrator)
             {
                 Pages = await this.pageService.GetMultiLevelPagesAsync();
             }
             else
             {
-                var pagePermissions = await this.pagePermissionService.GetUserPagePermissionAsync(userIdentity.Id);
+                var pagePermissions = await this.pagePermissionService.GetUserPagePermissionAsync(identity.Id);
 
-                Pages = await this.pageService.GetMultiLevelPagesAsync(pagePermissions, userIdentity.CompanyId);
+                Pages = await this.pageService.GetMultiLevelPagesAsync(pagePermissions, identity.CompanyId);
             }
         }
 

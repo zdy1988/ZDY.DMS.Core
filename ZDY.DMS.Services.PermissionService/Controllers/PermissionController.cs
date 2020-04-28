@@ -23,7 +23,7 @@ namespace ZDY.DMS.Services.PermissionService.Controllers
         }
 
         [HttpPost]
-        public async Task AddUserGroupMember(Guid groupId, List<UserGroupMember> members)
+        public async Task SaveUserGroupMember(Guid groupId, Guid[] members)
         {
             if (groupId.Equals(default(Guid)))
             {
@@ -32,28 +32,31 @@ namespace ZDY.DMS.Services.PermissionService.Controllers
 
             await userGroupMemberRepository.RemoveAsync(t => t.GroupId == groupId);
 
-            foreach (var member in members.Distinct())
+            foreach (var member in members.Where(t => !t.Equals(default)).Distinct())
             {
-                member.GroupId = groupId;
-                await userGroupMemberRepository.AddAsync(member);
+                await userGroupMemberRepository.AddAsync(new UserGroupMember
+                {
+                    GroupId = groupId,
+                    UserId = member
+                });
             }
 
             await this.RepositoryContext.CommitAsync();
         }
 
         [HttpPost]
-        public async Task<IEnumerable<UserGroupMember>> FindUserGroupMember(Guid groupId)
+        public async Task<IEnumerable<Guid>> FindUserGroupMember(Guid groupId)
         {
             if (groupId.Equals(default(Guid)))
             {
                 throw new InvalidOperationException("用户组信息有误");
             }
 
-            return await userGroupMemberRepository.FindAllAsync(t => t.GroupId == groupId);
+            return (await userGroupMemberRepository.FindAllAsync(t => t.GroupId == groupId)).Select(t => t.UserId);
         }
 
         [HttpPost]
-        public async Task SetUserGroupPagePermission(Guid groupId, List<UserGroupPagePermission> permissions)
+        public async Task SaveUserGroupPagePermission(Guid groupId, Guid[] permissions)
         {
             if (groupId.Equals(default(Guid)))
             {
@@ -62,16 +65,15 @@ namespace ZDY.DMS.Services.PermissionService.Controllers
 
             await userGroupPagePermissionRepository.RemoveAsync(t => t.GroupId == groupId);
 
-            if (permissions.Count > 0)
+            if (permissions.Count() > 0)
             {
-                var distinctResult = permissions.Where(t => !t.PageId.Equals(default))
-                                                .GroupBy(t => t.PageId)
-                                                .Select(t => t.First());
-
-                foreach (var permission in distinctResult)
+                foreach (var permission in permissions.Where(t => !t.Equals(default)).Distinct())
                 {
-                    permission.GroupId = groupId;
-                    await userGroupPagePermissionRepository.AddAsync(permission);
+                    await userGroupPagePermissionRepository.AddAsync(new UserGroupPagePermission
+                    {
+                        GroupId = groupId,
+                        PageId = permission
+                    });
                 }
             }
 
@@ -79,14 +81,14 @@ namespace ZDY.DMS.Services.PermissionService.Controllers
         }
 
         [HttpPost]
-        public async Task<IEnumerable<UserGroupPagePermission>> FindUserGroupPagePermission(Guid groupId)
+        public async Task<IEnumerable<Guid>> FindUserGroupPagePermission(Guid groupId)
         {
             if (groupId.Equals(default(Guid)))
             {
                 throw new InvalidOperationException("用户组信息有误");
             }
 
-            return await userGroupPagePermissionRepository.FindAllAsync(t => t.GroupId == groupId);
+            return (await userGroupPagePermissionRepository.FindAllAsync(t => t.GroupId == groupId)).Select(t => t.PageId);
         }
     }
 }

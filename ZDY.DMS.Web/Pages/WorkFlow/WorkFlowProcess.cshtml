@@ -53,7 +53,7 @@
     </tab-content>
 </tabs>
 
-@section Styles{
+@section styles{
     <style type="text/css">
         #canvas {
             background-image: url(/assets/global/img/flow-canvas-bg.gif);
@@ -76,7 +76,7 @@
     </style>
 }
 
-@section Scripts{
+@section scripts{
     <script type="text/javascript">
         var designData = @Html.Raw(Model.Instance.FlowDesignJson)
         var statusData = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.States))')

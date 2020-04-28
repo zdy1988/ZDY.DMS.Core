@@ -9,7 +9,7 @@ using ZDY.Metronic.UI.Untils;
 
 namespace ZDY.Metronic.UI.TagHelpers
 {
-    [HtmlTargetElement("tree-table-template-column", ParentTag = "tree-table")]
+    [HtmlTargetElement("tree-table-template-column", ParentTag = "tree-table" , TagStructure = TagStructure.NormalOrSelfClosing)]
     public class TreeTableTemplateColumnTagHelper : HelperBase
     {
         public virtual string DisplayName { get; set; }
@@ -27,10 +27,7 @@ namespace ZDY.Metronic.UI.TagHelpers
             if (context.TryGetContext<TreeTableContext, TreeTableTagHelper>(out TreeTableContext treeTableContext))
             {
                 var childContent = await output.GetChildContentAsync();
-                if (!childContent.IsEmptyOrWhiteSpace)
-                {
-                    treeTableContext.TreeTableTemplateColumns.Add(new Tuple<TreeTableTemplateColumnTagHelper, IHtmlContent>(this, childContent));
-                }
+                treeTableContext.TreeTableTemplateColumns.Add(new Tuple<TreeTableTemplateColumnTagHelper, IHtmlContent>(this, childContent));
             }
         }
     }

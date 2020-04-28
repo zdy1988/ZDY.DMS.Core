@@ -17,9 +17,9 @@ namespace ZDY.DMS.Services.OrganizationService.Implementation
             this.departmentFlowRepository = this.GetRepository<Guid, Department>();
         }
 
-        public async Task<IEnumerable<Department>> GetAllDepartmentAsync(Guid companyID)
+        public async Task<IEnumerable<Department>> GetAllDepartmentAsync(Guid companyId)
         {
-            return await departmentFlowRepository.FindAllAsync(t => t.CompanyId == companyID, o => o.Desc(t => t.TimeStamp));
+            return await departmentFlowRepository.FindAllAsync(t => t.CompanyId == companyId, o => o.Desc(t => t.TimeStamp));
         }
     }
 }

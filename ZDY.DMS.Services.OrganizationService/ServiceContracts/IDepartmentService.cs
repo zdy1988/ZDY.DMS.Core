@@ -7,6 +7,6 @@ namespace ZDY.DMS.Services.OrganizationService.ServiceContracts
 {
     public interface IDepartmentService
     {
-        Task<IEnumerable<Department>> GetAllDepartmentAsync(Guid companyID);
+        Task<IEnumerable<Department>> GetAllDepartmentAsync(Guid companyId);
     }
 }
