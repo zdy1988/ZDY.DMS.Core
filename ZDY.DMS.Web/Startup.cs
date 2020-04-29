@@ -104,6 +104,8 @@ namespace ZDY.DMS.Web
             //UI
             services.AddMetronicUI(setting => {
 
+                setting.ModalDismissText = "关闭";
+
                 setting.TextBoxPlaceholderFormat = "请输入{0}...";
 
                 setting.SelectBoxPlaceholderFormat = "请选择{0}...";

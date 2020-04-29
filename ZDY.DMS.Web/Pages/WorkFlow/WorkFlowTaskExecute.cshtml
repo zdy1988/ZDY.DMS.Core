@@ -13,22 +13,21 @@
 
 @if (Model.CurrentTask.Is(WorkFlowTaskState.Waiting))
 {
-    <note state="Warning">
+    <alert state="Danger">
         <strong>提醒</strong> 此任务还需其他人员处理后才能处理！
-    </note>
+    </alert>
 }
 
-<div class="row" data-model="flow-instance">
+<div class="row">
     <div class="@(Model.CanExecute ? "col-md-8" : "col-md-12")">
-        <portlet title="@Model.Instance.Title" title-icon="Slack" is-fit="true" is-show-tools="false">
+        <portlet title="@Model.Instance.Title" data-model="flow-instance">
 
-            <portlet-actions>
-                <button bs-toggle-modal="modal-work-process">查看审批过程</button>
-            </portlet-actions>
+            <portlet-header-action-container>
+                <button state="Warning" hover-mode="Air" data-bind="click:handleShowProcess">查看审批过程</button>
+            </portlet-header-action-container>
 
-            <form-builder action="" id="fb">
-                <div id="fb-render" style="min-height: 600px;"></div>
-            </form-builder>
+
+            <div id="fb-render" style="min-height: 600px;"></div>
 
         </portlet>
     </div>
@@ -36,56 +35,73 @@
     @if (Model.CanExecute)
     {
         <div class="col-md-4">
-            <portlet title="审批意见" title-icon="Pencil" is-fit="true" is-show-tools="false">
+            <portlet title="审批流程" data-model="flow-instance" is-height-fluid="true">
+                @{
+                    var isMultiSelect = !Model.CurrentStep.IsControlBy(WorkFlowControlKinds.SingleSelect);
 
-                <form-builder>
+                    var isControlBySystem = Model.CurrentStep.IsControlBy(WorkFlowControlKinds.System);
+                }
 
-                    <div class="row">
-
-                        <div class="col-md-12">
-                            <select-box name="抄送至" options="@Model.UserOptions" is-use-place-holder="false" is-multiple="true" bind="select2: {placeholder: '请选择...', width: '100%', multiple: true, value: CopyTo}"></select-box>
-
-                            @if (Model.CurrentStep.SignatureType != (int)WorkFlowSignatureKinds.NoComment)
-                            {
-
-                                <text-box name="处理意见" field="Comment" is-multiple="true"></text-box>
-
-                            }
-
-                            @if (Model.CurrentStep.SignatureType == (int)WorkFlowSignatureKinds.CommentAndSignature)
-                            {
-
-                                <text-box name="签名密钥" field="SignaturePassword" text-box-type="Password"></text-box>
-
-                            }
-
+                @if (Model.CurrentStep.IsControlBy(WorkFlowControlKinds.System))
+                {
+                    <section>
+                        <p>可选择步骤：</p>
+                        <div class="row" data-bind="foreach:NextSteps">
+                            <div class="col-md-12">
+                                <p class="mb-1">
+                                    <check-box is-multi-select="@isMultiSelect" field="IsChecked" style="padding-left: 18px;"></check-box>
+                                    <!-- ko text:StepName --><!-- /ko -->
+                                </p>
+                                <div data-bind="if:HandlerType==0">
+                                    <select-box name="选择步骤处理者" options="@Model.UserOptions" is-place-holder-destroyed="true" rows="3" bind="attr:{id: StepId} ,select2: {placeholder: '请选择...', width: '100%', multiple: true, value: $data.Handlers}"></select-box>
+                                </div>
+                            </div>
                         </div>
+                    </section>
 
+                    <separator></separator>
+                }
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <select-box name="抄送至" options="@Model.UserOptions" is-place-holder-destroyed="true" rows="3" bind="select2: {placeholder: '请选择...', width: '100%', multiple: true, value: CopyTo}"></select-box>
+
+                        @if (Model.CurrentStep.SignatureType != (int)WorkFlowSignatureKinds.NoComment)
+                        {
+
+                            <text-box name="处理意见" field="Comment" kind="Textarea"></text-box>
+
+                        }
+
+                        @if (Model.CurrentStep.SignatureType == (int)WorkFlowSignatureKinds.CommentAndSignature)
+                        {
+
+                            <text-box name="签名密钥" field="SignaturePassword" kind="Password"></text-box>
+
+                        }
                     </div>
+                </div>
 
-                    <form-actions class="margin-top-20">
+                <portlet-footer-action-container align="Right">
+                    <button icon="MailForward" state="Info" size="Sm" data-bind="click:handlePreRedirect">转交</button>
 
-                        <button icon="HandOLeft" color="BlueHoki" bs-toggle-modal="model-redirect-task">转交</button>
+                    @if (!Model.CurrentStep.IsBackTacticBy(WorkFlowBackTacticKinds.UnableToReturn))
+                    {
 
-                        @if (!Model.CurrentStep.IsBackTacticBy(WorkFlowBackTacticKinds.UnableToReturn))
-                        {
+                        <button icon="Close" state="Warning" size="Sm" data-bind="click:handleBack">退回</button>
 
-                            <button icon="HandStopO" color="Red" data-bind="click:handleBack">退回</button>
+                    }
 
-                        }
+                    @if (Model.NextSteps.Count() > 0)
+                    {
+                        <button icon="Check" state="Success" size="Sm" data-bind="click:handleSubmit">处理</button>
+                    }
+                    else
+                    {
+                        <button icon="Check" state="Success" size="Sm" data-bind="click:handleComplate">同意</button>
+                    }
 
-                        @if (Model.NextSteps.Count() > 0)
-                        {
-                            <button icon="HandODown" color="GreenJungle" bs-toggle-modal="modal-next-steps">处理</button>
-                        }
-                        else
-                        {
-                            <button icon="HandPaperO" color="GreenJungle" data-bind="click:handleComplate">同意</button>
-                        }
-
-                    </form-actions>
-
-                </form-builder>
+                </portlet-footer-action-container>
 
             </portlet>
         </div>
@@ -98,11 +114,10 @@
 
     <div class="row" data-model="flow-instance">
         <div class="col-md-12">
-            <portlet title="审批意见" title-icon="Pencil" is-fit="true" is-show-tools="false">
-
+            <portlet title="审批意见">
                 <div class="row">
                     <div class="col-md-12">
-                        <div class="todo-tasklist scroller" style="height: 265px;">
+                        <div class="todo-tasklist">
 
                             @foreach (var opinion in Model.HasCommentTasks)
                             {
@@ -131,55 +146,26 @@
 }
 
 <div data-model="flow-instance">
-    <modal title="下一步骤" id="modal-next-steps">
-        <modal-body>
-            <note state="Info">
-                请选择以下步骤：
-            </note>
-            <div class="row">
-                <div class="col-md-12">
-                    <list data-bind="foreach:NextSteps">
-                        <list-item>
-
-                            @{
-                                var inputType = @Model.CurrentStep.IsControlBy(WorkFlowControlKinds.SingleSelect) ? "radio" : "checkbox";
-                            }
-                            <h4 class="list-group-item-heading no-margin text-success">
-                                <input type="@inputType" name="nextStep" style="margin-right: 5px;" data-bind="checked: IsChecked, enable: IsAllowRuntimeToSelect == true" />
-                                <!-- ko text:StepName --><!-- /ko -->
-                                <badge data-bind="if: IsAllowRuntimeToSelect == false" theme="Danger" style="float: right; margin-top: 1px;">不能选择</badge>
-                            </h4>
-                            <div data-bind="if:HandlerType==0">
-                                <select-box options="@Model.UserOptions" name="选择步骤处理者" is-use-place-holder="false" is-multiple="true" field="Handlers" style="margin-bottom: 0px; margin-top: 10px;"></select-box>
-                            </div>
-                        </list-item>
-                    </list>
-                </div>
-            </div>
-        </modal-body>
-        <modal-footer dismiss-text="关闭">
-            <button type="button" class="btn green" data-bind="click:handleSubmit">提交</button>
-        </modal-footer>
-    </modal>
 
     <modal title="转交任务" id="model-redirect-task">
-        <modal-body>
-            <select-box name="选择转交处理人" options="@Model.UserOptions" field="RedirectHandler" is-use-place-holder="false"></select-box>
-        </modal-body>
-        <modal-footer dismiss-text="关闭">
-            <button type="button" class="btn green" data-bind="click:handleRedirect">确认</button>
+        <div class="row">
+            <div class="col-md-12">
+                <select-box field="RedirectHandler" is-bind-computed="true" name="选择转交处理人" options="@Model.UserOptions" is-place-holder-destroyed="true"></select-box>
+            </div>
+        </div>
+        <modal-footer>
+            <button state="Success" data-bind="click:handleRedirect">确认转交</button>
         </modal-footer>
     </modal>
 
     <modal title="审批过程" id="modal-work-process" size="Lg">
-        <modal-body>
-            <div class="row">
-                <div class="col-md-12">
-                    <iframe src="WorkFlowProcess?id=@Model.CurrentTask.InstanceId" frameborder="0" scrolling="no" style="width: 100%; border: none; height: 560px; margin-top: -48px;"></iframe>
-                </div>
+        <div class="row">
+            <div class="col-md-12">
+                <iframe src="/WorkFlow/WorkFlowProcess?id=@Model.CurrentTask.InstanceId" frameborder="0" scrolling="no" style="width: 100%; border: none; height: 480px;"></iframe>
             </div>
-        </modal-body>
+        </div>
     </modal>
+
 </div>
 
 @section styles{
@@ -285,191 +271,175 @@
 }
 
 @section scripts{
+    <script src="/js/workflow/form-render.min.js"></script>
 
     <script type="text/javascript">
-        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Model.Dictionary)) ')
-
         var formData = @Html.Raw(Model.Instance.FormJson)
+
         var data = @Html.Raw(Model.Instance.FormDataJson)
 
         var nextSteps = @Html.Raw(JsonConvert.SerializeObject(Model.NextSteps));
 
-        require([
-            "jquery",
-            "ko",
-            "zdy",
-            "app",
-            "bootstrap",
-            "form-render",
-            "jquery-select2",
-            ui], function ($, ko, zdy, app) {
-
-                var ui = arguments[arguments.length - 1];
-                ui.init();
-
-                var initRender = function () {
-                    for (var i = 0; i < formData.length; i++) {
-                        formData[i].disabled = true;
-                        for (var field in data) {
-                            if (field == formData[i].name) {
-                                formData[i].value = data[field]
-                            }
-                        }
+        var formRender = function () {
+            for (var i = 0; i < formData.length; i++) {
+                formData[i].disabled = true;
+                for (var field in data) {
+                    if (field == formData[i].name) {
+                        formData[i].value = data[field]
                     }
+                }
+            }
 
-                    return $('#fb-render').formRender({
-                        dataType: 'json',
-                        formData: JSON.stringify(formData),
-                        notify: {
-                            error: function (message) {
-                                return console.error(message);
-                            },
-                            success: function (message) {
-                                $("*[required=required]").each(function () {
-                                    $(this).attr("data-rule","required")
-                                })
+            return $('#fb-render').formRender({
+                dataType: 'json',
+                formData: JSON.stringify(formData),
+                notify: {
+                    error: function (message) {
+                        return console.error(message);
+                    },
+                    success: function (message) {
+                        $("*[required=required]").each(function () {
+                            $(this).attr("data-rule", "required")
+                        })
 
-                                return console.log(message);
-                            },
-                            warning: function (message) {
-                                return console.warn(message);
-                            }
-                        }
-                    });
+                        return console.log(message);
+                    },
+                    warning: function (message) {
+                        return console.warn(message);
+                    }
+                }
+            });
+        }();
+
+        var flowInstance = zdy.module().import(function () {
+
+            this.dic(dictionary)
+
+            this.CopyTo = ko.observable()
+
+            this.Comment = ko.observable("")
+
+            this.SignaturePassword = ko.observable("")
+
+            this.GetExecuteModel = function (steps) {
+
+                var ExecuteModel = function () {
+                    this.TaskId = '@Model.CurrentTask.Id'
+                    this.Steps = steps || [],
+                    this.Comment = flowInstance.Comment(),
+                    this.SignaturePassword = flowInstance.SignaturePassword()
+                    this.IsSign = false,
+                    this.Note = ''
                 }
 
-                var formRenderInstance = initRender();
+                return new ExecuteModel()
 
-                var flowInstance = zdy.module().import(function () {
+            };
 
-                    this.dic(dictionary)
+            nextSteps = nextSteps.map(function (item) {
 
-                    this.CopyTo = ko.observable()
+                item.IsChecked = false
+                item.Handlers = ko.observable()
 
-                    this.Comment = ko.observable("")
+                return item
+            });
 
-                    this.SignaturePassword = ko.observable("")
+            this.NextSteps = ko.observableArray(nextSteps)
 
-                    this.GetExecuteModel = function (steps) {
-
-                        var ExecuteModel = function () {
-                            this.InstanceId = '@Model.CurrentTask.InstanceId'
-                            this.GroupId = '@Model.CurrentTask.GroupId'
-                            this.StepId = '@Model.CurrentTask.StepId'
-                            this.FlowId = '@Model.CurrentTask.FlowId'
-                            this.TaskId = '@Model.CurrentTask.Id'
-                            this.Steps = steps || [],
-                            this.Comment = flowInstance.Comment(),
-                            this.SignaturePassword = flowInstance.SignaturePassword()
-                            this.IsSign = false,
-                            this.Note = ''
-                        }
-
-                        return new ExecuteModel()
-
-                    }
-
-                    nextSteps = nextSteps.map(function (item) {
-
-                        item.IsChecked = false
-                        item.Handlers = []
-
-                        return item
-                    })
-
-                    this.NextSteps = ko.observableArray(nextSteps)
-
-                    this.GetSelectNextSteps = function () {
-                        var result = []
-                        var steps = this.NextSteps()
-                        steps.map(function (item) {
-                            if (item.IsChecked) {
-                                var stepId = item.StepId
-                                var stepHandler = item.Handlers.map(function (item) {
+            this.GetSelectNextSteps = function () {
+                var result = []
+                var steps = this.NextSteps()
+                steps.map(function (item) {
+                    if (item.IsChecked) {
+                        var stepId = item.StepId
+                        var stepHandler = item.Handlers()
+                        if (stepHandler) {
+                            result.push({
+                                Key: stepId,
+                                Value: stepHandler.split(",").map(function (item) {
                                     return {
                                         Id: item
                                     }
                                 })
+                            });
+                        }
+                    }
+                });
+                return result
+            }
 
-                                result.push({
-                                    Key: stepId,
-                                    Value: stepHandler
-                                })
-                            }
-                        })
-                        return result
+            this.handleSubmit = function () {
+                var steps = this.GetSelectNextSteps()
+
+                var execute = flowInstance.GetExecuteModel(steps)
+
+                zdy.ajaxPost("WorkFlowHost/ExcuteSubmit", { execute: execute }).done(function (rst) {
+                    if (rst.IsSuccess) {
+                        zdy.toastr.success("操作成功");
+                        zdy.replacePage("/WorkFlow/WorkFlowTaskManager")
                     }
 
-                    this.handleSubmit = function () {
-                        var steps = this.GetSelectNextSteps()
-                        if (nextSteps.length > 0 && steps.length == 0) {
-                            zdy.toastr.error("请选择下一步骤")
-                            return;
+                })
+            }
+
+            this.handleComplate = function () {
+                zdy.confirm("确认同意此次操作？").done(function () {
+                    flowInstance.handleSubmit()
+                })
+            }
+
+            this.handleBack = function () {
+                zdy.confirm("确认退回此次操作？").done(function () {
+                    var execute = flowInstance.GetExecuteModel()
+
+                    zdy.ajaxPost("WorkFlowHost/ExcuteBack", { execute: execute }).done(function (rst) {
+
+                        if (rst.IsSuccess) {
+                            zdy.toastr.success("操作成功");
+                            zdy.replacePage("/WorkFlow/WorkFlowTaskManager")
                         }
 
-                        var execute = flowInstance.GetExecuteModel(steps)
+                    })
+                })
+            }
 
-                        zdy.ajaxPost("WorkFlowHost/ExcuteSubmit", { execute: execute }).done(function (rst) {
+            this.RedirectHandler = ko.observable()
 
-                            if (rst.IsSuccess) {
-                                zdy.toastr.success("操作成功");
-                                zdy.replacePage("/WorkFlow/WorkFlowTaskManager")
-                            }
+            this.handlePreRedirect = function () {
+                zdy.modal.show("model-redirect-task")
+            }
 
-                        })
+            this.handleRedirect = function () {
+                zdy.confirm("确认转交此项任务？").done(function () {
+                    var handler = flowInstance.RedirectHandler()
+
+                    if (handler == undefined || handler == "") {
+                        return
                     }
 
-                    this.handleComplate = function () {
-                        zdy.confirm("确认同意此次操作？").done(function () {
-                            flowInstance.handleSubmit()
-                        })
-                    }
+                    var steps = [{
+                        Key: '@(Model.CurrentTask.StepId)',
+                        Value: [{ Id: handler }]
+                    }]
 
-                    this.handleBack = function () {
-                        zdy.confirm("确认退回此次操作？").done(function () {
-                            var execute = flowInstance.GetExecuteModel()
+                    var execute = flowInstance.GetExecuteModel(steps)
 
-                            zdy.ajaxPost("WorkFlowHost/ExcuteBack", { execute: execute }).done(function (rst) {
+                    zdy.ajaxPost("WorkFlowHost/ExcuteRedirect", { execute: execute }).done(function (rst) {
 
-                                if (rst.IsSuccess) {
-                                    zdy.toastr.success("操作成功");
-                                    zdy.replacePage("/WorkFlow/WorkFlowTaskManager")
-                                }
+                        if (rst.IsSuccess) {
+                            zdy.toastr.success("操作成功");
+                            zdy.replacePage("/WorkFlow/WorkFlowTaskManager")
+                        }
 
-                            })
-                        })
-                    }
+                    })
+                })
+            }
 
-                    this.RedirectHandler = ko.observable()
+            this.handleShowProcess = function () {
+                zdy.modal.show("modal-work-process");
+            }
 
-                    this.handleRedirect = function () {
-                        zdy.confirm("确认转交此项任务？").done(function () {
-                            var handler = flowInstance.RedirectHandler()
-
-                            if (handler == undefined || handler == "") {
-                                return
-                            }
-
-                            var steps = [{
-                                Key: '@(Model.CurrentTask.StepId)',
-                                Value: [{ Id: handler}]
-                            }]
-
-                            var execute = flowInstance.GetExecuteModel(steps)
-
-                            zdy.ajaxPost("WorkFlowHost/ExcuteRedirect", { execute: execute }).done(function (rst) {
-
-                                if (rst.IsSuccess) {
-                                    zdy.toastr.success("操作成功");
-                                    zdy.replacePage("/WorkFlow/WorkFlowTaskManager")
-                                }
-
-                            })
-                        })
-                    }
-
-                }).bind("flow-instance")
-            })
+        }).bind("flow-instance");
 
     </script>
 

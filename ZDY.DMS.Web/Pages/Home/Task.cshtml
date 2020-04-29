@@ -1,739 +1,955 @@
 ﻿@page
 @model ZDY.DMS.Web.Pages.Home.TaskModel
+<!--Begin::Tasks-->
+<div class="kt-grid kt-grid--desktop kt-grid--ver-desktop  kt-todo" id="kt_todo">
 
-<div class="row">
-    <div class="col-md-3">
-        <div class="portlet light ">
-            <div class="portlet-title">
-                <div class="caption" data-toggle="collapse" data-target=".todo-project-list-content">
-                    <span class="caption-subject font-green-sharp bold uppercase">项目 </span>
-                    <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view project list</span>
-                </div>
-                <div class="actions">
-                    <div class="btn-group">
-                        <a class="btn green btn-circle btn-outline btn-sm todo-projects-config" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            <i class="icon-settings"></i> &nbsp;
-                            <i class="fa fa-angle-down"></i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li>
-                                <a href="javascript:;"> New Project </a>
-                            </li>
-                            <li class="divider"> </li>
-                            <li>
-                                <a href="javascript:;">
-                                    Pending
-                                    <span class="badge badge-danger"> 4 </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    Completed
-                                    <span class="badge badge-success"> 12 </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    Overdue
-                                    <span class="badge badge-warning"> 9 </span>
-                                </a>
-                            </li>
-                            <li class="divider"> </li>
-                            <li>
-                                <a href="javascript:;"> Archived Projects </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="portlet-body todo-project-list-content">
-                <div class="todo-project-list">
-                    <ul class="nav nav-stacked">
-                        <li>
-                            <a href="javascript:;">
-                                <span class="badge badge-info"> 6 </span> AirAsia Ads
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <span class="badge badge-success"> 2 </span> HSBC Promo
-                            </a>
-                        </li>
-                        <li class="active">
-                            <a href="javascript:;">
-                                <span class="badge badge-success"> 3 </span> GlobalEx
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <span class="badge badge-default"> 14 </span> Empire City
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <span class="badge badge-info"> 6 </span> AirAsia Ads
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <span class="badge badge-danger"> 2 </span> Loop Inc Promo
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <div class="portlet light ">
-            <div class="portlet-title">
-                <div class="caption" data-toggle="collapse" data-target=".todo-project-list-content-tags">
-                    <span class="caption-subject font-red bold uppercase">标签 </span>
-                    <span class="caption-helper visible-sm-inline-block visible-xs-inline-block">click to view</span>
-                </div>
-                <div class="actions">
-                    <div class="actions">
-                        <a class="btn btn-circle grey-salsa btn-outline btn-sm" href="javascript:;">
-                            <i class="fa fa-plus"></i> Add
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <div class="portlet-body todo-project-list-content todo-project-list-content-tags">
-                <div class="todo-project-list">
-                    <ul class="nav nav-pills nav-stacked">
-                        <li>
-                            <a href="javascript:;">
-                                <span class="badge badge-danger"> 6 </span> Pending
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <span class="badge badge-info"> 2 </span> Completed
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <span class="badge badge-success"> 14 </span> In Progress
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <span class="badge badge-warning"> 6 </span> Closed
-                            </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <span class="badge badge-info"> 2 </span> Delivered
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
+    <!--Begin::Aside Mobile Toggle-->
+    <button class="kt-todo__aside-close" id="kt_todo_aside_close">
+        <i class="la la-close"></i>
+    </button>
+
+    <!--End:: Aside Mobile Toggle-->
+    <!--Begin:: Tasks Aside-->
+    <div class="kt-grid__item   kt-portlet kt-todo__aside" id="kt_todo_aside">
+        <div class="kt-todo__nav">
+            <ul class="kt-nav">
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link" data-action="list" data-type="inbox">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-nav__link-icon">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24" />
+                                <path d="M2.56066017,10.6819805 L4.68198052,8.56066017 C5.26776695,7.97487373 6.21751442,7.97487373 6.80330086,8.56066017 L8.9246212,10.6819805 C9.51040764,11.267767 9.51040764,12.2175144 8.9246212,12.8033009 L6.80330086,14.9246212 C6.21751442,15.5104076 5.26776695,15.5104076 4.68198052,14.9246212 L2.56066017,12.8033009 C1.97487373,12.2175144 1.97487373,11.267767 2.56066017,10.6819805 Z M14.5606602,10.6819805 L16.6819805,8.56066017 C17.267767,7.97487373 18.2175144,7.97487373 18.8033009,8.56066017 L20.9246212,10.6819805 C21.5104076,11.267767 21.5104076,12.2175144 20.9246212,12.8033009 L18.8033009,14.9246212 C18.2175144,15.5104076 17.267767,15.5104076 16.6819805,14.9246212 L14.5606602,12.8033009 C13.9748737,12.2175144 13.9748737,11.267767 14.5606602,10.6819805 Z" fill="#000000" opacity="0.3" />
+                                <path d="M8.56066017,16.6819805 L10.6819805,14.5606602 C11.267767,13.9748737 12.2175144,13.9748737 12.8033009,14.5606602 L14.9246212,16.6819805 C15.5104076,17.267767 15.5104076,18.2175144 14.9246212,18.8033009 L12.8033009,20.9246212 C12.2175144,21.5104076 11.267767,21.5104076 10.6819805,20.9246212 L8.56066017,18.8033009 C7.97487373,18.2175144 7.97487373,17.267767 8.56066017,16.6819805 Z M8.56066017,4.68198052 L10.6819805,2.56066017 C11.267767,1.97487373 12.2175144,1.97487373 12.8033009,2.56066017 L14.9246212,4.68198052 C15.5104076,5.26776695 15.5104076,6.21751442 14.9246212,6.80330086 L12.8033009,8.9246212 C12.2175144,9.51040764 11.267767,9.51040764 10.6819805,8.9246212 L8.56066017,6.80330086 C7.97487373,6.21751442 7.97487373,5.26776695 8.56066017,4.68198052 Z" fill="#000000" />
+                            </g>
+                        </svg> <span class="kt-nav__link-text">Home</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="kt-nav__item  kt-nav__item--active">
+                    <a href="#" class="kt-nav__link" data-action="list" data-type="marked">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-nav__link-icon">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24" />
+                                <path d="M8,3 L8,3.5 C8,4.32842712 8.67157288,5 9.5,5 L14.5,5 C15.3284271,5 16,4.32842712 16,3.5 L16,3 L18,3 C19.1045695,3 20,3.8954305 20,5 L20,21 C20,22.1045695 19.1045695,23 18,23 L6,23 C4.8954305,23 4,22.1045695 4,21 L4,5 C4,3.8954305 4.8954305,3 6,3 L8,3 Z" fill="#000000" opacity="0.3" />
+                                <path d="M10.875,15.75 C10.6354167,15.75 10.3958333,15.6541667 10.2041667,15.4625 L8.2875,13.5458333 C7.90416667,13.1625 7.90416667,12.5875 8.2875,12.2041667 C8.67083333,11.8208333 9.29375,11.8208333 9.62916667,12.2041667 L10.875,13.45 L14.0375,10.2875 C14.4208333,9.90416667 14.9958333,9.90416667 15.3791667,10.2875 C15.7625,10.6708333 15.7625,11.2458333 15.3791667,11.6291667 L11.5458333,15.4625 C11.3541667,15.6541667 11.1145833,15.75 10.875,15.75 Z" fill="#000000" />
+                                <path d="M11,2 C11,1.44771525 11.4477153,1 12,1 C12.5522847,1 13,1.44771525 13,2 L14.5,2 C14.7761424,2 15,2.22385763 15,2.5 L15,3.5 C15,3.77614237 14.7761424,4 14.5,4 L9.5,4 C9.22385763,4 9,3.77614237 9,3.5 L9,2.5 C9,2.22385763 9.22385763,2 9.5,2 L11,2 Z" fill="#000000" />
+                            </g>
+                        </svg> <span class="kt-nav__link-text">My Tasks</span>
+                        <span class="kt-nav__link-badge">
+                            <span class="kt-badge kt-badge--unified-success kt-badge--md kt-badge--rounded kt-badge--boldest">3</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link" data-action="list" data-type="draft">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-nav__link-icon">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24" />
+                                <rect fill="#000000" x="4" y="4" width="7" height="7" rx="1.5" />
+                                <path d="M5.5,13 L9.5,13 C10.3284271,13 11,13.6715729 11,14.5 L11,18.5 C11,19.3284271 10.3284271,20 9.5,20 L5.5,20 C4.67157288,20 4,19.3284271 4,18.5 L4,14.5 C4,13.6715729 4.67157288,13 5.5,13 Z M14.5,4 L18.5,4 C19.3284271,4 20,4.67157288 20,5.5 L20,9.5 C20,10.3284271 19.3284271,11 18.5,11 L14.5,11 C13.6715729,11 13,10.3284271 13,9.5 L13,5.5 C13,4.67157288 13.6715729,4 14.5,4 Z M14.5,13 L18.5,13 C19.3284271,13 20,13.6715729 20,14.5 L20,18.5 C20,19.3284271 19.3284271,20 18.5,20 L14.5,20 C13.6715729,20 13,19.3284271 13,18.5 L13,14.5 C13,13.6715729 13.6715729,13 14.5,13 Z" fill="#000000" opacity="0.3" />
+                            </g>
+                        </svg> <span class="kt-nav__link-text">Calendar</span>
+                    </a>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link" data-action="list" data-type="draft">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-nav__link-icon">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <rect x="0" y="0" width="24" height="24" />
+                                <path d="M5,3 L6,3 C6.55228475,3 7,3.44771525 7,4 L7,20 C7,20.5522847 6.55228475,21 6,21 L5,21 C4.44771525,21 4,20.5522847 4,20 L4,4 C4,3.44771525 4.44771525,3 5,3 Z M10,3 L11,3 C11.5522847,3 12,3.44771525 12,4 L12,20 C12,20.5522847 11.5522847,21 11,21 L10,21 C9.44771525,21 9,20.5522847 9,20 L9,4 C9,3.44771525 9.44771525,3 10,3 Z" fill="#000000" />
+                                <rect fill="#000000" opacity="0.3" transform="translate(17.825568, 11.945519) rotate(-19.000000) translate(-17.825568, -11.945519) " x="16.3255682" y="2.94551858" width="3" height="18" rx="1" />
+                            </g>
+                        </svg> <span class="kt-nav__link-text">Reports</span>
+                        <span class="kt-nav__link-badge">
+                            <span class="kt-badge kt-badge--unified-warning kt-badge--md kt-badge--rounded kt-badge--boldest">1</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="kt-nav__item kt-margin-t-20 kt-margin-b-20">
+                    <span class="kt-nav__link-title">Projects</span>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link" data-action="list" data-type="marked">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-nav__link-icon">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <polygon points="0 0 24 0 24 24 0 24" />
+                                <path d="M12.2928955,6.70710318 C11.9023712,6.31657888 11.9023712,5.68341391 12.2928955,5.29288961 C12.6834198,4.90236532 13.3165848,4.90236532 13.7071091,5.29288961 L19.7071091,11.2928896 C20.085688,11.6714686 20.0989336,12.281055 19.7371564,12.675721 L14.2371564,18.675721 C13.863964,19.08284 13.2313966,19.1103429 12.8242777,18.7371505 C12.4171587,18.3639581 12.3896557,17.7313908 12.7628481,17.3242718 L17.6158645,12.0300721 L12.2928955,6.70710318 Z" fill="#000000" fill-rule="nonzero" />
+                                <path d="M3.70710678,15.7071068 C3.31658249,16.0976311 2.68341751,16.0976311 2.29289322,15.7071068 C1.90236893,15.3165825 1.90236893,14.6834175 2.29289322,14.2928932 L8.29289322,8.29289322 C8.67147216,7.91431428 9.28105859,7.90106866 9.67572463,8.26284586 L15.6757246,13.7628459 C16.0828436,14.1360383 16.1103465,14.7686056 15.7371541,15.1757246 C15.3639617,15.5828436 14.7313944,15.6103465 14.3242754,15.2371541 L9.03007575,10.3841378 L3.70710678,15.7071068 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" transform="translate(9.000003, 11.999999) rotate(-270.000000) translate(-9.000003, -11.999999) " />
+                            </g>
+                        </svg> <span class="kt-nav__link-text">AirAustraila Extranet</span>
+                    </a>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link" data-action="list" data-type="draft">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-nav__link-icon">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <polygon points="0 0 24 0 24 24 0 24" />
+                                <path d="M12.2928955,6.70710318 C11.9023712,6.31657888 11.9023712,5.68341391 12.2928955,5.29288961 C12.6834198,4.90236532 13.3165848,4.90236532 13.7071091,5.29288961 L19.7071091,11.2928896 C20.085688,11.6714686 20.0989336,12.281055 19.7371564,12.675721 L14.2371564,18.675721 C13.863964,19.08284 13.2313966,19.1103429 12.8242777,18.7371505 C12.4171587,18.3639581 12.3896557,17.7313908 12.7628481,17.3242718 L17.6158645,12.0300721 L12.2928955,6.70710318 Z" fill="#000000" fill-rule="nonzero" />
+                                <path d="M3.70710678,15.7071068 C3.31658249,16.0976311 2.68341751,16.0976311 2.29289322,15.7071068 C1.90236893,15.3165825 1.90236893,14.6834175 2.29289322,14.2928932 L8.29289322,8.29289322 C8.67147216,7.91431428 9.28105859,7.90106866 9.67572463,8.26284586 L15.6757246,13.7628459 C16.0828436,14.1360383 16.1103465,14.7686056 15.7371541,15.1757246 C15.3639617,15.5828436 14.7313944,15.6103465 14.3242754,15.2371541 L9.03007575,10.3841378 L3.70710678,15.7071068 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" transform="translate(9.000003, 11.999999) rotate(-270.000000) translate(-9.000003, -11.999999) " />
+                            </g>
+                        </svg> <span class="kt-nav__link-text">Partnership</span>
+                    </a>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link" data-action="list" data-type="sent">
+                        <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-nav__link-icon">
+                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                <polygon points="0 0 24 0 24 24 0 24" />
+                                <path d="M12.2928955,6.70710318 C11.9023712,6.31657888 11.9023712,5.68341391 12.2928955,5.29288961 C12.6834198,4.90236532 13.3165848,4.90236532 13.7071091,5.29288961 L19.7071091,11.2928896 C20.085688,11.6714686 20.0989336,12.281055 19.7371564,12.675721 L14.2371564,18.675721 C13.863964,19.08284 13.2313966,19.1103429 12.8242777,18.7371505 C12.4171587,18.3639581 12.3896557,17.7313908 12.7628481,17.3242718 L17.6158645,12.0300721 L12.2928955,6.70710318 Z" fill="#000000" fill-rule="nonzero" />
+                                <path d="M3.70710678,15.7071068 C3.31658249,16.0976311 2.68341751,16.0976311 2.29289322,15.7071068 C1.90236893,15.3165825 1.90236893,14.6834175 2.29289322,14.2928932 L8.29289322,8.29289322 C8.67147216,7.91431428 9.28105859,7.90106866 9.67572463,8.26284586 L15.6757246,13.7628459 C16.0828436,14.1360383 16.1103465,14.7686056 15.7371541,15.1757246 C15.3639617,15.5828436 14.7313944,15.6103465 14.3242754,15.2371541 L9.03007575,10.3841378 L3.70710678,15.7071068 Z" fill="#000000" fill-rule="nonzero" opacity="0.3" transform="translate(9.000003, 11.999999) rotate(-270.000000) translate(-9.000003, -11.999999) " />
+                            </g>
+                        </svg> <span class="kt-nav__link-text">In Progres</span>
+                    </a>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link" data-action="list" data-type="trash">
+                        <i class="kt-nav__link-icon kt-nav__link-icon--size fa flaticon2-plus"></i>
+                        <span class="kt-nav__link-text">Add Project</span>
+                    </a>
+                </li>
+                <li class="kt-nav__item kt-margin-t-20 kt-margin-b-20">
+                    <span class="kt-nav__link-title">Tags</span>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-genderless kt-font-warning"></i>
+                        <span class="kt-nav__link-text">Custom Work</span>
+                    </a>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-genderless kt-font-success"></i>
+                        <span class="kt-nav__link-text">Partnership</span>
+                    </a>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa fa-genderless kt-font-info"></i>
+                        <span class="kt-nav__link-text">In Progres</span>
+                    </a>
+                </li>
+                <li class="kt-nav__item">
+                    <a href="#" class="kt-nav__link">
+                        <i class="kt-nav__link-icon fa flaticon2-plus"></i>
+                        <span class="kt-nav__link-text">Add Tog</span>
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
-    <!-- END TODO SIDEBAR -->
-    <!-- BEGIN TODO CONTENT -->
-    <div class="col-md-9">
-        <div class="portlet light ">
-            <!-- PROJECT HEAD -->
-            <div class="portlet-title">
-                <div class="caption">
-                    <i class="icon-bar-chart font-green-sharp hide"></i>
-                    <span class="caption-helper">GlobalEx Tasks:</span> &nbsp;
-                    <span class="caption-subject font-green-sharp bold uppercase">Tune Website</span>
-                </div>
-                <div class="actions">
-                    <div class="btn-group">
-                        <a class="btn green btn-circle btn-sm" href="javascript:;" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
-                            MANAGE
-                            <i class="fa fa-angle-down"></i>
+
+    <!--End:: Tasks Aside-->
+    <!--Begin:: Tasks Content-->
+    <div class="kt-grid__item kt-grid__item--fluid kt-todo__content" id="kt_todo_content">
+        <div class="kt-todo__tasks-top">
+            <div class="kt-portlet">
+
+                <!--Begin:: Tasks Toolbar-->
+                <div class="kt-todo__header">
+                    <h3 class="kt-todo__title">AirAustraila Extranet</h3>
+
+                    <!--Begin:: Tasks Nav-->
+                    <div class="kt-todo__nav">
+                        <a href="custom/apps/todo/tasks.html" class="kt-todo__link kt-todo__link--active">Tasks</a>
+                        <a href="custom/apps/todo/docs.html" class="kt-todo__link ">Docs</a>
+                        <a href="custom/apps/todo/files.html" class="kt-todo__link ">Files</a>
+                        <a href="#" class="btn btn-clean btn-icon" data-toggle="dropdown">
+                            <i class="flaticon-more-1"></i>
                         </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li>
-                                <a href="javascript:;"> New Task </a>
-                            </li>
-                            <li class="divider"> </li>
-                            <li>
-                                <a href="javascript:;">
-                                    Pending
-                                    <span class="badge badge-danger"> 4 </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    Completed
-                                    <span class="badge badge-success"> 12 </span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    Overdue
-                                    <span class="badge badge-warning"> 9 </span>
-                                </a>
-                            </li>
-                            <li class="divider"> </li>
-                            <li>
-                                <a href="javascript:;"> Delete Project </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- end PROJECT HEAD -->
-            <div class="portlet-body">
-                <div class="row">
-                    <div class="col-md-5 col-sm-4">
-                        <div class="todo-tasklist">
-                            <div class="todo-tasklist-item todo-tasklist-item-border-green">
-                                <img class="todo-userpic pull-left" src="~/assets/layouts/layout2/img/avatar4.jpg" width="27px" height="27px">
-                                <div class="todo-tasklist-item-title"> Slider Redesign </div>
-                                <div class="todo-tasklist-item-text"> Lorem dolor sit amet ipsum dolor sit consectetuer dolore. </div>
-                                <div class="todo-tasklist-controls pull-left">
-                                    <span class="todo-tasklist-date">
-                                        <i class="fa fa-calendar"></i> 21 Sep 2014
-                                    </span>
-                                    <span class="todo-tasklist-badge badge badge-roundless">Urgent</span>
-                                </div>
-                            </div>
-                            <div class="todo-tasklist-item todo-tasklist-item-border-red">
-                                <img class="todo-userpic pull-left" src="~/assets/layouts/layout2/img/avatar5.jpg" width="27px" height="27px">
-                                <div class="todo-tasklist-item-title"> Homepage Alignments to adjust </div>
-                                <div class="todo-tasklist-item-text"> Lorem ipsum dolor sit amet, consectetuer dolore dolor sit amet. </div>
-                                <div class="todo-tasklist-controls pull-left">
-                                    <span class="todo-tasklist-date">
-                                        <i class="fa fa-calendar"></i> 14 Sep 2014
-                                    </span>
-                                    <span class="todo-tasklist-badge badge badge-roundless">Important</span>
-                                </div>
-                            </div>
-                            <div class="todo-tasklist-item todo-tasklist-item-border-green">
-                                <img class="todo-userpic pull-left" src="~/assets/layouts/layout2/img/avatar9.jpg" width="27px" height="27px">
-                                <div class="todo-tasklist-item-title"> Slider Redesign </div>
-                                <div class="todo-tasklist-controls pull-left">
-                                    <span class="todo-tasklist-date">
-                                        <i class="fa fa-calendar"></i> 10 Feb 2015
-                                    </span>
-                                    <span class="todo-tasklist-badge badge badge-roundless">Important</span>&nbsp;
-                                </div>
-                            </div>
-                            <div class="todo-tasklist-item todo-tasklist-item-border-blue">
-                                <img class="todo-userpic pull-left" src="~/assets/layouts/layout2/img/avatar6.jpg" width="27px" height="27px">
-                                <div class="todo-tasklist-item-title"> Contact Us Map Location changes </div>
-                                <div class="todo-tasklist-item-text"> Lorem ipsum amet, consectetuer dolore dolor sit amet. </div>
-                                <div class="todo-tasklist-controls pull-left">
-                                    <span class="todo-tasklist-date">
-                                        <i class="fa fa-calendar"></i> 04 Oct 2014
-                                    </span>
-                                    <span class="todo-tasklist-badge badge badge-roundless">Postponed</span>&nbsp;
-                                    <span class="todo-tasklist-badge badge badge-roundless">Test</span>
-                                </div>
-                            </div>
-                            <div class="todo-tasklist-item todo-tasklist-item-border-purple">
-                                <img class="todo-userpic pull-left" src="~/assets/layouts/layout2/img/avatar7.jpg" width="27px" height="27px">
-                                <div class="todo-tasklist-item-title"> Projects list new Forms </div>
-                                <div class="todo-tasklist-item-text"> Lorem ipsum dolor sit amet, consectetuer dolore psum dolor sit. </div>
-                                <div class="todo-tasklist-controls pull-left">
-                                    <span class="todo-tasklist-date">
-                                        <i class="fa fa-calendar"></i> 19 Dec 2014
-                                    </span>
-                                </div>
-                            </div>
-                            <div class="todo-tasklist-item todo-tasklist-item-border-yellow">
-                                <img class="todo-userpic pull-left" src="~/assets/layouts/layout2/img/avatar8.jpg" width="27px" height="27px">
-                                <div class="todo-tasklist-item-title"> New Search Keywords </div>
-                                <div class="todo-tasklist-item-text"> Lorem ipsum dolor sit amet, consectetuer sit amet ipsum dolor, consectetuer ipsum consectetuer sit amet dolore. </div>
-                                <div class="todo-tasklist-controls pull-left">
-                                    <span class="todo-tasklist-date">
-                                        <i class="fa fa-calendar"></i> 02 Feb 2015
-                                    </span>
-                                    <span class="todo-tasklist-badge badge badge-roundless">Postponed</span>&nbsp;
-                                </div>
-                            </div>
-                            <div class="todo-tasklist-item todo-tasklist-item-border-green">
-                                <img class="todo-userpic pull-left" src="~/assets/layouts/layout2/img/avatar9.jpg" width="27px" height="27px">
-                                <div class="todo-tasklist-item-title"> Slider Redesign </div>
-                                <div class="todo-tasklist-controls pull-left">
-                                    <span class="todo-tasklist-date">
-                                        <i class="fa fa-calendar"></i> 10 Feb 2015
-                                    </span>
-                                    <span class="todo-tasklist-badge badge badge-roundless">Important</span>&nbsp;
-                                </div>
-                            </div>
-                            <div class="todo-tasklist-item todo-tasklist-item-border-red">
-                                <img class="todo-userpic pull-left" src="~/assets/layouts/layout2/img/avatar5.jpg" width="27px" height="27px">
-                                <div class="todo-tasklist-item-title"> Homepage Alignments to adjust </div>
-                                <div class="todo-tasklist-item-text"> Lorem ipsum dolor sit amet, consectetuer dolore psum dolor sit. </div>
-                                <div class="todo-tasklist-controls pull-left">
-                                    <span class="todo-tasklist-date">
-                                        <i class="fa fa-calendar"></i> 14 Sep 2014
-                                    </span>
-                                    <span class="todo-tasklist-badge badge badge-roundless">Important</span>
-                                </div>
-                            </div>
-                            <div class="todo-tasklist-item todo-tasklist-item-border-blue">
-                                <img class="todo-userpic pull-left" src="~/assets/layouts/layout2/img/avatar6.jpg" width="27px" height="27px">
-                                <div class="todo-tasklist-item-title"> Contact Us Improvement </div>
-                                <div class="todo-tasklist-item-text"> Lorem ipsum amet, psum dolor sit consectetuer dolore. </div>
-                                <div class="todo-tasklist-controls pull-left">
-                                    <span class="todo-tasklist-date">
-                                        <i class="fa fa-calendar"></i> 21 Feb 2015
-                                    </span>
-                                    <span class="todo-tasklist-badge badge badge-roundless">Postponed</span>&nbsp;
-                                    <span class="todo-tasklist-badge badge badge-roundless">Primary</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="todo-tasklist-devider"> </div>
-                    <div class="col-md-7 col-sm-8">
-                        <div class="form">
-                            <div class="row">
-                                <div class="col-md-8 col-sm-8">
-                                    <div class="todo-taskbody-user">
-                                        <img class="todo-userpic pull-left" src="~/assets/layouts/layout2/img/avatar6.jpg" width="50px" height="50px">
-                                        <span class="todo-username pull-left">Vanessa Bond</span>
-                                        <button type="button" class-names="todo-username-btn" is-outline="true" color="Dark">&nbsp;编辑&nbsp;</button>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-4">
-                                    <div class="todo-taskbody-date pull-right">
-                                        <button type="button" class-names="todo-username-btn" is-outline="true" color="Green">&nbsp;完成&nbsp;</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- END TASK HEAD -->
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <text-box></text-box>
-                                </div>
-                                <div class="col-md-12">
-                                    <text-box is-multiple="true"></text-box>
-                                </div>
-                                <div class="col-md-12">
-                                    <text-box is-date-picker="true"></text-box>
-                                </div>
-                                <div class="col-md-12">
-                                    <select-box options="@Model.Tags"></select-box>
-                                </div>
-                            </div>
-                            <!-- TASK TAGS -->
-                            <div class="form-actions right todo-form-actions">
-                                <button color="Green">提交</button>
-                                <button color="Default">取消</button>
-                            </div>
-                        </div>
-                        <div class="tabbable-line">
-                            <ul class="nav nav-tabs ">
-                                <li class="active">
-                                    <a href="#tab_1" data-toggle="tab"> Comments </a>
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <ul class="kt-nav">
+                                <li class="kt-nav__item">
+                                    <a href="#" class="kt-nav__link">
+                                        <i class="kt-nav__link-icon flaticon2-line-chart"></i>
+                                        <span class="kt-nav__link-text">Reports</span>
+                                    </a>
                                 </li>
-                                <li>
-                                    <a href="#tab_2" data-toggle="tab"> History </a>
+                                <li class="kt-nav__item">
+                                    <a href="#" class="kt-nav__link">
+                                        <i class="kt-nav__link-icon flaticon2-send"></i>
+                                        <span class="kt-nav__link-text">Messages</span>
+                                    </a>
+                                </li>
+                                <li class="kt-nav__item">
+                                    <a href="#" class="kt-nav__link">
+                                        <i class="kt-nav__link-icon flaticon2-pie-chart-1"></i>
+                                        <span class="kt-nav__link-text">Charts</span>
+                                    </a>
+                                </li>
+                                <li class="kt-nav__item">
+                                    <a href="#" class="kt-nav__link">
+                                        <i class="kt-nav__link-icon flaticon2-avatar"></i>
+                                        <span class="kt-nav__link-text">Members</span>
+                                    </a>
+                                </li>
+                                <li class="kt-nav__item">
+                                    <a href="#" class="kt-nav__link">
+                                        <i class="kt-nav__link-icon flaticon2-settings"></i>
+                                        <span class="kt-nav__link-text">Settings</span>
+                                    </a>
                                 </li>
                             </ul>
-                            <div class="tab-content">
-                                <div class="tab-pane active" id="tab_1">
-                                    <!-- TASK COMMENTS -->
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <ul class="media-list">
-                                                <li class="media">
-                                                    <a class="pull-left" href="javascript:;">
-                                                        <img class="todo-userpic" src="~/assets/layouts/layout2/img/avatar8.jpg" width="27px" height="27px">
-                                                    </a>
-                                                    <div class="media-body todo-comment">
-                                                        <button type="button" class="todo-comment-btn btn btn-circle btn-default btn-sm">&nbsp; Reply &nbsp;</button>
-                                                        <p class="todo-comment-head">
-                                                            <span class="todo-comment-username">Christina Aguilera</span> &nbsp;
-                                                            <span class="todo-comment-date">17 Sep 2014 at 2:05pm</span>
-                                                        </p>
-                                                        <p class="todo-text-color">
-                                                            Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.
-                                                        </p>
-                                                        <!-- Nested media object -->
-                                                        <div class="media">
-                                                            <a class="pull-left" href="javascript:;">
-                                                                <img class="todo-userpic" src="~/assets/layouts/layout2/img/avatar4.jpg" width="27px" height="27px">
+                        </div>
+                    </div>
+
+                    <!--End:: Tasks Nav-->
+                    <!--Begin:: Tasks Users-->
+                    <div class="kt-todo__users">
+                        <a href="#" class="kt-media kt-media--xs" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Nick Mana">
+                            <img src="/media/users/100_1.jpg" alt="image">
+                        </a>
+                        <a href="#" class="kt-media kt-media--xs kt-media--danger" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Sean Stone">
+                            <span>S</span>
+                        </a>
+                        <a href="#" class="kt-media kt-media--xs  kt-media--info" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Anna Krox">
+                            <span>A</span>
+                        </a>
+                        <a href="#" class="kt-media kt-media--xs  kt-bg-success kt-margin-l-10" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Add Participants">
+                            <span><i class="kt-nav__link-icon fa flaticon2-plus kt-font-light"></i></span>
+                        </a>
+                    </div>
+
+                    <!--End:: Tasks Users-->
+                </div>
+
+                <!--End:: Tasks Toolbar-->
+            </div>
+        </div>
+        <div class="kt-todo__tasks-bottom">
+            <div class="row">
+                <div class="col-xl-6">
+
+                    <!--Begin:: Inbox List-->
+                    <div class="kt-grid__item kt-grid__item--fluid  kt-portlet kt-portlet--height-fluid kt-todo__list" id="kt_todo_list">
+                        <div class="kt-portlet__body kt-portlet__body--fit-x">
+                            <div class="kt-todo__head">
+                                <div class="kt-todo__toolbar">
+                                    <div class="kt-todo__actions kt-todo__actions--expanded">
+                                        <div class="kt-todo__check">
+                                            <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                <input type="checkbox">
+                                                <span></span>
+                                            </label>
+                                            <div class="btn-group">
+                                                <button type="button" class="kt-todo__icon kt-todo__icon--sm kt-todo__icon--light" data-toggle="dropdown">
+                                                    <i class="flaticon2-down"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-left dropdown-menu-fit dropdown-menu-xs">
+                                                    <ul class="kt-nav">
+                                                        <li class="kt-nav__item kt-nav__item--active">
+                                                            <a href="#" class="kt-nav__link">
+                                                                <span class="kt-nav__link-text">All</span>
                                                             </a>
-                                                            <div class="media-body">
-                                                                <p class="todo-comment-head">
-                                                                    <span class="todo-comment-username">Carles Puyol</span> &nbsp;
-                                                                    <span class="todo-comment-date">17 Sep 2014 at 4:30pm</span>
-                                                                </p>
-                                                                <p class="todo-text-color"> Thanks so much my dear! </p>
+                                                        </li>
+                                                        <li class="kt-nav__item">
+                                                            <a href="#" class="kt-nav__link">
+                                                                <span class="kt-nav__link-text">Read</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="kt-nav__item">
+                                                            <a href="#" class="kt-nav__link">
+                                                                <span class="kt-nav__link-text">Unread</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="kt-nav__item">
+                                                            <a href="#" class="kt-nav__link">
+                                                                <span class="kt-nav__link-text">Starred</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="kt-nav__item">
+                                                            <a href="#" class="kt-nav__link">
+                                                                <span class="kt-nav__link-text">Unstarred</span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <button type="button" class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" title="Reload list">
+                                                <i class="flaticon2-refresh-arrow"></i>
+                                            </button>
+                                        </div>
+                                        <div class="kt-todo__panel">
+                                            <button class="kt-todo__icon" data-toggle="kt-tooltip" title="Archive">
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <rect x="0" y="0" width="24" height="24" />
+                                                        <path d="M6,2 L18,2 C18.5522847,2 19,2.44771525 19,3 L19,12 C19,12.5522847 18.5522847,13 18,13 L6,13 C5.44771525,13 5,12.5522847 5,12 L5,3 C5,2.44771525 5.44771525,2 6,2 Z M7.5,5 C7.22385763,5 7,5.22385763 7,5.5 C7,5.77614237 7.22385763,6 7.5,6 L13.5,6 C13.7761424,6 14,5.77614237 14,5.5 C14,5.22385763 13.7761424,5 13.5,5 L7.5,5 Z M7.5,7 C7.22385763,7 7,7.22385763 7,7.5 C7,7.77614237 7.22385763,8 7.5,8 L10.5,8 C10.7761424,8 11,7.77614237 11,7.5 C11,7.22385763 10.7761424,7 10.5,7 L7.5,7 Z" fill="#000000" opacity="0.3" />
+                                                        <path d="M3.79274528,6.57253826 L12,12.5 L20.2072547,6.57253826 C20.4311176,6.4108595 20.7436609,6.46126971 20.9053396,6.68513259 C20.9668779,6.77033951 21,6.87277228 21,6.97787787 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,6.97787787 C3,6.70173549 3.22385763,6.47787787 3.5,6.47787787 C3.60510559,6.47787787 3.70753836,6.51099993 3.79274528,6.57253826 Z" fill="#000000" />
+                                                    </g>
+                                                </svg>
+                                            </button>
+                                            <button class="kt-todo__icon" data-toggle="kt-tooltip" title="Spam">
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <rect x="0" y="0" width="24" height="24" />
+                                                        <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+                                                        <rect fill="#000000" x="11" y="7" width="2" height="8" rx="1" />
+                                                        <rect fill="#000000" x="11" y="16" width="2" height="2" rx="1" />
+                                                    </g>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-label-success btn-upper btn-sm btn-bold">new task</button>
+                                </div>
+                            </div>
+                            <div class="kt-todo__body">
+                                <div class="kt-todo__items" data-type="task">
+                                    <div class="kt-todo__item kt-todo__item--unread" data-id="1" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--on kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Digital PPV Customer Confirmation</span>
+                                            </div>
+                                            <div class="kt-todo__labels">
+                                                <span class="kt-todo__label kt-badge kt-badge--unified-brand kt-badge--bold kt-badge--inline">inbox</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            8:30 PM
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Sean Paul">
+                                            <span class="kt-media kt-media--sm kt-media--danger" style="background-image: url('/media/users/100_13.jpg')">
+                                                <span></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item kt-todo__item--unread" data-id="2" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Your iBuy.com grocery shopping confirmation</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            day ago
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Oliver	Jake">
+                                            <span class="kt-media kt-media--sm kt-media--danger">
+                                                <span>OJ</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item" data-id="3" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Your Order #224820998666029 has been Confirmed</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            11:20PM
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Enrico Fermi">
+                                            <span class="kt-media kt-media--sm kt-media--brand">
+                                                <span>EF</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item" data-id="4" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--on kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--on kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Payment Notification DLOP2329KD</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            2 days ago
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Jane Goodall">
+                                            <span class="kt-media kt-media--sm kt-media--brand" style="background-image: url('/media/users/100_11.jpg')">
+                                                <span></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item" data-id="5" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Congratulations on your iRun Coach subscription</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            Jul 25
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Matt Peares">
+                                            <span class="kt-media kt-media--sm kt-media--success">
+                                                <span>MP</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item" data-id="6" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Pay bills & win up to 600$ Cashback!</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            July 24
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Rita Levi-Montalcini">
+                                            <span class="kt-media kt-media--sm kt-media--brand" style="background-image: url('/media/users/100_7.jpg')">
+                                                <span></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item kt-todo__item--unread" data-id="7" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--on kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Activate your LIPO Account today</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            Jun 13
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Stephen Hawking">
+                                            <span class="kt-media kt-media--sm kt-media--brand" style="background-image: url('/media/users/100_8.jpg')">
+                                                <span></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item" data-id="8" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--on kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">About your request for PalmLake</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            25 May
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Wolfgang Ernst Pauli">
+                                            <span class="kt-media kt-media--sm kt-media--dark">
+                                                <span>WE</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item" data-id="9" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Verification of your card transaction</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            May 23
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Sarah Boysen">
+                                            <span class="kt-media kt-media--sm" style="background-image: url('/media/users/100_12.jpg')">
+                                                <span></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item" data-id="10" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Payment Notification (DE223232034)</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            Apr 12
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Max Born">
+                                            <span class="kt-media kt-media--sm kt-media--brand" style="background-image: url('/media/users/100_14.jpg')">
+                                                <span></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item" data-id="11" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Welcome, Patty</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            Mar 1
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Patty Jo Watson">
+                                            <span class="kt-media kt-media--sm kt-media--brand" style="background-image: url('/media/users/100_5.jpg')">
+                                                <span></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item" data-id="12" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Optimize with Recommendations, now used by most advertisers</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime" data-toggle="view">
+                                            Feb 11
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Roberts O'Neill Wilson">
+                                            <span class="kt-media kt-media--sm kt-media--warning">
+                                                <span>RW</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__item" data-id="13" data-type="task">
+                                        <div class="kt-todo__info">
+                                            <div class="kt-todo__actions">
+                                                <label class="kt-checkbox kt-checkbox--single kt-checkbox--tick kt-checkbox--brand">
+                                                    <input type="checkbox">
+                                                    <span></span>
+                                                </label>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Star">
+                                                    <i class="flaticon-star"></i>
+                                                </span>
+                                                <span class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" data-placement="right" title="Mark as important">
+                                                    <i class="flaticon-add-label-button"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__details" data-toggle="view">
+                                            <div class="kt-todo__message">
+                                                <span class="kt-todo__subject">Free Video Marketing Guide</span>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__datetime">
+                                            Jan 24
+                                        </div>
+                                        <div class="kt-todo__sender" data-toggle="kt-tooltip" data-placement="top" title="" data-original-title="Blaise Pascal">
+                                            <span class="kt-media kt-media--sm kt-media--brand" style="background-image: url('/media/users/100_12.jpg')">
+                                                <span></span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="kt-todo__foot">
+                                <div class="kt-todo__toolbar">
+                                    <div class="kt-todo__controls">
+                                        <div class="kt-todo__pages" data-toggle="kt-tooltip" title="Records per page">
+                                            <span class="kt-todo__perpage" data-toggle="dropdown">1 - 50 of 235</span>
+                                            <div class="dropdown-menu dropdown-menu-right dropdown-menu-fit dropdown-menu-xs">
+                                                <ul class="kt-nav">
+                                                    <li class="kt-nav__item">
+                                                        <a href="#" class="kt-nav__link">
+                                                            <span class="kt-nav__link-text">20 per page</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="kt-nav__item kt-nav__item--active">
+                                                        <a href="#" class="kt-nav__link">
+                                                            <span class="kt-nav__link-text">50 par page</span>
+                                                        </a>
+                                                    </li>
+                                                    <li class="kt-nav__item">
+                                                        <a href="#" class="kt-nav__link">
+                                                            <span class="kt-nav__link-text">100 per page</span>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <button class="kt-todo__icon" data-toggle="kt-tooltip" title="Previose page">
+                                            <i class="flaticon2-left-arrow"></i>
+                                        </button>
+                                        <button class="kt-todo__icon" data-toggle="kt-tooltip" title="Next page">
+                                            <i class="flaticon2-right-arrow"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--End:: Inbox List-->
+                </div>
+                <div class="col-xl-6">
+
+                    <!--Begin:: Inbox View-->
+                    <div class="kt-grid__item kt-grid__item--fluid  kt-portlet kt-portlet--height-fluid kt-todo__view" id="kt_todo_view">
+
+                        <!--Begin:: Portlet Body-->
+                        <div class="kt-portlet__body kt-portlet__body--fit-y">
+
+                            <!--Begin:: Wrapper-->
+                            <div class="kt-todo__wrapper">
+
+                                <!--Begin:: Head-->
+                                <div class="kt-todo__head">
+                                    <div class="kt-todo__toolbar">
+                                        <div class="kt-todo__info">
+                                            <span class="kt-media kt-media--sm" data-toggle="expand" style="background-image: url('/media/users/100_13.jpg')">
+                                                <span></span>
+                                            </span>
+                                            <a href="#" class="kt-todo__name">
+                                                Dave Stone
+                                            </a>
+                                        </div>
+                                        <div class="kt-todo__details">
+                                            <a href="#" class="kt-todo__icon kt-todo__icon--back">
+                                                <i class="flaticon2-left-arrow-1"></i>
+                                            </a>
+                                            <a href="#" class="kt-todo__icon" data-toggle="kt-tooltip" title="Archive">
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <rect x="0" y="0" width="24" height="24" />
+                                                        <path d="M6,2 L18,2 C18.5522847,2 19,2.44771525 19,3 L19,12 C19,12.5522847 18.5522847,13 18,13 L6,13 C5.44771525,13 5,12.5522847 5,12 L5,3 C5,2.44771525 5.44771525,2 6,2 Z M7.5,5 C7.22385763,5 7,5.22385763 7,5.5 C7,5.77614237 7.22385763,6 7.5,6 L13.5,6 C13.7761424,6 14,5.77614237 14,5.5 C14,5.22385763 13.7761424,5 13.5,5 L7.5,5 Z M7.5,7 C7.22385763,7 7,7.22385763 7,7.5 C7,7.77614237 7.22385763,8 7.5,8 L10.5,8 C10.7761424,8 11,7.77614237 11,7.5 C11,7.22385763 10.7761424,7 10.5,7 L7.5,7 Z" fill="#000000" opacity="0.3" />
+                                                        <path d="M3.79274528,6.57253826 L12,12.5 L20.2072547,6.57253826 C20.4311176,6.4108595 20.7436609,6.46126971 20.9053396,6.68513259 C20.9668779,6.77033951 21,6.87277228 21,6.97787787 L21,17 C21,18.1045695 20.1045695,19 19,19 L5,19 C3.8954305,19 3,18.1045695 3,17 L3,6.97787787 C3,6.70173549 3.22385763,6.47787787 3.5,6.47787787 C3.60510559,6.47787787 3.70753836,6.51099993 3.79274528,6.57253826 Z" fill="#000000" />
+                                                    </g>
+                                                </svg>
+                                            </a>
+                                            <a href="#" class="kt-todo__icon" data-toggle="kt-tooltip" title="Spam">
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <rect x="0" y="0" width="24" height="24" />
+                                                        <circle fill="#000000" opacity="0.3" cx="12" cy="12" r="10" />
+                                                        <rect fill="#000000" x="11" y="7" width="2" height="8" rx="1" />
+                                                        <rect fill="#000000" x="11" y="16" width="2" height="2" rx="1" />
+                                                    </g>
+                                                </svg>
+                                            </a>
+                                            <a href="#" class="kt-todo__icon" data-toggle="kt-tooltip" title="Delete">
+                                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
+                                                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                        <rect x="0" y="0" width="24" height="24" />
+                                                        <path d="M6,8 L6,20.5 C6,21.3284271 6.67157288,22 7.5,22 L16.5,22 C17.3284271,22 18,21.3284271 18,20.5 L18,8 L6,8 Z" fill="#000000" fill-rule="nonzero" />
+                                                        <path d="M14,4.5 L14,4 C14,3.44771525 13.5522847,3 13,3 L11,3 C10.4477153,3 10,3.44771525 10,4 L10,4.5 L5.5,4.5 C5.22385763,4.5 5,4.72385763 5,5 L5,5.5 C5,5.77614237 5.22385763,6 5.5,6 L18.5,6 C18.7761424,6 19,5.77614237 19,5.5 L19,5 C19,4.72385763 18.7761424,4.5 18.5,4.5 L14,4.5 Z" fill="#000000" opacity="0.3" />
+                                                    </g>
+                                                </svg>
+                                            </a>
+                                            <button type="button" class="btn btn-label-danger btn-upper btn-sm btn-bold">may 07</button>
+                                            <button type="button" class="btn btn-label-success btn-upper btn-sm btn-bold">complete</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--End:: Head-->
+                                <!--Begin:: Body-->
+                                <div class="kt-todo__body">
+                                    <div class="kt-todo__title">
+                                        <a href="#" class="kt-todo__text">Company Meeting Agenda</a>
+                                        <div class="kt-todo__labels">
+                                            <span class="kt-todo__label">
+                                                <i class="kt-todo__dot fa fa-genderless kt-font-info"></i>
+                                                <span class="kt-todo__text">In Progres</span>
+                                            </span>
+                                            <span class="kt-todo__label">
+                                                <i class="kt-todo__dot fa fa-genderless kt-font-danger"></i>
+                                                <span class="kt-todo__text">Urgent</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="kt-todo__desc">
+                                        With respect, imust disagree with Mr.Zinsser.We all know the
+                                        most part important part of any article is the title.Without a compell
+                                    </div>
+                                    <div class="kt-todo__files">
+                                        <span class="kt-todo__file">
+                                            <i class="flaticon2-clip-symbol kt-font-warning"></i>
+                                            <a href="#">Agreement Samle.pdf</a>
+                                        </span>
+                                        <span class="kt-todo__file">
+                                            <i class="flaticon2-clip-symbol kt-font-warning"></i>
+                                            <a href="#">Requirements.docx</a>
+                                        </span>
+                                    </div>
+                                    <div class="kt-todo__comments">
+                                        <div class="kt-todo__comment">
+                                            <div class="kt-todo__box">
+                                                <span class="kt-media kt-media--sm" data-toggle="expand" style="background-image: url('/media/users/100_1.jpg')">
+                                                    <span></span>
+                                                </span>
+                                                <a href="#" class="kt-todo__username">
+                                                    Matt Peares
+                                                </a>
+                                                <span class="kt-todo__date">
+                                                    Yestarday
+                                                </span>
+                                            </div>
+                                            <span class="kt-todo__text">
+                                                With respect, imust disagree with Mr.Zinsser.We all know the
+                                                most part important part of any article is the title.
+                                            </span>
+                                        </div>
+                                        <div class="kt-todo__comment">
+                                            <div class="kt-todo__box">
+                                                <span class="kt-media kt-media--sm" data-toggle="expand" style="background-image: url('/media/users/100_4.jpg')">
+                                                    <span></span>
+                                                </span>
+                                                <a href="#" class="kt-todo__username">
+                                                    Jane Miller
+                                                </a>
+                                                <span class="kt-todo__date">
+                                                    3 Days Ago
+                                                </span>
+                                            </div>
+                                            <span class="kt-todo__text">
+                                                With respect, imust disagree with Mr.Zinsser.We all know the
+                                                most part important part of any article is the title.
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!--End:: Body-->
+                                <!--Begin:: Foot-->
+                                <div class="kt-todo__foot">
+                                    <div class="kt-todo__form" id="kt_todo_post_form">
+                                        <div class="kt-todo__body">
+                                            <div class="kt-todo__editor" id="kt_todo_post_editor" style="height: 175px;">
+                                            </div>
+                                            <div class="kt-todo__attachments">
+                                                <div class="dropzone dropzone-multi" id="kt_todo_post_attachments">
+                                                    <div class="dropzone-items">
+                                                        <div class="dropzone-item" style="display:none">
+                                                            <div class="dropzone-file">
+                                                                <div class="dropzone-filename" title="some_image_file_name.jpg">
+                                                                    <span data-dz-name>some_image_file_name.jpg</span> <strong>(<span data-dz-size>340kb</span>)</strong>
+                                                                </div>
+                                                                <div class="dropzone-error" data-dz-errormessage></div>
+                                                            </div>
+                                                            <div class="dropzone-progress">
+                                                                <div class="progress">
+                                                                    <div class="progress-bar kt-bg-brand" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-dz-uploadprogress></div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="dropzone-toolbar">
+                                                                <span class="dropzone-delete" data-dz-remove><i class="flaticon2-cross"></i></span>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                </li>
-                                                <li class="media">
-                                                    <a class="pull-left" href="javascript:;">
-                                                        <img class="todo-userpic" src="~/assets/layouts/layout2/img/avatar5.jpg" width="27px" height="27px">
-                                                    </a>
-                                                    <div class="media-body todo-comment">
-                                                        <button type="button" class="todo-comment-btn btn btn-circle btn-default btn-sm">&nbsp; Reply &nbsp;</button>
-                                                        <p class="todo-comment-head">
-                                                            <span class="todo-comment-username">Andres Iniesta</span> &nbsp;
-                                                            <span class="todo-comment-date">18 Sep 2014 at 9:22am</span>
-                                                        </p>
-                                                        <p class="todo-text-color">
-                                                            Cras sit amet nibh libero, in gravida nulla. Scelerisque ante sollicitudin commodo Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum
-                                                            in vulputate at, tempus viverra turpis.
-                                                            <br>
-                                                        </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="kt-todo__foot">
+                                            <div class="kt-todo__primary">
+                                                <div class="btn-group">
+                                                    <button type="button" class="btn btn-brand btn-bold">
+                                                        Commment
+                                                    </button>
+                                                    <button type="button" class="btn btn-brand btn-bold dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                    </button>
+                                                    <div class="dropdown-menu dropup dropdown-menu-fit dropdown-menu-right">
+                                                        <ul class="kt-nav">
+                                                            <li class="kt-nav__item">
+                                                                <a href="#" class="kt-nav__link">
+                                                                    <i class="kt-nav__link-icon flaticon2-writing"></i>
+                                                                    <span class="kt-nav__link-text">Schedule Send</span>
+                                                                </a>
+                                                            </li>
+                                                            <li class="kt-nav__item">
+                                                                <a href="#" class="kt-nav__link">
+                                                                    <i class="kt-nav__link-icon flaticon2-medical-records"></i>
+                                                                    <span class="kt-nav__link-text">Save & archive</span>
+                                                                </a>
+                                                            </li>
+                                                            <li class="kt-nav__item">
+                                                                <a href="#" class="kt-nav__link">
+                                                                    <i class="kt-nav__link-icon flaticon2-hourglass-1"></i>
+                                                                    <span class="kt-nav__link-text">Cancel</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
                                                     </div>
-                                                </li>
-                                                <li class="media">
-                                                    <a class="pull-left" href="javascript:;">
-                                                        <img class="todo-userpic" src="~/assets/layouts/layout2/img/avatar6.jpg" width="27px" height="27px">
-                                                    </a>
-                                                    <div class="media-body todo-comment">
-                                                        <button type="button" class="todo-comment-btn btn btn-circle btn-default btn-sm">&nbsp; Reply &nbsp;</button>
-                                                        <p class="todo-comment-head">
-                                                            <span class="todo-comment-username">Olivia Wilde</span> &nbsp;
-                                                            <span class="todo-comment-date">18 Sep 2014 at 11:50am</span>
-                                                        </p>
-                                                        <p class="todo-text-color">
-                                                            Cras sit amet nibh libero, in gravida nulla. Scelerisque ante sollicitudin commodo Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum
-                                                            in vulputate at, tempus viverra turpis.
-                                                            <br>
-                                                        </p>
-                                                    </div>
-                                                </li>
-                                            </ul>
+                                                </div>
+                                                <div class="kt-todo__panel">
+                                                    <button class="kt-todo__icon kt-todo__icon--light" id="kt_todo_post_attachments_select">
+                                                        <i class="flaticon2-clip-symbol"></i>
+                                                    </button>
+                                                    <button class="kt-todo__icon kt-todo__icon--light">
+                                                        <i class="flaticon2-pin"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="kt-todo__secondary">
+                                                <button class="kt-todo__icon kt-todo__icon--light" data-toggle="kt-tooltip" title="More actions">
+                                                    <i class="flaticon2-settings"></i>
+                                                </button>
+                                                <button class="kt-todo__icon kt-todo__icon--remove kt-todo__icon--light" data-toggle="kt-tooltip" title="Dismiss reply">
+                                                    <i class="flaticon2-rubbish-bin-delete-button"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <!-- END TASK COMMENTS -->
-                                    <!-- TASK COMMENT FORM -->
-                                    <div class="form-group">
-                                        <div class="col-md-12">
-                                            <ul class="media-list">
-                                                <li class="media">
-                                                    <a class="pull-left" href="javascript:;">
-                                                        <img class="todo-userpic" src="~/assets/layouts/layout2/img/avatar4.jpg" width="27px" height="27px">
-                                                    </a>
-                                                    <div class="media-body">
-                                                        <textarea class="form-control todo-taskbody-taskdesc" rows="4" placeholder="添加评论..."></textarea>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                            <button type="button" color="Green" class-names="pull-right"> &nbsp; 提交 &nbsp; </button>
-                                        </div>
-                                    </div>
-                                    <!-- END TASK COMMENT FORM -->
                                 </div>
-                                <div class="tab-pane" id="tab_2">
-                                    <ul class="todo-task-history">
-                                        <li>
-                                            <div class="todo-task-history-date"> 20 Jun, 2014 at 11:35am </div>
-                                            <div class="todo-task-history-desc"> Task created </div>
-                                        </li>
-                                        <li>
-                                            <div class="todo-task-history-date"> 21 Jun, 2014 at 10:35pm </div>
-                                            <div class="todo-task-history-desc"> Task category status changed to "Top Priority" </div>
-                                        </li>
-                                        <li>
-                                            <div class="todo-task-history-date"> 22 Jun, 2014 at 11:35am </div>
-                                            <div class="todo-task-history-desc"> Task owner changed to "Nick Larson" </div>
-                                        </li>
-                                        <li>
-                                            <div class="todo-task-history-date"> 30 Jun, 2014 at 8:09am </div>
-                                            <div class="todo-task-history-desc"> Task completed by "Nick Larson" </div>
-                                        </li>
-                                    </ul>
-                                </div>
+
+                                <!--End:: Foot-->
                             </div>
+
+                            <!--End:: Wrapper-->
                         </div>
+
+                        <!--End:: Portlet Body-->
                     </div>
+
+                    <!--End:: Inbox View-->
                 </div>
             </div>
         </div>
     </div>
-    <!-- END TODO CONTENT -->
+
+    <!--End:: Tasks Content-->
 </div>
 
+<!--End::Tasks-->
+
 @section styles{
-    <style type="text/css">
-        /* Cubic Bezier Transition */
-        .todo-tasklist-item-border-green {
-            border-left: #3faba4 2px solid;
-        }
-
-        .todo-tasklist-item-border-blue {
-            border-left: #4c87b9 2px solid;
-        }
-
-        .todo-tasklist-item-border-purple {
-            border-left: #8877a9 2px solid;
-        }
-
-        .todo-tasklist-item-border-red {
-            border-left: #d05454 2px solid;
-        }
-
-        .todo-tasklist-item-border-yellow {
-            border-left: #d4ad38 2px solid;
-        }
-
-        .padding-top-10px {
-            padding-top: 15px;
-        }
-
-        .todo-userpic {
-            -webkit-border-radius: 50% !important;
-            -moz-border-radius: 50% !important;
-            border-radius: 50% !important;
-            border: 1px #cedae1 solid;
-        }
-
-        .todo-text-color {
-            color: #45535b;
-        }
-
-        /* PROJECT LIST */
-        .todo-projects-config {
-            padding: 6px 9px 3px 9px !important;
-        }
-
-            .todo-projects-config > i {
-                font-size: 14px !important;
-            }
-
-        .todo-tasklist {
-            padding: 0;
-        }
-
-        .todo-tasklist-badge {
-            float: right;
-            margin-top: 1px;
-        }
-
-        .todo-project-list ul li a {
-            font-size: 14px !important;
-            padding: 8px 10px;
-        }
-
-        .todo-project-list .nav li a .badge {
-            float: right;
-            margin-top: 1px !important;
-        }
-
-        .todo-project-list .nav > li.active > a {
-            color: #3f444a;
-            background-color: #f1f4f7 !important;
-        }
-
-        /* END PROJECT LIST */
-        /* TASK HISTORY */
-        .todo-task-history {
-            padding: 0;
-            margin: 0;
-        }
-
-            .todo-task-history > li {
-                padding: 5px 0;
-            }
-
-                .todo-task-history > li > .todo-task-history-desc {
-                    overflow: hidden;
-                }
-
-                .todo-task-history > li > .todo-task-history-date {
-                    font-size: 12px;
-                    float: right;
-                    width: 150px;
-                    margin-left: 10px;
-                    text-align: right;
-                    color: #999;
-                }
-
-        /* TASKS LIST */
-        .todo-tasklist-item {
-            background: #f6fbfc;
-            padding: 10px;
-            margin-bottom: 10px;
-            margin-bottom: 15px;
-            overflow: hidden;
-        }
-
-            .todo-tasklist-item:last-child {
-                margin-bottom: 0;
-            }
-
-        div .todo-tasklist-item:hover {
-            cursor: pointer;
-            background-color: #edf7f9;
-        }
-
-        .todo-tasklist-item img {
-            margin: 0 10px 10px 0;
-        }
-
-        .todo-tasklist-item-title {
-            font-size: 15px;
-            color: #2b4a5c;
-            font-weight: 600;
-            padding-top: 3px;
-            padding-bottom: 13px;
-        }
-
-        .todo-tasklist-item-text {
-            font-size: 13px;
-            color: #577688;
-            padding-bottom: 5px;
-        }
-
-        .todo-tasklist-item ul {
-            margin: 5px 0 0 0px;
-        }
-
-        .todo-tasklist-item li {
-            color: #577688;
-            font-size: 13px;
-            margin-right: 10px;
-            margin-bottom: 5px;
-            padding: 0 !important;
-        }
-
-            .todo-tasklist-item li i {
-                color: #b3bfcb;
-                font-size: 15px;
-            }
-
-        .todo-tasklist-controls {
-            margin-top: 5px;
-        }
-
-        .todo-tasklist-date {
-            color: #637b89 !important;
-            margin-right: 12px;
-        }
-
-            .todo-tasklist-date i {
-                color: #abbfca !important;
-                margin-right: 5px;
-            }
-
-        /* END TASKS LIST */
-        /* TASK BODY */
-        .todo-taskbody-tasktitle {
-            font-size: 18px;
-            color: #778d96;
-        }
-
-        .todo-taskbody-taskdesc {
-            font-size: 14px;
-            color: #778d96;
-        }
-
-        .todo-username {
-            font-size: 16px;
-            color: #2b4a5c;
-            font-weight: 600;
-            padding: 15px 0 0 15px;
-        }
-
-        .todo-comment-head {
-            padding-top: 3px;
-        }
-
-        .todo-comment {
-            position: relative;
-        }
-
-            .todo-comment:hover > .todo-comment-btn {
-                display: block;
-            }
-
-        .todo-comment-btn {
-            display: none;
-            position: absolute;
-            top: 1px;
-            right: 0px;
-            font-size: 12px;
-            color: #566e7c;
-            border-color: #a2aeb5;
-        }
-
-            .todo-comment-btn:hover {
-                color: #fff;
-                background-color: #a1b6c2;
-                border-color: #a1b6c2;
-            }
-
-        .todo-comment-username {
-            font-size: 14px;
-            color: #2b4a5c;
-            font-weight: 600;
-        }
-
-        .todo-comment-date {
-            font-size: 12px;
-            color: #2b4a5c;
-            font-weight: 400;
-        }
-
-        .todo-username-btn {
-            margin: 10px 0 0 15px;
-            color: #566e7c;
-            border-color: #a2aeb5;
-        }
-
-            .todo-username-btn:hover {
-                color: #fff;
-                background-color: #a1b6c2;
-                border-color: #a1b6c2;
-            }
-
-        .form .form-actions.todo-form-actions {
-            padding-top: 10px;
-            border: 0;
-            margin: 0 0 20px 0;
-        }
-    </style>
+    <link href="/css/pages/todo/todo.css" rel="stylesheet" />
 }
 
 @section scripts{
-    <script type="text/javascript">
-        require([
-            "jquery",
-            "ko",
-            "zdy",
-            "app",
-            "bootstrap",
-            "bootstrap-datepicker",
-            ui], function ($, ko, zdy, app) {
-
-                var ui = arguments[arguments.length - 1];
-                ui.init();
-
-                var AppTodo2 = function () {
-
-                    // private functions & variables
-                    var _handleProjectListMenu = function () {
-                        if (app.getViewPort().width <= 992) {
-                            $('.todo-project-list-content').addClass("collapse");
-                        } else {
-                            $('.todo-project-list-content').removeClass("collapse").css("height", "auto");
-                        }
-                    }
-
-                    // public functions
-                    return {
-
-                        //main function
-                        init: function () {
-                            _handleProjectListMenu();
-
-                            app.addResizeHandler(function () {
-                                _handleProjectListMenu();
-                            });
-                        }
-
-                    };
-
-                }();
-
-                AppTodo2.init();
-
-            })
-    </script>
+    <script src="/js/pages/custom/todo/todo.js"></script>
 }

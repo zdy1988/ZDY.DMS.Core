@@ -813,9 +813,12 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
 
                 var toStep = execution.Definition.GetStep(item.Key);
 
-                var toStepReceivers = string.IsNullOrEmpty(toStep.Handlers) ? null : toStep.Handlers.Split(',').Select(t => Guid.Parse(t)).ToList();
+                if (!string.IsNullOrWhiteSpace(toStep.Handlers))
+                {
+                    var toStepReceivers = toStep.Handlers.Split(',').Select(t => Guid.Parse(t)).ToList();
 
-                appointReceivers.AddRange(toStepReceivers);
+                    appointReceivers.AddRange(toStepReceivers);
+                }
 
                 List<WorkFlowUser> receivers = GetUser(execution.Task.CompanyId, appointReceivers.Distinct().ToArray());
 

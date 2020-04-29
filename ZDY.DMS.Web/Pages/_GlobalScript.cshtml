@@ -1,5 +1,5 @@
 ﻿<!-- begin::Global Config(global config for global JS sciprts) -->
-<script>
+<script type="text/javascript">
     var KTAppOptions = {
         "colors": {
             "state": {
@@ -29,6 +29,15 @@
         }
     };
 </script>
+
+@if (Model.GetType().GetProperty("Dictionary")!= null)
+{
+
+    <script type="text/javascript">
+        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Model.Dictionary)) ')
+    </script>
+
+}
 <!-- end::Global Config -->
 <!--begin::Global Theme Bundle(used by all pages) -->
 <script src="/plugins/global/plugins.bundle.js" type="text/javascript"></script>

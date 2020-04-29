@@ -79,6 +79,11 @@ namespace ZDY.DMS.Web.Pages.Home
 
             foreach (var page in pages)
             {
+                if (!page.IsInMenu)
+                {
+                    continue;
+                }
+
                 var item = new TagBuilder("li");
 
                 //if (page.IsSection)
@@ -92,11 +97,6 @@ namespace ZDY.DMS.Web.Pages.Home
                 var isBuildSubMenu = page.ChildLevelPages != null && page.ChildLevelPages.Any();
 
                 item.AddCssClass("kt-menu__item");
-
-                //if (page.IsActived)
-                //{
-                //    item.AddCssClass("kt-menu__item--active");
-                //}
 
                 if (isBuildSubMenu)
                 {

@@ -3,27 +3,25 @@
 
 <div class="row">
     <div class="col-md-12">
-        <portlet title="查询条件" is-form="true" is-fit="true" data-model="list">
-            <form-builder>
-                <div class="row">
-                    <div class="col-md-3">
-                        <text-box field="Title" name="实例名称"></text-box>
-                    </div>
-                    <div class="col-md-3">
-                        <text-box field="FlowName" name="所属流程"></text-box>
-                    </div>
-                    <div class="col-md-3">
-                        <text-box field="SenderName" name="发送人员"></text-box>
-                    </div>
-                    <div class="col-md-3">
-                        <text-box field="ReceiverName" name="接收人员"></text-box>
-                    </div>
+        <portlet title="查询条件" data-model="list">
+            <div class="row">
+                <div class="col-md-3">
+                    <text-box field="Title" name="实例名称"></text-box>
                 </div>
-                <form-actions>
-                    <button color="Default" data-bind="click:reset">重置条件</button>
-                    <button color="Green" data-bind="click:firstPage">点击查询</button>
-                </form-actions>
-            </form-builder>
+                <div class="col-md-3">
+                    <text-box field="FlowName" name="所属流程"></text-box>
+                </div>
+                <div class="col-md-3">
+                    <text-box field="SenderName" name="发送人员"></text-box>
+                </div>
+                <div class="col-md-3">
+                    <text-box field="ReceiverName" name="接收人员"></text-box>
+                </div>
+            </div>
+            <portlet-footer-action-container align="Right">
+                <button size="Sm" data-bind="click:reset">重置条件</button>
+                <button state="Success" size="Sm" data-bind="click:firstPage">点击查询</button>
+            </portlet-footer-action-container>
         </portlet>
     </div>
 </div>
@@ -32,19 +30,19 @@
     <div class="col-md-12">
         <portlet title="实例列表" is-fit="true" data-model="list">
             <data-table is-show-checkbox-column="false">
-                <td data-bind="text:Title"></td>
-                <td data-bind="text:FlowName"></td>
-                <td data-bind="text:StepName"></td>
-                <td data-bind="text:SenderName"></td>
-                <td data-bind="text:SendTime"></td>
-                <td data-bind="text:ReceiverName"></td>
-                <td data-bind="text:ReceiveTime"></td>
-                <td>
+                <cell filed="Title"></cell>
+                <cell filed="FlowName"></cell>
+                <cell filed="StepName"></cell>
+                <cell filed="SenderName"></cell>
+                <cell filed="SendTime"></cell>
+                <cell filed="ReceiverName"></cell>
+                <cell filed="ReceiveTime"></cell>
+                <cell>
                     <lable data-bind="state: $root.dic('WorkFlowTaskState', State, true)"></lable>
-                </td>
-                <td>
-                    <button size="Xs" color="Dark" icon="Search" data-bind="click:$root.goto, attr: {'data-url': '/WorkFlow/WorkFlowTaskExecute?id=' + Id}">详情</button>
-                </td>
+                </cell>
+                <cell>
+                    <button size="Sm" state="Brand" icon="PencilSquare" is-only-icon="true" data-bind="click:$root.goto, attr: {'data-url': '/WorkFlow/WorkFlowTaskExecute?id=' + Id}">详情</button>
+                </cell>
             </data-table>
             <pager></pager>
         </portlet>
@@ -53,44 +51,33 @@
 
 @section scripts{
     <script type="text/javascript">
-        var dictionary = JSON.parse(' @Html.Raw(JsonConvert.SerializeObject(Model.Dictionary)) ')
 
-        require([
-            "jquery",
-            "ko",
-            "zdy",
-            "bootstrap",
-            ui], function ($, ko, zdy) {
-                var ui = arguments[arguments.length - 1];
-                ui.init();
+        var table = zdy.table().options({
+            fields: [
+                { field: 'Title', value: ko.observable(), method: zdy.querymethod.contains },
+                { field: 'FlowName', value: ko.observable(), method: zdy.querymethod.contains },
+                { field: 'SenderName', value: ko.observable(), method: zdy.querymethod.contains },
+                { field: 'ReceiverName', value: ko.observable(), method: zdy.querymethod.contains },
+                { field: 'State', value: [2, 3, 4, 5], method: zdy.querymethod.in }
+            ],
+            headers: [
+                { text: '任务名称', field: 'Title' },
+                { text: '所属流程', field: 'FlowName' },
+                { text: '所在步骤', field: 'StepName' },
+                { text: '发送人员', field: 'SenderName' },
+                { text: '发送时间', field: 'SendTime' },
+                { text: '接收人员', field: 'ReceiverName' },
+                { text: '接收时间', field: 'ReceiveTime' },
+                { text: '任务状态', field: 'State' }
+            ],
+            defaultOrderBy: "TimeStamp",
+            dataQueryUrl: 'WorkFlowTask/Search'
+        }).import(function () {
 
-                var table = zdy.table().options({
-                    fields: [
-                        { field: 'Title', value: ko.observable(), method: zdy.querymethod.contains },
-                        { field: 'FlowName', value: ko.observable(), method: zdy.querymethod.contains },
-                        { field: 'SenderName', value: ko.observable(), method: zdy.querymethod.contains },
-                        { field: 'ReceiverName', value: ko.observable(), method: zdy.querymethod.contains },
-                        { field: 'State', value: [2, 3, 4, 5], method: zdy.querymethod.in }
-                    ],
-                    headers: [
-                        { text: '任务名称', field: 'Title' },
-                        { text: '所属流程', field: 'FlowName' },
-                        { text: '所在步骤', field: 'StepName' },
-                        { text: '发送人员', field: 'SenderName' },
-                        { text: '发送时间', field: 'SendTime' },
-                        { text: '接收人员', field: 'ReceiverName' },
-                        { text: '接收时间', field: 'ReceiveTime' },
-                        { text: '任务状态', field: 'State' }
-                    ],
-                    defaultOrderBy: "TimeStamp",
-                    dataQueryUrl: 'WorkFlowTask/Search'
-                }).import(function () {
+            this.dic(dictionary)
 
-                    this.dic(dictionary)
+        }).bind("list").load();
 
-                }).bind("list").load();
-
-            })
     </script>
 }
 

@@ -1277,9 +1277,20 @@ var zdy = function () {
             var $modal;
 
             if (window.parent.$) {
-                $(window.top.document.body).append($("#" + id).clone(true, true));
+                var $el = $("#" + id);
+
+                var array = [];
+                $el.find("select").each(function () {
+                    array.push({ key: "select[name=" + this.name + "]", value: this.value });
+                });
+
+                $(window.top.document.body).append($el.clone(true, true));
+
                 $modal = window.parent.$("#" + id);
 
+                array.each(function (item) {
+                    $modal.find(item.key).val(item.value);
+                });
             } else {
                 $modal = $("#" + id);
             }

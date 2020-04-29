@@ -396,7 +396,6 @@
     <script src="/js/workflow/flow-designer.js"></script>
 
     <script type="text/javascript">
-        var dictionary = JSON.parse('@Html.Raw(JsonConvert.SerializeObject(Model.Dictionary))')
 
         var Step = function Step(unit) {
             //基础信息
@@ -675,7 +674,7 @@
 
             this.dic(dictionary)
 
-            this.WorkFlowKinds = dictionary["WorkFlowKinds"]
+            this.WorkFlowKinds  = dictionary["WorkFlowKinds"]
 
             this.afterLoad = function () {
                 var id = settings.Id()

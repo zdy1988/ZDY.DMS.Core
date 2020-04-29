@@ -14,7 +14,7 @@ namespace ZDY.Metronic.UI.TagHelpers
     {
         public virtual bool IsCloseDestroyed { get; set; } = false;
 
-        public virtual string DismissText { get; set; } = "Close";
+        public virtual string DismissText { get; set; } = Settings.GetInstance().ModalDismissText;
 
         public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {

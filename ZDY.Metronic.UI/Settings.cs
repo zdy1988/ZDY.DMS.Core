@@ -36,5 +36,7 @@ namespace ZDY.Metronic.UI
         public string SelectBoxPlaceholderFormat { get; set; } = "Please Select {0}...";
 
         public string SelectBoxHelpTextFormat { get; set; } = "Please Select {0}...";
+
+        public string ModalDismissText { get; set; } = "Close";
     }
 }
