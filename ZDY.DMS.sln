@@ -9,8 +9,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0 Framework", "0 Framework"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDY.DMS.Tools", "ZDY.DMS.Tools\ZDY.DMS.Tools.csproj", "{84A87A70-0C1F-4EC4-A51B-F2452E3540D8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDY.DMS.Metronic.TagHelpers", "ZDY.DMS.Metronic.TagHelpers\ZDY.DMS.Metronic.TagHelpers.csproj", "{7F0A1F1B-209D-47B6-80A0-EFA833663761}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDY.DMS.Caching.InMemory", "ZDY.DMS.Caching.InMemory\ZDY.DMS.Caching.InMemory.csproj", "{A706CA3C-999F-4045-B5CF-F4DF187431D1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZDY.DMS.Repositories.EntityFramework", "ZDY.DMS.Repositories.EntityFramework\ZDY.DMS.Repositories.EntityFramework.csproj", "{576EBC28-7EB8-4C35-B660-EE90DBC516BF}"
@@ -83,10 +81,6 @@ Global
 		{84A87A70-0C1F-4EC4-A51B-F2452E3540D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84A87A70-0C1F-4EC4-A51B-F2452E3540D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84A87A70-0C1F-4EC4-A51B-F2452E3540D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7F0A1F1B-209D-47B6-80A0-EFA833663761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7F0A1F1B-209D-47B6-80A0-EFA833663761}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7F0A1F1B-209D-47B6-80A0-EFA833663761}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7F0A1F1B-209D-47B6-80A0-EFA833663761}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A706CA3C-999F-4045-B5CF-F4DF187431D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A706CA3C-999F-4045-B5CF-F4DF187431D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A706CA3C-999F-4045-B5CF-F4DF187431D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
