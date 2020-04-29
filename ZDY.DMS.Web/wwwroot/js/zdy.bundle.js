@@ -1284,7 +1284,7 @@ var zdy = function () {
                 $modal = $("#" + id);
             }
 
-            $.Deferred(function (defer) {
+            return $.Deferred(function (defer) {
                 $modal.modal({
                     show: true,
                     keyboard: false,
@@ -1313,6 +1313,24 @@ var zdy = function () {
                     defer.resolve();
                 });
             }).promise();
+        }
+    };
+
+    _.nav =  {
+        actived: function (id, $el) {
+            if (id) {
+                return $.Deferred(function (defer) {
+                    var $item = $el ? $el.find(".kt-nav__item[data-id=" + id + "]") : $(".kt-nav__item[data-id=" + id + "]");
+
+                    if ($item.length > 0) {
+                        var $actived = $el ? $el.find(".kt-nav__item--active") : $(".kt-nav__item--active");
+                        $actived.removeClass("kt-nav__item--active");
+                        $item.addClass("kt-nav__item--active");
+                    }
+
+                    defer.resolve(id);
+                }).promise();
+            }
         }
     };
 

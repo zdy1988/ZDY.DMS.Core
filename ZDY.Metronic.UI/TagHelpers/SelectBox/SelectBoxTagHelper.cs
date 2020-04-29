@@ -40,6 +40,7 @@ namespace ZDY.Metronic.UI.TagHelpers
             {
                 return StringBuilder.Build(
                   (Rows > 0 ? $"selectedOptions:{Field}" : $"value:{Field}", !String.IsNullOrWhiteSpace(Field)),
+                  ("event:{change:function(data,event){this." + Field + "(event.target.value)}}", IsBindComputed),
                   (Bind, !String.IsNullOrWhiteSpace(Bind))
                 );
             }
@@ -89,7 +90,7 @@ namespace ZDY.Metronic.UI.TagHelpers
                     if (Rows > 0)
                     {
                         select.Attributes.Add("multiple", "multiple");
-                        select.Attributes.Add("size", Rows.ToString());
+                        //select.Attributes.Add("size", Rows.ToString());
                     }
 
                     if (!IsPlaceHolderDestroyed&& Rows <= 0)

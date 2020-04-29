@@ -17,7 +17,7 @@ namespace ZDY.DMS.Web
 {
     public class SelectOptionsFactory
     {
-        private readonly UserIdentity UserIdentity;
+        private readonly UserIdentity identity;
         private readonly IRepositoryContext repositoryContext;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IDictionaryService dictionaryService;
@@ -30,7 +30,7 @@ namespace ZDY.DMS.Web
             IWorkFlowService workFlowService,
             IWorkFlowFormService workFlowFormService)
         {
-            this.UserIdentity = httpContextAccessor.HttpContext.GetUserIdentity();
+            this.identity = httpContextAccessor.HttpContext.GetUserIdentity();
             this.repositoryContext = repositoryContext;
             this.httpContextAccessor = httpContextAccessor;
             this.dictionaryService = dictionaryService;
@@ -41,7 +41,7 @@ namespace ZDY.DMS.Web
         private async Task<List<SelectOption>> GetOptionsUnderCompanyPermission<TEntity>(string keyProperty, string valueProperty)
             where TEntity : class, ICompanyEntity<Guid>
         {
-            var data = await repositoryContext.GetRepository<Guid, TEntity>().FindAllAsync(t => t.CompanyId == UserIdentity.CompanyId);
+            var data = await repositoryContext.GetRepository<Guid, TEntity>().FindAllAsync(t => t.CompanyId == identity.CompanyId);
 
             return data.Select(t => new SelectOption
             {
@@ -66,7 +66,7 @@ namespace ZDY.DMS.Web
         {
             var flowKinds = dictionaryService.GetDictionary("WorkFlowKinds")["WorkFlowKinds"];
 
-            var flows = await workFlowService.GetInstalledWorkFlowCollectionAsync(UserIdentity.CompanyId);
+            var flows = await workFlowService.GetInstalledWorkFlowCollectionAsync(identity.CompanyId);
 
             var options = new List<SelectOption>();
 
@@ -82,7 +82,7 @@ namespace ZDY.DMS.Web
         {
             var formKinds = dictionaryService.GetDictionary("WorkFlowFormKinds")["WorkFlowFormKinds"];
 
-            var forms = await workFlowFormService.GetPublishedWorkFlowFormCollectionAsync(UserIdentity.CompanyId);
+            var forms = await workFlowFormService.GetPublishedWorkFlowFormCollectionAsync(identity.CompanyId);
 
             var options = new List<SelectOption>();
 
@@ -96,25 +96,27 @@ namespace ZDY.DMS.Web
 
         public async Task<List<SelectOption>> GetSelectUserGroupOptions()
         {
-            var data = await repositoryContext.GetRepository<Guid,UserGroup>().FindAllAsync(t => t.CompanyId == UserIdentity.CompanyId);
+            var data = await repositoryContext.GetRepository<Guid,UserGroup>().FindAllAsync(t => t.CompanyId == identity.CompanyId);
 
             return data.Select(t => new SelectOption { Value = t.Id.ToString(), Name = t.GroupName }).ToList();
         }
 
         public async Task<List<SelectOption>> GetSelectDepartmentOptions()
         {
-            var data = await repositoryContext.GetRepository<Guid, Department>().FindAllAsync(t => t.CompanyId == UserIdentity.CompanyId);
+            var data = await repositoryContext.GetRepository<Guid, Department>().FindAllAsync(t => t.CompanyId == identity.CompanyId);
 
             return data.Select(t => new SelectOption { Value = t.Id.ToString(), Name = t.DepartmentName }).ToList();
         }
 
         public async Task<List<SelectOption>> GetSelectUserOptions()
         {
-            var users = await repositoryContext.GetRepository<Guid, User>().FindAllAsync(t => t.CompanyId == UserIdentity.CompanyId && t.IsDisabled == false);
+            var users = await repositoryContext.GetRepository<Guid, User>().FindAllAsync(t => t.CompanyId == identity.CompanyId && t.IsDisabled == false);
 
             var departments = await GetSelectDepartmentOptions();
 
             var options = new List<SelectOption>();
+
+            options.AddRange(users.Where(t => t.DepartmentId.Equals(default)).Select(t => new SelectOption { Value = t.Id.ToString(), Name = t.NickName, Section = "无部门人员" }));
 
             if (departments.Count() > 0)
             {

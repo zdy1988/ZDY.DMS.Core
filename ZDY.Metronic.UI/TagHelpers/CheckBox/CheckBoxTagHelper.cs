@@ -32,6 +32,8 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         public virtual string Rule { get; set; }
 
+        public virtual bool IsBindComputed { get; set; }
+
         protected override string HelpTextValue
         {
             get
@@ -68,6 +70,7 @@ namespace ZDY.Metronic.UI.TagHelpers
             {
                 return StringBuilder.Build(
                     ($"checked:{Field}", !String.IsNullOrWhiteSpace(Field)),
+                    ("event:{change:function(data,event){this." + Field + "(event.target.checked)}}", IsBindComputed),
                     (Bind, !String.IsNullOrWhiteSpace(Bind))
                 );
             }
