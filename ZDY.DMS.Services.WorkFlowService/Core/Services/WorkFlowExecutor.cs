@@ -123,7 +123,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Services
                 if (step.IsStart() || step.IsEnd())
                 {
                     step.FlowControl = (int)WorkFlowControlKinds.System;  //系统控制流转
-                    step.IsAllowRuntimeToSelect = false; //不允许选择
                     step.HandleTactic = (int)WorkFlowHandleTacticKinds.Independent;  //独立处理
                     step.HandlerType = (int)WorkFlowHandlerKinds.User;  //制定创建者为处理人
                     step.Handlers = instance.CreaterId.ToString();

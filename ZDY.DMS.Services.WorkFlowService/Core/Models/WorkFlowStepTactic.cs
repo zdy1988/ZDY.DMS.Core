@@ -11,10 +11,6 @@ namespace ZDY.DMS.Services.WorkFlowService.Core.Models
         /// </summary>
         public int FlowControl { get; set; } = 0;
         /// <summary>
-        /// 是否允许运行时选择处理者和类型
-        /// </summary>
-        public bool IsAllowRuntimeToSelect { get; set; } = false;
-        /// <summary>
         /// 处理者类型 0任意人员 1指定人员 2部门 3工作组 15发起者 16发起者主管 17发起者分管领导 18当前处理者主管 19当前处理者分管领导
         /// </summary>
         public int HandlerType { get; set; }

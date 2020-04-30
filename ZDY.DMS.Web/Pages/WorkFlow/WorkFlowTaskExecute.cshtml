@@ -42,7 +42,7 @@
                     var isControlBySystem = Model.CurrentStep.IsControlBy(WorkFlowControlKinds.System);
                 }
 
-                @if (Model.CurrentStep.IsControlBy(WorkFlowControlKinds.System))
+                @if (!Model.CurrentStep.IsControlBy(WorkFlowControlKinds.System))
                 {
                     <section>
                         <p>可选择步骤：</p>
