@@ -5,11 +5,11 @@ using Microsoft.AspNetCore.Http;
 
 namespace Microsoft.AspNetCore.Middlewares
 {
-    public class CookiesAuthenticationMiddleware
+    public class TokenProviderMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public CookiesAuthenticationMiddleware(RequestDelegate next)
+        public TokenProviderMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -18,9 +18,7 @@ namespace Microsoft.AspNetCore.Middlewares
         {
             if (context.Request.Headers.Keys.Count(t => t == "Authorization") == 0)
             {
-                string token = "";
-
-                if (context.Request.Cookies.TryGetValue("zdy_token", out token))
+                if (context.Request.Cookies.TryGetValue("zdy_token", out string token))
                 {
                     if (!String.IsNullOrEmpty(token))
                     {

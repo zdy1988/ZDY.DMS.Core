@@ -24,26 +24,27 @@ namespace ZDY.DMS.AspNetCore.Auth
 
         public static UserIdentity GetUserIdentity(this HttpContext context)
         {
-            //var claimsIdentity = context.User.Identity as ClaimsIdentity;
-            //var id = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "Id").Value;
-            //var name = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "Name").Value;
-            //var companyId = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "CompanyId").Value;
-
-            //return new UserIdentity
-            //{
-            //    Id = Guid.Parse(id),    
-            //    Name = name,
-            //    CompanyId = Guid.Parse(companyId),
-            //    IsAdministrator = companyId == MysteriousCode.ToString()
-            //};
-
-            return new UserIdentity
+            if (context.User.Identity.IsAuthenticated)
             {
-                Id = Guid.Parse("10aaf527-351c-45a0-8fab-6c7318969b8b"),
-                Name = "zdy",
-                CompanyId = Guid.Parse("0387000f-cb65-4314-a488-dcb270575af4"),
-                IsAdministrator = true
-            };
+                var claimsIdentity = context.User.Identity as ClaimsIdentity;
+
+                if (claimsIdentity.Claims.Any())
+                {
+                    var id = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "Id").Value;
+                    var name = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "Name").Value;
+                    var companyId = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "CompanyId").Value;
+
+                    return new UserIdentity
+                    {
+                        Id = Guid.Parse(id),
+                        Name = name,
+                        CompanyId = Guid.Parse(companyId),
+                        IsAdministrator = companyId == MysteriousCode.ToString()
+                    };
+                }
+            }
+
+            return null;
         }
 
         public static bool TryGetUserId(this HttpContext context, out Guid userId)

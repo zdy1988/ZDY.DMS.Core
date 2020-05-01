@@ -49,9 +49,8 @@ namespace ZDY.DMS.API
 
             services.AddMvc(options =>
             {
-                options.Filters.Add(typeof(ApiValidationFilter));
-                //options.Filters.Add(typeof(ApiDataPermissionFilter));
-                options.Filters.Add(typeof(ApiResponseFilter));
+                options.Filters.Add(typeof(ValidationFilter));
+                options.Filters.Add(typeof(ResponseFilter));
                 options.RespectBrowserAcceptHeader = true;
 
             }).AddNewtonsoftJson(options =>
@@ -130,7 +129,7 @@ namespace ZDY.DMS.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseErrorHandle();
+            ExceptionHandlerBuilderExtensions.UseExceptionHandler(app);
 
             app.UseAutofacServiceLocator();
 

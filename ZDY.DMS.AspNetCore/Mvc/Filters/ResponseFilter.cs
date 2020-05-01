@@ -4,7 +4,7 @@ using System;
 
 namespace ZDY.DMS.AspNetCore.Mvc.Filters
 {
-    public class ApiResponseFilter : ActionFilterAttribute
+    public class ResponseFilter : ActionFilterAttribute
     {
         public override void OnResultExecuting(ResultExecutingContext context)
         {

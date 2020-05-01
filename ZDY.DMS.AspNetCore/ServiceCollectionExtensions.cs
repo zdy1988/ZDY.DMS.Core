@@ -120,7 +120,7 @@ namespace Microsoft.AspNetCore.Builder
         public static void UseDMS(this IApplicationBuilder builder)
         {
             //使用错处处理
-            builder.UseErrorHandle();
+            builder.UseExceptionHandler();
 
             //使用Autofac服务定位器
             builder.UseAutofacServiceLocator();
@@ -142,19 +142,19 @@ namespace Microsoft.AspNetCore.Builder
         }
     }
 
-    public static class CookiesAuthorizationAppBuilderExtensions
+    public static class TokenProviderExtensions
     {
-        public static IApplicationBuilder UseCookiesAuthentication(this IApplicationBuilder builder)
+        public static IApplicationBuilder UseTokenProvider(this IApplicationBuilder builder)
         {
-            return builder.UseMiddleware<CookiesAuthenticationMiddleware>();
+            return builder.UseMiddleware<TokenProviderMiddleware>();
         }
     }
 
-    public static class ExceptionHandleBuilderExtensions
+    public static class ExceptionHandlerBuilderExtensions
     {
-        public static IApplicationBuilder UseErrorHandle(this IApplicationBuilder app)
+        public static IApplicationBuilder UseExceptionHandler(this IApplicationBuilder app)
         {
-            return app.UseMiddleware<ExceptionHandleMiddleware>();
+            return app.UseMiddleware<ExceptionHandlerMiddleware>();
         }
     }
 }

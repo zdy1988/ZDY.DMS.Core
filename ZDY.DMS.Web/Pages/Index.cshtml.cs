@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace ZDY.DMS.Web.Pages
 {
+    [AllowAnonymous]
     public class IndexModel : PageModel
     {
         public void OnGet()

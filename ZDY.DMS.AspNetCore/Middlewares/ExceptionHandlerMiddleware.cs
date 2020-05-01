@@ -9,11 +9,11 @@ using ZDY.DMS.Events;
 
 namespace Microsoft.AspNetCore.Middlewares
 {
-    public class ExceptionHandleMiddleware
+    public class ExceptionHandlerMiddleware
     {
         private readonly RequestDelegate _next;
 
-        public ExceptionHandleMiddleware(RequestDelegate next)
+        public ExceptionHandlerMiddleware(RequestDelegate next)
         {
             _next = next;
         }
@@ -23,7 +23,7 @@ namespace Microsoft.AspNetCore.Middlewares
             var message = "";
             try
             {
-                await _next(context);
+                await _next.Invoke(context);
             }
             catch (Exception e)
             {
@@ -80,16 +80,23 @@ namespace Microsoft.AspNetCore.Middlewares
 
         private static async Task ConstructResponseResultAsync(HttpContext context, string message, int ststusCode)
         {
-            context.Response.ContentType = "application/json;charset=utf-8";
-
-            var result = new ApiResult
+            if (context.Request.Path.ToUriComponent().ToLower().StartsWith("/api"))
             {
-                StatusCode = ststusCode,
-                IsSuccess = ststusCode == 200,
-                Message = message
-            };
+                context.Response.ContentType = "application/json;charset=utf-8";
 
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+                var result = new ApiResult
+                {
+                    StatusCode = ststusCode,
+                    IsSuccess = ststusCode == 200,
+                    Message = message
+                };
+
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(result));
+            }
+            else
+            {
+                context.Response.Redirect($"/Error?code={ststusCode}");
+            }
         }
     }
 }

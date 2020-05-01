@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +25,7 @@ using ZDY.DMS.Services.WorkFlowService;
 using ZDY.DMS.Web.Repositories.EntityFramework;
 using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Querying.DataTableGateway.MySQL;
+
 
 namespace ZDY.DMS.Web
 {
@@ -66,8 +68,9 @@ namespace ZDY.DMS.Web
             //注册MVC
             services.AddMvc(options =>
             {
-                options.Filters.Add(typeof(ApiValidationFilter));
-                options.Filters.Add(typeof(ApiResponseFilter));
+                options.Filters.Add(new AuthorizeFilter()); //全局权限
+                options.Filters.Add(new ValidationFilter()); //数据验证
+                options.Filters.Add(new ResponseFilter()); //响应重构
                 options.RespectBrowserAcceptHeader = true;
 
             }).AddNewtonsoftJson(options =>
@@ -131,7 +134,7 @@ namespace ZDY.DMS.Web
 
             app.UseRouting();
 
-            app.UseCookiesAuthentication();
+            app.UseTokenProvider();
 
             app.UseAuthorization();
 

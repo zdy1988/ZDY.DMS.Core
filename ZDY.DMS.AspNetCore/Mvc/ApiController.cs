@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.AspNetCore.Bootstrapper.Module;
@@ -7,8 +8,7 @@ using ZDY.DMS.Repositories;
 
 namespace ZDY.DMS.AspNetCore.Mvc
 {
-    //[Authorize]
-    //[ApiController]
+    [Authorize]
     [ApiRoute(ApiVersions.v1)]
     public abstract class ApiController<TServiceModule> : ControllerBase
         where TServiceModule : IServiceModule

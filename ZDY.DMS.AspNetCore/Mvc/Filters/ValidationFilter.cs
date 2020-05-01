@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace ZDY.DMS.AspNetCore.Mvc.Filters
 {
-    public class ApiValidationFilter: ActionFilterAttribute
+    public class ValidationFilter: ActionFilterAttribute
     {
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var action = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName;
+            var action = ((ControllerActionDescriptor)context.ActionDescriptor).ActionName.ToLower();
 
-            if (action == "Add" || action == "Update")
+            if (action == "add" || action == "update")
             {
                 //只有在提交Model的时候才进行验证
                 if (context.ActionArguments.Count == 1

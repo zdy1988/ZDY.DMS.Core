@@ -10,6 +10,7 @@ using ZDY.DMS.Services.AdminService.ServiceContracts;
 using ZDY.DMS.Services.PermissionService.ServiceContracts;
 using ZDY.Metronic.UI;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ZDY.DMS.Web.Pages.Home
 {
@@ -79,12 +80,12 @@ namespace ZDY.DMS.Web.Pages.Home
 
             foreach (var page in pages)
             {
+                var item = new TagBuilder("li");
+
                 if (!page.IsInMenu)
                 {
-                    continue;
+                    item.AddCssClass("kt-hidden");
                 }
-
-                var item = new TagBuilder("li");
 
                 //if (page.IsSection)
                 //{
