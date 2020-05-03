@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ZDY.DMS.Services.Common\ZDY.DMS.Services.Common.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.PermissionService.Models\ZDY.DMS.Services.PermissionService.Models.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.PermissionService.ServiceContracts\ZDY.DMS.Services.PermissionService.ServiceContracts.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.Shared\ZDY.DMS.Services.Shared.csproj" />
   </ItemGroup>
 
 </Project>

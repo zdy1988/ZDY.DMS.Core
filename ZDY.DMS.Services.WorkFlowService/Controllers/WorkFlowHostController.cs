@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.Services.WorkFlowService.Core.Models;
-using ZDY.DMS.Services.WorkFlowService.Enums;
+using ZDY.DMS.Services.WorkFlowService.Core.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 

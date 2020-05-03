@@ -2,9 +2,9 @@
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.KeyGeneration;
 using ZDY.DMS.StringEncryption;
-using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.Events;
-using ZDY.DMS.Services.Common.Events;
+using ZDY.DMS.Services.Shared.Events;
+using ZDY.DMS.Services.UserService.Models;
 
 namespace ZDY.DMS.Services.UserService.Controllers
 {

@@ -5,7 +5,7 @@ using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 using ZDY.DMS.Events;
 using ZDY.DMS.Services.AdminService.Enums;
 using ZDY.DMS.Services.AdminService.EventHandlers;
-using ZDY.DMS.Services.Common.Events;
+using ZDY.DMS.Services.Shared.Events;
 
 namespace ZDY.DMS.Services.AdminService
 {

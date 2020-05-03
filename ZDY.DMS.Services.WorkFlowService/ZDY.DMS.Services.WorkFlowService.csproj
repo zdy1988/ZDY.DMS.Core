@@ -5,7 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ZDY.DMS.Services.Common\ZDY.DMS.Services.Common.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.Shared\ZDY.DMS.Services.Shared.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.WorkFlowService.Core\ZDY.DMS.Services.WorkFlowService.Core.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.WorkFlowService.Models\ZDY.DMS.Services.WorkFlowService.Models.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.WorkFlowService.ServiceContracts\ZDY.DMS.Services.WorkFlowService.ServiceContracts.csproj" />
   </ItemGroup>
 
 </Project>

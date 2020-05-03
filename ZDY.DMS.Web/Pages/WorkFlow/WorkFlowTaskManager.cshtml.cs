@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ZDY.DMS.AspNetCore.Dictionary;
-using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.DMS.Services.Shared.ServiceContracts;
 using ZDY.Metronic.UI;
 
 namespace ZDY.DMS.Web.Pages.WorkFlow

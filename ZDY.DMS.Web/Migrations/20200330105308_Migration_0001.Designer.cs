@@ -19,7 +19,7 @@ namespace ZDY.DMS.Web.Migrations
                 .HasAnnotation("ProductVersion", "3.1.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("ZDY.DMS.Services.Common.Models.Company", b =>
+            modelBuilder.Entity("ZDY.DMS.Services.Shared.Models.Company", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -57,7 +57,7 @@ namespace ZDY.DMS.Web.Migrations
                     b.ToTable("Company");
                 });
 
-            modelBuilder.Entity("ZDY.DMS.Services.Common.Models.Department", b =>
+            modelBuilder.Entity("ZDY.DMS.Services.Shared.Models.Department", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -92,7 +92,7 @@ namespace ZDY.DMS.Web.Migrations
                     b.ToTable("Department");
                 });
 
-            modelBuilder.Entity("ZDY.DMS.Services.Common.Models.DictionaryKey", b =>
+            modelBuilder.Entity("ZDY.DMS.Services.Shared.Models.DictionaryKey", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -118,7 +118,7 @@ namespace ZDY.DMS.Web.Migrations
                     b.ToTable("Dictionary_Key");
                 });
 
-            modelBuilder.Entity("ZDY.DMS.Services.Common.Models.DictionaryValue", b =>
+            modelBuilder.Entity("ZDY.DMS.Services.Shared.Models.DictionaryValue", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -150,7 +150,7 @@ namespace ZDY.DMS.Web.Migrations
                     b.ToTable("Dictionary_Value");
                 });
 
-            modelBuilder.Entity("ZDY.DMS.Services.Common.Models.File", b =>
+            modelBuilder.Entity("ZDY.DMS.Services.Shared.Models.File", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -188,7 +188,7 @@ namespace ZDY.DMS.Web.Migrations
                     b.ToTable("File");
                 });
 
-            modelBuilder.Entity("ZDY.DMS.Services.Common.Models.Log", b =>
+            modelBuilder.Entity("ZDY.DMS.Services.Shared.Models.Log", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -208,7 +208,7 @@ namespace ZDY.DMS.Web.Migrations
                     b.ToTable("Log");
                 });
 
-            modelBuilder.Entity("ZDY.DMS.Services.Common.Models.Page", b =>
+            modelBuilder.Entity("ZDY.DMS.Services.Shared.Models.Page", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -261,7 +261,7 @@ namespace ZDY.DMS.Web.Migrations
                     b.ToTable("Page");
                 });
 
-            modelBuilder.Entity("ZDY.DMS.Services.Common.Models.PageAction", b =>
+            modelBuilder.Entity("ZDY.DMS.Services.Shared.Models.PageAction", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -284,7 +284,7 @@ namespace ZDY.DMS.Web.Migrations
                     b.ToTable("Page_Action");
                 });
 
-            modelBuilder.Entity("ZDY.DMS.Services.Common.Models.User", b =>
+            modelBuilder.Entity("ZDY.DMS.Services.Shared.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

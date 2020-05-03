@@ -1,11 +1,11 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using ZDY.DMS.Services.AdminService.Models;
-using ZDY.DMS.Services.Common.Models;
 using ZDY.DMS.Services.MessageService.Models;
 using ZDY.DMS.Services.OrganizationService.Models;
 using ZDY.DMS.Services.PermissionService.Models;
 using ZDY.DMS.Services.WorkFlowService.Models;
+using ZDY.DMS.Services.UserService.Models;
 
 namespace ZDY.DMS.Web.Repositories.EntityFramework
 {

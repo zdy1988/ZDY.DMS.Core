@@ -203,7 +203,7 @@ namespace ZDY.DMS.Web.Migrations
                     b.ToTable("Page_Action");
                 });
 
-            modelBuilder.Entity("ZDY.DMS.Services.Common.Models.User", b =>
+            modelBuilder.Entity("ZDY.DMS.Services.Shared.Models.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()

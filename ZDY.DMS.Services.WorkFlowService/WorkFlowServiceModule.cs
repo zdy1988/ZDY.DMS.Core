@@ -2,8 +2,8 @@
 using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.AspNetCore.Bootstrapper.Module;
 using ZDY.DMS.Events;
-using ZDY.DMS.Services.Common.Events;
-using ZDY.DMS.Services.WorkFlowService.Enums;
+using ZDY.DMS.Services.Shared.Events;
+using ZDY.DMS.Services.WorkFlowService.Core.Enums;
 using ZDY.DMS.Services.WorkFlowService.EventHandlers;
 
 namespace ZDY.DMS.Services.WorkFlowService

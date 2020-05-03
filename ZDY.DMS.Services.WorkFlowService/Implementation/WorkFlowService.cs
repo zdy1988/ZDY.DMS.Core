@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Bootstrapper.Service;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Services.WorkFlowService.Enums;
+using ZDY.DMS.Services.WorkFlowService.Core.Enums;
 using ZDY.DMS.Services.WorkFlowService.ServiceContracts;
 
 namespace ZDY.DMS.Services.WorkFlowService.Implementation

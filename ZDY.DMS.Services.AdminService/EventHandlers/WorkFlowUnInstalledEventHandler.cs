@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Messaging;
 using ZDY.DMS.Services.AdminService.Models;
-using ZDY.DMS.Services.Common.Events;
+using ZDY.DMS.Services.Shared.Events;
 
 namespace ZDY.DMS.Services.AdminService.EventHandlers
 {

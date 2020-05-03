@@ -9,7 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ZDY.DMS.Services.Common\ZDY.DMS.Services.Common.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.AdminService.Models\ZDY.DMS.Services.AdminService.Models.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.AdminService.ServiceContracts\ZDY.DMS.Services.AdminService.ServiceContracts.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.Shared\ZDY.DMS.Services.Shared.csproj" />
   </ItemGroup>
 
 </Project>

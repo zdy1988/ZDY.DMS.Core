@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ZDY.DMS.Repositories;
 using ZDY.DMS.Services.AdminService.Enums;
-using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.DMS.Services.Shared.ServiceContracts;
 using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.AspNetCore.Bootstrapper.Service;
 using ZDY.DMS.Services.AdminService.Models;

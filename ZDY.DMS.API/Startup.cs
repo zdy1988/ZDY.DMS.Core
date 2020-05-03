@@ -22,7 +22,7 @@ using ZDY.DMS.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc;
 using ZDY.DMS.Querying.DataTableGateway;
 using ZDY.DMS.Querying.DataTableGateway.MySQL;
-using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.DMS.Services.Shared.ServiceContracts;
 using ZDY.DMS.Services.AdminService.Implementation;
 using ZDY.DMS.API.Repositories.EntityFramework;
 using ZDY.DMS.AspNetCore;

@@ -3,7 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ZDY.DMS.AspNetCore.Messaging;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Services.Common.Events;
+using ZDY.DMS.Services.Shared.Events;
 using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService.EventHandlers

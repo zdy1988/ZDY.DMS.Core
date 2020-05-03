@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using ZDY.DMS.Events;
-using ZDY.DMS.Services.Common.Events;
+using ZDY.DMS.Services.Shared.Events;
 using ZDY.DMS.Services.WorkFlowService.Core.Interfaces;
 
 namespace ZDY.DMS.Services.WorkFlowService.Core.Services

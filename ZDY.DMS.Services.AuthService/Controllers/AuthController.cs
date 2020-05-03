@@ -9,8 +9,9 @@ using ZDY.DMS.AspNetCore.Auth;
 using ZDY.DMS.AspNetCore.Mvc;
 using ZDY.DMS.Events;
 using ZDY.DMS.Repositories;
-using ZDY.DMS.Services.Common.Events;
-using ZDY.DMS.Services.Common.Models;
+using ZDY.DMS.Services.Shared.Events;
+using ZDY.DMS.Services.Shared.Models;
+using ZDY.DMS.Services.UserService.Models;
 using ZDY.DMS.StringEncryption;
 
 namespace ZDY.DMS.Services.AuthService.Controllers

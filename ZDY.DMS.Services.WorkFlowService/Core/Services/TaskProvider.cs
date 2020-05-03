@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ZDY.DMS.Services.WorkFlowService.Core.Extensions;
 using ZDY.DMS.Services.WorkFlowService.Core.Interfaces;
-using ZDY.DMS.Services.WorkFlowService.Enums;
+using ZDY.DMS.Services.WorkFlowService.Core.Enums;
 using ZDY.DMS.Services.WorkFlowService.Models;
 
 namespace ZDY.DMS.Services.WorkFlowService.Core.Services

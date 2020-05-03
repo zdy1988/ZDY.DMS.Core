@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using ZDY.DMS.Services.Common.ServiceContracts;
+using ZDY.DMS.Services.Shared.ServiceContracts;
 using ZDY.Metronic.UI;
 
 namespace ZDY.DMS.Web.Pages.User
