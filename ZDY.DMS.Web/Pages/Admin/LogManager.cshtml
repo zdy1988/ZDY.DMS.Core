@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <portlet title="查询条件" is-form="true" is-fit="true" data-model="list">
+        <portlet title="查询条件" fit="FitBottom" data-model="list">
             <div class="row">
                 <div class="col-md-3">
                     <text-box field="Message" name="关键字"></text-box>
@@ -28,7 +28,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <portlet title="日志列表" is-fit="true" data-model="list">
+        <portlet title="日志列表" fit="Fit" data-model="list">
             <data-table is-show-checkbox-column="false">
                 <cell filed="Message" style="width: 100%;"></cell>
                 <cell filed="TimeStamp"></cell>
@@ -36,7 +36,7 @@
                     <lable data-bind="state: $root.dic('LogKinds', Type, true)"></lable>
                 </cell>
                 <cell>
-                    <button size="Sm" state="Brand" is-only-icon="true" icon="Search" data-bind="click:$root.detail">
+                    <button size="Sm" is-outline="true" state="Brand" is-only-icon="true" icon="Comment" data-bind="click:$root.detail">
                         查看
                     </button>
                 </cell>
@@ -48,7 +48,7 @@
 </div>
 
 <div data-model="form">
-    <modal title="日志信息" id="modal-detail">
+    <modal title="日志信息" id="modal-detail" size="Lg">
         <modal-body>
             <p data-bind="html:Message"></p>
             <p>时间：<!-- ko text: TimeStamp --><!-- /ko --></p>

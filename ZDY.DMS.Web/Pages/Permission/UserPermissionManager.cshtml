@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="col-md-3">
-        <portlet title="全部角色" data-model="permissions" is-height-fluid="true">
+        <portlet title="全部角色" data-model="permissions">
             <div class="kt-scroll" data-scroll="true" data-height="750">
                 @if (Model.UserGroups.Count > 0)
                 {
@@ -33,7 +33,7 @@
         </portlet>
     </div>
     <div class="col-md-9">
-        <portlet title="页面权限" data-model="permissions">
+        <portlet title="页面权限" fit="Fit" data-model="permissions">
             <portlet-header-action-container>
                 <button icon="Save" state="Success" size="Sm" data-bind="click:handleSavePagePermissions">
                     保存权限

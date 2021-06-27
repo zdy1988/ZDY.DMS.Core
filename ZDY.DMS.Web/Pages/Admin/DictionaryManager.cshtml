@@ -3,35 +3,32 @@
 
 <div class="row">
     <div class="col-md-6">
-        <portlet title="字典管理">
-            <section data-model="key-form">
-                <div class="row">
-                    <div class="col-md-6">
-                        <text-box field="Name" is-required="true" name="名称"></text-box>
-                    </div>
-                    <div class="col-md-6">
-                        <text-box field="Code" is-required="true" name="标识"></text-box>
-                    </div>
+        <portlet title="字典管理" data-model="key-form">
+            <portlet-header-action-container>
+                <button size="Sm" data-bind="click:reset">重置</button>
+                <button size="Sm" state="Danger" data-bind="click:$root.delete, visible:Id()">删除</button>
+                <button size="Sm" state="Success" data-bind="click:update, visible:Id()">修改</button>
+                <button size="Sm" state="Success" data-bind="click:add, visible:!Id()">新增标识</button>
+            </portlet-header-action-container>
+            <div class="row">
+                <div class="col-md-6">
+                    <text-box field="Name" is-required="true" name="名称"></text-box>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <text-box field="Order" is-required="true" name="排序" text-box-type="Number"></text-box>
-                    </div>
-                    <div class="col-md-6">
-                        <select-box field="Type" is-required="true" name="类型" options="@Model.DictionaryKinds"></select-box>
-                    </div>
+                <div class="col-md-6">
+                    <text-box field="Code" is-required="true" name="标识"></text-box>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 kt-align-right">
-                        <button size="Sm" data-bind="click:reset">重置</button>
-                        <button size="Sm" state="Danger" data-bind="click:$root.delete, visible:Id()">删除</button>
-                        <button size="Sm" state="Success" data-bind="click:update, visible:Id()">修改</button>
-                        <button size="Sm" state="Success" data-bind="click:add, visible:!Id()">新增标识</button>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <text-box field="Order" is-required="true" name="排序" text-box-type="Number"></text-box>
                 </div>
-            </section>
-            <separator />
-            <div class="row" data-model="key-table">
+                <div class="col-md-6">
+                    <select-box field="Type" is-required="true" name="类型" options="@Model.DictionaryKinds"></select-box>
+                </div>
+            </div>
+        </portlet>
+        <portlet title="字典管理" fit="Fit" is-height-fluid="true" data-model="key-table">
+            <div class="row">
                 <div class="col-md-12">
                     <data-table is-show-checkbox-column="false" row-click-funtion="handleRowClick">
                         <cell filed="Name"></cell>
@@ -41,7 +38,7 @@
                             <lable data-bind="state: $root.dic('DictionaryKinds', Type, true)"></lable>
                         </cell>
                         <cell>
-                            <button size="Sm" state="Brand" is-only-icon="true" icon="Edit" data-bind="click:$root.handleDetail"/>
+                            <button size="Sm" is-outline="true" state="Brand" is-only-icon="true" icon="Edit" data-bind="click:$root.handleDetail" />
                         </cell>
                     </data-table>
                     <pager></pager>
@@ -50,35 +47,32 @@
         </portlet>
     </div>
     <div class="col-md-6">
-        <portlet title="字典数据" is-height-fluid="true">
-            <section data-model="value-form">
-                <div class="row">
-                    <div class="col-md-6">
-                        <text-box field="Name" is-required="true" name="名称"></text-box>
-                    </div>
-                    <div class="col-md-6">
-                        <text-box field="Order" is-required="true" name="排序" text-box-type="Number"></text-box>
-                    </div>
+        <portlet title="字典数据" data-model="value-form">
+            <portlet-header-action-container>
+                <button size="Sm" data-bind="click:reset">重置</button>
+                <button size="Sm" state="Danger" data-bind="click:$root.delete, visible:Id()">删除</button>
+                <button size="Sm" state="Success" data-bind="click:update, visible:Id()">修改</button>
+                <button size="Sm" state="Success" data-bind="click:add, visible:!Id(), enable:DictionaryKey()">新增数据</button>
+            </portlet-header-action-container>
+            <div class="row">
+                <div class="col-md-6">
+                    <text-box field="Name" is-required="true" name="名称"></text-box>
                 </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <text-box field="Value" is-required="true" name="值"></text-box>
-                    </div>
-                    <div class="col-md-6">
-                        <text-box field="ParentValue" name="父级值"></text-box>
-                    </div>
+                <div class="col-md-6">
+                    <text-box field="Order" is-required="true" name="排序" text-box-type="Number"></text-box>
                 </div>
-                <div class="row">
-                    <div class="col-md-12 kt-align-right">
-                        <button size="Sm" data-bind="click:reset">重置</button>
-                        <button size="Sm" state="Danger" data-bind="click:$root.delete, visible:Id()">删除</button>
-                        <button size="Sm" state="Success" data-bind="click:update, visible:Id()">修改</button>
-                        <button size="Sm" state="Success" data-bind="click:add, visible:!Id(), enable:DictionaryKey()">新增数据</button>
-                    </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <text-box field="Value" is-required="true" name="值"></text-box>
                 </div>
-            </section>
-            <separator />
-            <div class="row" data-model="value-table">
+                <div class="col-md-6">
+                    <text-box field="ParentValue" name="父级值"></text-box>
+                </div>
+            </div>
+        </portlet>
+        <portlet title="字典数据" fit="Fit" is-height-fluid="true" data-model="value-table">
+            <div class="row">
                 <div class="col-md-12">
                     <data-table is-show-checkbox-column="false">
                         <cell filed="Name"></cell>
@@ -86,7 +80,7 @@
                         <cell filed="ParentValue"></cell>
                         <cell filed="Order"></cell>
                         <cell>
-                            <button size="Sm" state="Brand" is-only-icon="true" icon="Edit" data-bind="click:$root.handleDetail"/>
+                            <button size="Sm" is-outline="true" state="Brand" is-only-icon="true" icon="Edit" data-bind="click:$root.handleDetail" />
                         </cell>
                     </data-table>
                 </div>

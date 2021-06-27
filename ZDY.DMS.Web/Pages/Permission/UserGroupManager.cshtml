@@ -4,9 +4,9 @@
 <div class="row">
     <div class="col-md-3">
         <portlet data-model="user-group-list" is-header-destroyed="true" is-height-fluid="true">
-            <button size="Lg" state="Brand" style="margin:20px 20px 0; padding:0.9rem 0;" data-bind="click:handleAdd">新建角色</button>
+            <button size="Lg" state="Brand" style="padding:0.9rem 0;" data-bind="click:handleAdd">新建角色</button>
 
-            <div class="kt-scroll" data-scroll="true" data-height="660">
+            <div class="kt-scroll" data-scroll="true" data-height="574">
                 <ul class="kt-nav kt-nav--md-space">
                     <!-- ko foreach: recordSet -->
                     <li class="kt-nav__item" data-bind="click: $root.handleItemClick, attr:{'data-id': Id}">
@@ -33,7 +33,7 @@
         </portlet>
     </div>
     <div class="col-md-9">
-        <portlet title="角色成员" data-model="user-list" is-height-fluid="true">
+        <portlet title="角色成员" fit="Fit" data-model="user-list">
             <portlet-header-action-container>
                 <button icon="Save" state="Success" size="Sm" data-bind="click:handleSaveGroupMember, visible:$root.selectData().length > 0">
                     保存成员

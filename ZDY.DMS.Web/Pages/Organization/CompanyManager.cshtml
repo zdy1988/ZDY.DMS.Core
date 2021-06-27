@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <portlet title="查询条件" data-model="list">
+        <portlet title="查询条件" fit="FitBottom" data-model="list">
             <div class="row">
                 <div class="col-md-3">
                     <text-box field="CompanyName" name="公司名称"></text-box>
@@ -28,7 +28,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <portlet title="公司列表" data-model="list">
+        <portlet title="公司列表" fit="Fit" data-model="list">
             <portlet-header-action-container>
                 <button state="Brand" icon="PlusSquare" size="Sm" data-bind="click:$root.goto, attr: {'data-url': '/Organization/CompanyDetail'}">新增公司</button>
             </portlet-header-action-container>
@@ -42,8 +42,8 @@
                 </cell>
                 <cell filed="Address" width="50%"></cell>
                 <cell>
-                    <button size="Sm" state="Brand" icon="Home" is-only-icon="true" tooltip="部门" data-bind="click:$root.goto, attr: {'data-url': '/Organization/DepartmentManager?companyId=' + Id }"/>
-                    <button size="Sm" state="Info" icon="Edit" is-only-icon="true" data-bind="click:$root.goto, attr: {'data-url': '/Organization/CompanyDetail?id=' + Id }"/>
+                    <button size="Sm" is-outline="true" state="Brand" icon="Home" is-only-icon="true" tooltip="部门" data-bind="click:$root.goto, attr: {'data-url': '/Organization/DepartmentManager?companyId=' + Id }"/>
+                    <button size="Sm" is-outline="true" state="Success" icon="Edit" is-only-icon="true" data-bind="click:$root.goto, attr: {'data-url': '/Organization/CompanyDetail?id=' + Id }"/>
                 </cell>
             </data-table>
 

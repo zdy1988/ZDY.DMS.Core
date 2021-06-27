@@ -10,6 +10,10 @@ h1, h2, h3, h4, h5, h6,
     font: 14px/1.5 Helvetica Neue,Helvetica,Arial,Microsoft Yahei,Hiragino Sans GB,Heiti SC,WenQuanYi Micro Hei,sans-serif;
 }
 
+.form-control-label {
+    font-weight: bold !important;
+}
+
 .kt-nav .kt-nav__item > .kt-nav__sub .kt-nav__item > .kt-nav__sub .kt-nav__item > .kt-nav__link {
     padding: 0.5rem 1.5rem 0.5rem 3.5rem;
 }
@@ -22,6 +26,25 @@ h1, h2, h3, h4, h5, h6,
     padding: 0.5rem 1.5rem 0.5rem 5.5rem;
 }
 
+.kt-subheader .kt-subheader__main .kt-subheader__title {
+    font-weight: bold;
+}
+
+/*#region portlet*/
+
+.kt-portlet .kt-portlet__head {
+    padding: 0 24px;
+}
+
+.kt-portlet .kt-portlet__head .kt-portlet__head-label .kt-portlet__head-title {
+    font-weight: bold;
+}
+
+.kt-portlet .kt-portlet__foot {
+    padding: 12px 25px;
+}
+
+/*#endregion*/
 /*#region btn*/
 .btn-sm, .btn-group-sm > .btn {
     font-size: 1rem;
@@ -41,6 +64,10 @@ h1, h2, h3, h4, h5, h6,
 .table {
     cursor: pointer;
 }
+
+    .table > thead > tr > th {
+        font-weight: bold;
+    }
 
     .table > thead > tr > th a {
         color: #595d6e;
@@ -86,14 +113,44 @@ h1, h2, h3, h4, h5, h6,
         color: #595d6e;
     }
 
-    .table > tbody > tr > td > .btn {
-        margin-right: 0px;
-        margin-left: 5px;
-    }
-
-        .table > tbody > tr > td > .btn:first-child {
-            margin-left: 0px;
+        .table > tbody > tr > td > .btn.btn-sm {
+            margin: -1rem 0px -1rem 5px;
         }
+
+            .table > tbody > tr > td > .btn.btn-sm:first-child {
+                margin-left: 0px;
+            }
+
+        .table > tbody > tr > td > .btn.btn-icon {
+            height: 2.2rem;
+            width: 2.2rem;
+        }
+
+            .table > tbody > tr > td > .btn.btn-icon [class*=" la-"] {
+                margin-top: 0px;
+            }
+
+.kt-portlet__body--fit .table > thead > tr > th:first-child,
+.kt-portlet__body--fit .table > tbody > tr > td:first-child,
+.kt-portlet__body--fit-x .table > thead > tr > th:first-child,
+.kt-portlet__body--fit-x .table > tbody > tr > td:first-child {
+    padding-left: 25px;
+}
+
+.kt-portlet__body--fit .table > thead > tr > th:last-child,
+.kt-portlet__body--fit .table > tbody > tr > td:last-child,
+.kt-portlet__body--fit-x .table > thead > tr > th:last-child,
+.kt-portlet__body--fit-x .table > tbody > tr > td:last-child {
+    padding-right: 25px;
+}
+
+.kt-portlet__body--fit .kt-pagination{
+    padding: 0 13px 20px 20px;
+}
+
+.kt-portlet__body--fit-x .kt-pagination {
+    padding: 0 20px;
+}
 
 /*#endregion*/
 
@@ -104,7 +161,7 @@ h1, h2, h3, h4, h5, h6,
 
         .table.table-tree svg {
             margin-top: -2px;
-            margin-right: 6px;
+            margin-right: 12px;
             transition: all .3s;
         }
 

@@ -3,7 +3,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <portlet title="查询条件" data-model="list">
+        <portlet title="查询条件" fit="FitBottom" data-model="list">
             <div class="row">
                 <div class="col-md-3">
                     <text-box field="UserName" name="账号"></text-box>
@@ -28,7 +28,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <portlet title="用户列表" data-model="list">
+        <portlet title="用户列表" fit="Fit" data-model="list">
             <portlet-header-action-container>
                 <button state="Brand" icon="UserPlus" size="Sm" data-bind="click:$root.goto, attr: {'data-url': '/User/UserDetail'}">新增用户</button>
             </portlet-header-action-container>
@@ -42,7 +42,7 @@
                 <cell filed="Email" />
                 <cell />
                 <cell align="Center">
-                    <button size="Sm" state="Brand" is-only-icon="true" icon="Search" data-bind="click:$root.goto, attr: {'data-url': '/User/UserDetail?id=' + Id}" />
+                    <button size="Sm" is-outline="true" state="Brand" is-only-icon="true" icon="CommentO" data-bind="click:$root.goto, attr: {'data-url': '/User/UserDetail?id=' + Id}" />
                 </cell>
             </data-table>
 
