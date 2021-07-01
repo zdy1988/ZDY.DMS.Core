@@ -119,7 +119,7 @@ namespace ZDY.Metronic.UI.TagHelpers
                     }
                     else
                     {
-                        bodyBuilder.Append($@"<td class='{column.Classes}'>{column.ChildContent.ToHtml()}</td>");
+                        bodyBuilder.Append($@"<td class='{column.Classes}'>{column.ChildHtmlContent}</td>");
                     } 
                 }
             }

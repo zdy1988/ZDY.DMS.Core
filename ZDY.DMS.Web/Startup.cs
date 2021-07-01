@@ -45,15 +45,7 @@ namespace ZDY.DMS.Web
 
             services.AddRazorPages();
 
-            //注册验证
-            services.AddAuthorization(auth =>
-            {
-                auth.DefaultPolicy = new AuthorizationPolicyBuilder()
-                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
-                    .RequireAuthenticatedUser()
-                    .Build();
-            });
-
+            //注册认证
             services.AddAuthentication(options => options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options => options.TokenValidationParameters = new TokenValidationParameters
                     {
@@ -65,10 +57,19 @@ namespace ZDY.DMS.Web
                         ClockSkew = TimeSpan.FromMinutes(0)
                     });
 
+            //注册授权
+            services.AddAuthorization(auth =>
+            {
+                auth.DefaultPolicy = new AuthorizationPolicyBuilder()
+                    .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme‌​)
+                    .RequireAuthenticatedUser()
+                    .Build();
+            });
+
             //注册MVC
             services.AddMvc(options =>
             {
-                options.Filters.Add(new AuthorizeFilter()); //全局权限
+                options.Filters.Add(new AuthorizeFilter()); //全局授权
                 options.Filters.Add(new ValidationFilter()); //数据验证
                 options.Filters.Add(new ResponseFilter()); //响应重构
                 options.RespectBrowserAcceptHeader = true;

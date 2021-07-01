@@ -8,7 +8,7 @@ using ZDY.DMS.Repositories;
 
 namespace ZDY.DMS.AspNetCore.Mvc
 {
-    [Authorize]
+    //[Authorize]
     [ApiRoute(ApiVersions.v1)]
     public abstract class ApiController<TServiceModule> : ControllerBase
         where TServiceModule : IServiceModule

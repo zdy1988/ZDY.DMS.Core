@@ -20,8 +20,6 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         public virtual Align Align { get; set; } = Align.None;
 
-        public IHtmlContent ChildContent { get; set; }
-
         public virtual string Classes
         {
             get
@@ -35,14 +33,14 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            ChildContent = await output.GetChildContentAsync();
-
-            output.SuppressOutput();
-
             if (context.TryGetContext<DataTableContext, DataTableTagHelper>(out DataTableContext dataTableContext))
             {
+                ChildHtmlContent = await output.GetChildHtmlContentAsync();
+
                 dataTableContext.Columns.Add(this);
             }
+
+            output.SuppressOutput();
         }
     }
 }

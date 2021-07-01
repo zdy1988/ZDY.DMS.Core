@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
+using System.Threading.Tasks;
 
 namespace ZDY.Metronic.UI
 {
@@ -17,6 +18,13 @@ namespace ZDY.Metronic.UI
             }
 
             output.Content.SetHtmlContent(builder.InnerHtml);
+        }
+
+        internal static async Task<string> GetChildHtmlContentAsync(this TagHelperOutput output)
+        {
+            var childContent = await output.GetChildContentAsync();
+
+            return childContent.IsEmptyOrWhiteSpace ? string.Empty : childContent.GetContent();
         }
     }
 }

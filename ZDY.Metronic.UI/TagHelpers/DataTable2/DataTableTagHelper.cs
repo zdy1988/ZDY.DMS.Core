@@ -141,7 +141,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             var checkboxColumn = dataTableContext.CheckboxColumns.FirstOrDefault(t => t.FieldName == field.FieldName);
 
-            var templateColumn = dataTableContext.TemplateColumns.FirstOrDefault(t => t.Item1.FieldName == field.FieldName);
+            var templateColumn = dataTableContext.TemplateColumns.FirstOrDefault(t => t.FieldName == field.FieldName);
 
             var cell = BuildCell(tagName, field);
 
@@ -165,7 +165,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         internal void AppendTemplateCellByIndex(TagBuilder row, DataTableContext dataTableContext, DataTableField field, string tagName, int columnIndex)
         {
-            var templateColumn2 = dataTableContext.TemplateColumns.FirstOrDefault(t => t.Item1.Index == columnIndex && String.IsNullOrWhiteSpace(t.Item1.FieldName));
+            var templateColumn2 = dataTableContext.TemplateColumns.FirstOrDefault(t => t.Index == columnIndex && String.IsNullOrWhiteSpace(t.FieldName));
 
             if (templateColumn2.IsNotNull())
             {
@@ -179,7 +179,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         internal void AppendTemplateCellToEnding(TagBuilder row, DataTableContext dataTableContext, string tagName)
         {
-            var templateColumns2 = dataTableContext.TemplateColumns.Where(t => t.Item1.Index < 0 && String.IsNullOrWhiteSpace(t.Item1.FieldName));
+            var templateColumns2 = dataTableContext.TemplateColumns.Where(t => t.Index < 0 && String.IsNullOrWhiteSpace(t.FieldName));
 
             if (templateColumns2.Any())
             {
@@ -246,36 +246,36 @@ namespace ZDY.Metronic.UI.TagHelpers
                                        </span>");
         }
 
-        internal void BuildDataTableTemplateCell(TagBuilder cell, Tuple<DataTableTemplateColumnTagHelper, IHtmlContent> templateColumn)
+        internal void BuildDataTableTemplateCell(TagBuilder cell, DataTableTemplateColumnTagHelper templateColumn)
         {
-            if (!templateColumn.Item1.IsAutoHide)
+            if (!templateColumn.IsAutoHide)
             {
                 cell.Attributes.Add("data-autohide-disabled", "false");
             }
 
-            if (templateColumn.Item1.IsAutoWidth)
+            if (templateColumn.IsAutoWidth)
             {
                 cell.Attributes.Add("data-width", "auto");
             }
-            else if (templateColumn.Item1.Width > 0 && !templateColumn.Item1.IsAutoWidth)
+            else if (templateColumn.Width > 0 && !templateColumn.IsAutoWidth)
             {
-                cell.Attributes.Add("data-width", templateColumn.Item1.Width.ToString());
+                cell.Attributes.Add("data-width", templateColumn.Width.ToString());
             }
 
             var classes = CssClasser.Build(
-                new CssClass("kt-datatable__cell--sort", templateColumn.Item1.IsSort),
-                new CssClass("kt-datatable__cell--center", templateColumn.Item1.IsCenter)
+                new CssClass("kt-datatable__cell--sort", templateColumn.IsSort),
+                new CssClass("kt-datatable__cell--center", templateColumn.IsCenter)
             );
 
             cell.AddCssClass(classes);
 
             if (cell.TagName == "td")
             {
-                cell.InnerHtml.AppendHtml($"<span>{templateColumn.Item2.ToHtml()}</span>");
+                cell.InnerHtml.AppendHtml($"<span>{templateColumn.ChildHtmlContent}</span>");
             }
             else
             {
-                var name = String.IsNullOrWhiteSpace(templateColumn.Item1.DisplayName) ? templateColumn.Item1.FieldName : templateColumn.Item1.DisplayName;
+                var name = String.IsNullOrWhiteSpace(templateColumn.DisplayName) ? templateColumn.FieldName : templateColumn.DisplayName;
 
                 cell.InnerHtml.AppendHtml($"<span>{name}</span>");
             }

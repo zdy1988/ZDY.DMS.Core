@@ -12,8 +12,6 @@ using ZDY.DMS.AspNetCore.Dictionary;
 using ZDY.DMS.AspNetCore.Bootstrapper.Service;
 using ZDY.DMS.Caching;
 using ZDY.DMS.Caching.InMemory;
-using ZDY.DMS.Querying.DataTableGateway;
-using ZDY.DMS.Querying.DataTableGateway.MySQL;
 using ZDY.DMS.StringEncryption;
 
 namespace Microsoft.Extensions.DependencyInjection

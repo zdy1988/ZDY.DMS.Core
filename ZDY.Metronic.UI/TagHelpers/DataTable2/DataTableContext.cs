@@ -15,6 +15,6 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         internal List<DataTableCheckboxColumnTagHelper> CheckboxColumns { get; set; } = new List<DataTableCheckboxColumnTagHelper>();
 
-        internal List<Tuple<DataTableTemplateColumnTagHelper, IHtmlContent>> TemplateColumns { get; set; } = new List<Tuple<DataTableTemplateColumnTagHelper, IHtmlContent>>();
+        internal List<DataTableTemplateColumnTagHelper> TemplateColumns { get; set; } = new List<DataTableTemplateColumnTagHelper>();
     }
 }

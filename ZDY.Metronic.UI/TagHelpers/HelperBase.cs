@@ -32,6 +32,8 @@ namespace ZDY.Metronic.UI
 
         public virtual string ClassNames { get; set; }
 
+        internal string ChildHtmlContent { get; set; } = string.Empty;
+
         protected string UseHtml(IHtmlContent htmlContent)
         {
             return htmlContent == null ? "" : htmlContent.ToHtml();

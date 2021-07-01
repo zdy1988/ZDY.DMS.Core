@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autofac" Version="5.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.3" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.3" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.1.0" />
@@ -28,6 +29,7 @@
     <ProjectReference Include="..\ZDY.DMS.Querying.DataTableGateway.MySQL\ZDY.DMS.Querying.DataTableGateway.MySQL.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Repositories.EntityFramework\ZDY.DMS.Repositories.EntityFramework.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.AdminService\ZDY.DMS.Services.AdminService.csproj" />
+    <ProjectReference Include="..\ZDY.DMS.Services.AuthService\ZDY.DMS.Services.AuthService.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.MessageService\ZDY.DMS.Services.MessageService.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.OrganizationService\ZDY.DMS.Services.OrganizationService.csproj" />
     <ProjectReference Include="..\ZDY.DMS.Services.PermissionService\ZDY.DMS.Services.PermissionService.csproj" />

@@ -32,9 +32,9 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             if (context.TryGetContext<DataTableContext, DataTable2TagHelper>(out DataTableContext dataTableContext))
             {
-                var childContent = await output.GetChildContentAsync();
+                ChildHtmlContent = await output.GetChildHtmlContentAsync();
 
-                dataTableContext.TemplateColumns.Add(new Tuple<DataTableTemplateColumnTagHelper, IHtmlContent>(this, childContent));
+                dataTableContext.TemplateColumns.Add(this);
             }
 
             output.SuppressOutput();

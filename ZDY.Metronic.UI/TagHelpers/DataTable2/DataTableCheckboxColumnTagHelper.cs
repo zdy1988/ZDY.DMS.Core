@@ -9,19 +9,19 @@ using ZDY.Metronic.UI.Untils;
 
 namespace ZDY.Metronic.UI.TagHelpers
 {
-    [HtmlTargetElement("checkbox-column", ParentTag = "data-table", TagStructure = TagStructure.NormalOrSelfClosing)]
+    [HtmlTargetElement("checkbox-column", ParentTag = "data-table2", TagStructure = TagStructure.NormalOrSelfClosing)]
     public class DataTableCheckboxColumnTagHelper : HelperBase
     {
         public virtual string FieldName { get; set; }
 
         public override void Process(TagHelperContext context, TagHelperOutput output)
         {
-            output.SuppressOutput();
-
             if (context.TryGetContext<DataTableContext, DataTable2TagHelper>(out DataTableContext dataTableContext))
             {
                 dataTableContext.CheckboxColumns.Add(this);
             }
+
+            output.SuppressOutput();
         }
     }
 }

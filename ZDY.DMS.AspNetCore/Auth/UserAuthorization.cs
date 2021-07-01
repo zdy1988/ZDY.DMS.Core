@@ -24,15 +24,23 @@ namespace ZDY.DMS.AspNetCore.Auth
 
         public static UserIdentity GetUserIdentity(this HttpContext context)
         {
+            //return new UserIdentity
+            //{
+            //    Id = MysteriousCode,
+            //    Name = "Administrator",
+            //    CompanyId = MysteriousCode,
+            //    IsAdministrator = true
+            //};
+
             if (context.User.Identity.IsAuthenticated)
             {
                 var claimsIdentity = context.User.Identity as ClaimsIdentity;
 
                 if (claimsIdentity.Claims.Any())
                 {
-                    var id = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "Id").Value;
-                    var name = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "Name").Value;
-                    var companyId = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "CompanyId").Value;
+                    var id = claimsIdentity.FindFirst("Id").Value;
+                    var name = claimsIdentity.FindFirst("Name").Value;
+                    var companyId = claimsIdentity.FindFirst("CompanyId").Value;
 
                     return new UserIdentity
                     {
@@ -49,18 +57,18 @@ namespace ZDY.DMS.AspNetCore.Auth
 
         public static bool TryGetUserId(this HttpContext context, out Guid userId)
         {
-            try
+            userId = Guid.Empty;
+
+            var userIdentity = context.GetUserIdentity();
+
+            if (userIdentity != null)
             {
-                var claimsIdentity = context.User.Identity as ClaimsIdentity;
-                var id = claimsIdentity.Claims.FirstOrDefault(c => c.Type == "Id").Value;
-                userId = Guid.Parse(id);
+                userId = userIdentity.Id;
 
                 return true;
             }
-            catch
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public static string GenerateToken(Guid UserId, string Name, Guid CompanyId, DateTime expires)
