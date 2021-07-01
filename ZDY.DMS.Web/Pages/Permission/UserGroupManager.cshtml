@@ -6,7 +6,7 @@
         <portlet data-model="user-group-list" is-header-destroyed="true" is-height-fluid="true">
             <button size="Lg" state="Brand" style="padding:0.9rem 0;" data-bind="click:handleAdd">新建角色</button>
 
-            <div class="kt-scroll" data-scroll="true" data-height="574">
+            <scroll-viewer height="560" style="margin-top: 1rem;">
                 <ul class="kt-nav kt-nav--md-space">
                     <!-- ko foreach: recordSet -->
                     <li class="kt-nav__item" data-bind="click: $root.handleItemClick, attr:{'data-id': Id}">
@@ -28,7 +28,7 @@
                     </li>
                     <!-- /ko -->
                 </ul>
-            </div>
+            </scroll-viewer>
 
         </portlet>
     </div>
@@ -39,11 +39,11 @@
                     保存成员
                 </button>
             </portlet-header-action-container>
-            <data-table is-show-action-column="false">
-                <cell filed="UserName"></cell>
-                <cell filed="NickName"></cell>
-                <cell filed="Mobile"></cell>
-                <cell filed="Gender"></cell>
+            <data-table>
+                <column filed="UserName" text="账号"></column>
+                <column filed="NickName" text="昵称"></column>
+                <column filed="Mobile" text="手机号码"></column>
+                <column filed="Gender" text="性别" align="Center"></column>
             </data-table>
             <pager></pager>
         </portlet>
@@ -68,9 +68,6 @@
 @section scripts {
     <script type="text/javascript">
         var userGroupTable = zdy.table().options({
-            headers: [
-                { text: '角色名称', field: 'GroupName' }
-            ],
             pageSize: 10000,
             defaultOrderBy: "TimeStamp",
             dataQueryUrl: 'PermissionGroup/Search'
@@ -138,12 +135,6 @@
         }).bind("user-group-form");
 
         var userTable = zdy.table().options({
-            headers: [
-                { text: '账号', field: 'UserName' },
-                { text: '昵称', field: 'NickName' },
-                { text: '手机号码', field: 'Mobile' },
-                { text: '性别', field: 'Gender' }
-            ],
             defaultOrderBy: "TimeStamp",
             dataQueryUrl: 'User/Search'
         }).import(function () {

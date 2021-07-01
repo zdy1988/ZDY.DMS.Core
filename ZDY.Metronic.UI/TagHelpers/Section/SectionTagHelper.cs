@@ -26,7 +26,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-section", true),
                     new CssClass(ClassNames, !String.IsNullOrWhiteSpace(ClassNames))
                 );
@@ -37,7 +37,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-section__content", true),
                     new CssClass($"kt-section__content--{Mode.ToValue()}", Mode.IsUsed()),
                     new CssClass("kt-section__content--fit", IsFit),

@@ -14,6 +14,10 @@ h1, h2, h3, h4, h5, h6,
     font-weight: bold !important;
 }
 
+.scroll-viewer .kt-nav {
+    padding: 0;
+}
+
 .kt-nav .kt-nav__item > .kt-nav__sub .kt-nav__item > .kt-nav__sub .kt-nav__item > .kt-nav__link {
     padding: 0.5rem 1.5rem 0.5rem 3.5rem;
 }
@@ -30,21 +34,49 @@ h1, h2, h3, h4, h5, h6,
     font-weight: bold;
 }
 
+/*#region scrollbar*/
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px
+}
+
+::-webkit-scrollbar-track {
+    background: #ffffff;
+    margin: 4px 0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #aaa;
+    border-radius: 4px
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #747474
+    }
+
+::-webkit-scrollbar-corner {
+    background: #f6f6f6
+}
+
+/*#endregion*/
+
 /*#region portlet*/
 
 .kt-portlet .kt-portlet__head {
     padding: 0 24px;
 }
 
-.kt-portlet .kt-portlet__head .kt-portlet__head-label .kt-portlet__head-title {
-    font-weight: bold;
-}
+    .kt-portlet .kt-portlet__head .kt-portlet__head-label .kt-portlet__head-title {
+        font-weight: bold;
+    }
 
 .kt-portlet .kt-portlet__foot {
     padding: 12px 25px;
 }
 
 /*#endregion*/
+
 /*#region btn*/
 .btn-sm, .btn-group-sm > .btn {
     font-size: 1rem;
@@ -69,13 +101,13 @@ h1, h2, h3, h4, h5, h6,
         font-weight: bold;
     }
 
-    .table > thead > tr > th a {
-        color: #595d6e;
-    }
-
-        .table > thead > tr > th a.sorted {
-            color: #5d78ff;
+        .table > thead > tr > th a {
+            color: #595d6e;
         }
+
+            .table > thead > tr > th a.sorted {
+                color: #5d78ff;
+            }
 
         .table > thead > tr > th i {
             font-size: .6rem;
@@ -88,15 +120,15 @@ h1, h2, h3, h4, h5, h6,
         }
 
 
-.table > thead > tr > th.table-checkbox,
-.table > tbody > tr > td.table-checkbox {
-    width: 50px;
-}
+        .table > thead > tr > th.table-checkbox,
+        .table > tbody > tr > td.table-checkbox {
+            width: 50px;
+        }
 
-    .table > tbody > tr > td.table-checkbox .kt-checkbox {
-        margin-bottom: 0px;
-        padding: 0px;
-    }
+            .table > tbody > tr > td.table-checkbox .kt-checkbox {
+                margin-bottom: 0px;
+                padding: 0px;
+            }
 
     .table > tbody > tr > td,
     .table > tbody > tr > th,
@@ -144,7 +176,7 @@ h1, h2, h3, h4, h5, h6,
     padding-right: 25px;
 }
 
-.kt-portlet__body--fit .kt-pagination{
+.kt-portlet__body--fit .kt-pagination {
     padding: 0 13px 20px 20px;
 }
 
@@ -156,42 +188,42 @@ h1, h2, h3, h4, h5, h6,
 
 /*#region table*/
 
-    .table.table-tree {
+.table.table-tree {
+}
+
+    .table.table-tree svg {
+        margin-top: -2px;
+        margin-right: 12px;
+        transition: all .3s;
     }
 
-        .table.table-tree svg {
-            margin-top: -2px;
-            margin-right: 12px;
-            transition: all .3s;
-        }
+    .table.table-tree .table-row-slide.collapsed svg {
+        transform: rotate(-90deg);
+    }
 
-        .table.table-tree .table-row-slide.collapsed svg {
-            transform: rotate(-90deg);
-        }
+    .table.table-tree > tbody > tr.table-row-level-1 td:first-child {
+        padding-left: 38px;
+    }
 
-        .table.table-tree > tbody > tr.table-row-level-1 td:first-child {
-            padding-left: 38px;
-        }
+    .table.table-tree > tbody > tr.table-row-level-2 td:first-child {
+        padding-left: 66px;
+    }
 
-        .table.table-tree > tbody > tr.table-row-level-2 td:first-child {
-            padding-left: 66px;
-        }
+    .table.table-tree > tbody > tr.table-row-level-3 td:first-child {
+        padding-left: 94px;
+    }
 
-        .table.table-tree > tbody > tr.table-row-level-3 td:first-child {
-            padding-left: 94px;
-        }
+    .table.table-tree > tbody > tr.table-row-level-4 td:first-child {
+        padding-left: 122px;
+    }
 
-        .table.table-tree > tbody > tr.table-row-level-4 td:first-child {
-            padding-left: 122px;
-        }
+    .table.table-tree > tbody > tr.table-row-level-5 td:first-child {
+        padding-left: 150px;
+    }
 
-        .table.table-tree > tbody > tr.table-row-level-5 td:first-child {
-            padding-left: 150px;
-        }
-
-        .table.table-tree > tbody > tr.table-row-level-6 td:first-child {
-            padding-left: 178px;
-        }
+    .table.table-tree > tbody > tr.table-row-level-6 td:first-child {
+        padding-left: 178px;
+    }
 
 
 /*#endregion*/

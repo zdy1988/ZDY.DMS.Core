@@ -19,7 +19,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-svg-icon", true),
                     new CssClass(ClassNames, !String.IsNullOrWhiteSpace(ClassNames))
                 );

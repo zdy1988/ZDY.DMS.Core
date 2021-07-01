@@ -56,5 +56,25 @@ namespace ZDY.Metronic.UI
 
             return isGet;
         }
+
+        internal static string GetHtmlClass(this TagHelperContext context)
+        {
+            if (context.AllAttributes.TryGetAttribute("class", out TagHelperAttribute attr))
+            {
+                return attr.Value.ToString();
+            }
+
+            return default;
+        }
+
+        internal static string GetHtmlStyle(this TagHelperContext context)
+        {
+            if (context.AllAttributes.TryGetAttribute("style", out TagHelperAttribute attr))
+            {
+                return attr.Value.ToString();
+            }
+
+            return default;
+        }
     }
 }

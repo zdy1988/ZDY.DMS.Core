@@ -26,7 +26,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-portlet kt-iconbox", true),
                     new CssClass($"kt-iconbox--{State.ToValue()}", State.IsUsed()),
                     new CssClass($"kt-iconbox--{Wave.ToValue()}", Wave.IsUsed()),

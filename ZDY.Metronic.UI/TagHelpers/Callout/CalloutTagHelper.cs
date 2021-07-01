@@ -24,7 +24,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-portlet kt-callout", true),
                     new CssClass($"kt-callout--{State.ToValue()}", State.IsUsed()),
                     new CssClass($"kt-callout--diagonal-bg", IsDiagonalBackground),

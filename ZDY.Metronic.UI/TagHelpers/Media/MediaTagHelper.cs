@@ -28,7 +28,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-media", true),
                     new CssClass("kt-media--circle", IsCircled),
                     new CssClass($"kt-media--{Size.ToValue()}", Size.IsUsed()),

@@ -20,7 +20,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                    new CssClass("btn-group", !IsVertical),
                    new CssClass("btn-group-vertical", IsVertical),
                    new CssClass($"btn-group-{Size.ToValue()}", Size.IsUsed()),

@@ -37,7 +37,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-spinner", true),
                     new CssClass("kt-spinner--v2", SpinnerShorted),
                     new CssClass($"kt-spinner--{SpinnerStateValue}", true),

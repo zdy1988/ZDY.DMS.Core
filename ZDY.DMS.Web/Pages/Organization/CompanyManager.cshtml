@@ -34,17 +34,17 @@
             </portlet-header-action-container>
 
             <data-table is-show-checkbox-column="false">
-                <cell filed="CompanyName" />
-                <cell filed="Phone" />
-                <cell filed="Fax" />
-                <cell>
+                <column filed="CompanyName" text="公司名称"/>
+                <column filed="Phone" text="电话号码"/>
+                <column filed="Fax" text="传真号码"/>
+                <column text="省市区域">
                     <!-- ko text:Province --><!-- /ko --> <!-- ko text:City --><!-- /ko -->
-                </cell>
-                <cell filed="Address" width="50%"></cell>
-                <cell>
+                </column>
+                <column filed="Address" text="公司地址"></column>
+                <column align="Center" text="操作" width="1">
                     <button size="Sm" is-outline="true" state="Brand" icon="Home" is-only-icon="true" tooltip="部门" data-bind="click:$root.goto, attr: {'data-url': '/Organization/DepartmentManager?companyId=' + Id }"/>
                     <button size="Sm" is-outline="true" state="Success" icon="Edit" is-only-icon="true" data-bind="click:$root.goto, attr: {'data-url': '/Organization/CompanyDetail?id=' + Id }"/>
-                </cell>
+                </column>
             </data-table>
 
             <pager></pager>
@@ -60,13 +60,6 @@
                 { field: 'Phone', value: ko.observable(), method: zdy.querymethod.contains },
                 { field: 'Fax', value: ko.observable(), method: zdy.querymethod.contains },
                 { field: 'Address', value: ko.observable(), method: zdy.querymethod.contains }
-            ],
-            headers: [
-                { text: '公司名称', field: 'CompanyName' },
-                { text: '电话号码', field: 'Phone' },
-                { text: '传真号码', field: 'Fax' },
-                { text: '省市区域', field: 'City' },
-                { text: '公司地址', field: 'Address' }
             ],
             defaultOrderBy: "TimeStamp",
             dataQueryUrl: 'Company/Search'

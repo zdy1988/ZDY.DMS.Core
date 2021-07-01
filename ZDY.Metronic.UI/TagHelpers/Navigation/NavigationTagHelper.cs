@@ -28,7 +28,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-nav", true),
                     new CssClass("kt-nav--bold", Space == Size.Lg),
                     new CssClass($"kt-nav--{Space.ToValue()}-space", Space.IsUsed()),

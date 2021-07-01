@@ -38,7 +38,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return StringBuilder.Build(
+                return Stringer.Build(
                   (Rows > 0 ? $"selectedOptions:{Field}" : $"value:{Field}", !String.IsNullOrWhiteSpace(Field)),
                   ("event:{change:function(data,event){this." + Field + "(event.target.value)}}", IsBindComputed),
                   (Bind, !String.IsNullOrWhiteSpace(Bind))

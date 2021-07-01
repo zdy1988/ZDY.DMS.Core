@@ -34,7 +34,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("alert fade", true),
                     new CssClass($"alert-{StateValue}", true),
                     new CssClass("show", IsShow),

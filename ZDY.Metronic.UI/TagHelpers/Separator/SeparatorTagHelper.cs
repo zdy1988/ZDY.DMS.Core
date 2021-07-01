@@ -22,7 +22,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-separator", true),
                     new CssClass("kt-separator--dashed", !IsBorderSolid),
                     new CssClass($"kt-separator--{State.ToValue()}", State.IsUsed()),

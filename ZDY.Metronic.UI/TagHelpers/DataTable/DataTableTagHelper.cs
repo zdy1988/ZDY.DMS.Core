@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using ZDY.Metronic.UI.Untils;
 
 namespace ZDY.Metronic.UI.TagHelpers
 {
@@ -14,81 +14,121 @@ namespace ZDY.Metronic.UI.TagHelpers
     {
         public string SourceKey { get; set; } = "recordSet";
 
-        public string HeaderKey { get; set; } = "headers";
-
         public string CheckedKey { get; set; } = "Id";
 
         public bool IsShowHeader { get; set; } = true;
 
         public bool IsShowCheckboxColumn { get; set; } = true;
 
-        public bool IsShowActionColumn { get; set; } = true;
-
-        public bool IsCustomColumnWidth { get; set; } = false;
-
-        public string RowClickFuntion { get; set; }
+        public string RowClickFunc { get; set; }
 
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            var childContent = await output.GetChildContentAsync();
+            if (context.TryAddContext<DataTableContext, DataTableTagHelper>(out DataTableContext dataTableContext))
+            {
+                await output.GetChildContentAsync();
 
-            output.TagName = "div";
+                output.TagName = "div";
 
-            output.Attributes.Add("id", Id);
+                output.Attributes.Add("id", Id);
 
-            output.Attributes.Add("class", "table-scrollable");
+                output.Attributes.Add("class", "table-container");
 
-            var customColumnWidthBind = "data-bind='style: {width: width}'";
-
-            var checkboxColumn = @"<th class='table-checkbox'>
-                                       <a href='javascript:;' data-bind='click: $root.selectAll, text: $root.isSelectAll() == true ? &quot;取消&quot; : &quot;全选&quot;'></a>
-                                   </th>";
-
-            var checkboxColumn2 = $@"<td class='table-checkbox'>
-                                       <label class='kt-checkbox kt-checkbox--single kt-checkbox--solid'>
-                                           <input type='checkbox' data-bind='checked:$root.selectData,value:{CheckedKey}'>&nbsp;<span></span>
-                                       </label>
-                                   </td>";
-
-            var actionColumn = @"<th class='kt-align-center' style='width:1%;'>
-                                    <a href='javascript:;'>操作</a>
-                                 </th>";
-
-            var rowClickFunctionBind = $@"data-bind='click: $root.{RowClickFuntion}'";
-
-            var sortedColumnBind = "data-bind='click: $root.sort, css: {sorted: field == $root.orderField()}'";
-
-            var header = $@"<thead>
-                                <!--表头操作部分Start-->
-                                <tr>
-                                    {(IsShowCheckboxColumn ? checkboxColumn : "")}
-                                    <!-- ko foreach: {HeaderKey} -->
-                                    <th {(IsCustomColumnWidth ? customColumnWidthBind : "")}>
-                                        <a href='javascript:;' {sortedColumnBind}>
-                                            <!-- ko text: text --><!-- /ko -->
-                                            <i data-bind='visible: field == $root.orderField() && $root.isAsc()' class='flaticon2-arrow-up'></i>
-                                            <i data-bind='visible: field == $root.orderField() && !$root.isAsc()' class='flaticon2-arrow-down'></i>
-                                        </a>
-                                    </th>
-                                    <!-- /ko -->
-                                    {(IsShowActionColumn ? actionColumn : "")}
-                                </tr>
-                                <!--表头操作部分End-->
-                            </thead>";
-
-            var content = $@"<table class='table table-hover'>
-                                 {(IsShowHeader ? header : "")}
-                                 <tbody>
-                                     <!-- ko foreach: {SourceKey} -->
-                                        <tr {(!String.IsNullOrEmpty(RowClickFuntion) ? rowClickFunctionBind : "")}>
-                                            {(IsShowCheckboxColumn ? checkboxColumn2 : "")}
-                                            {childContent.GetContent()}
-                                        </tr>
-                                     <!-- /ko -->
-                                 </tbody>
+                var table = $@"<table class='table table-hover'>
+                                 {(IsShowHeader ? BuildDataTableHead(dataTableContext) : "")}
+                                 {BuildDataTableBody(dataTableContext)}
                              </table>";
 
-            output.Content.SetHtmlContent(content);
+                output.Content.SetHtmlContent(table);
+
+                return;
+            }
+
+            output.SuppressOutput();
+        }
+
+        internal string BuildDataTableHead(DataTableContext dataTableContext)
+        {
+            var theadCheckboxColumn = @"<th class='table-checkbox'>
+                                           <a href='javascript:;' data-bind='click: $root.selectAll, text: $root.isSelectAll() == true ? &quot;取消&quot; : &quot;全选&quot;'></a>
+                                        </th>";
+
+            var headBuilder = new StringBuilder();
+
+            headBuilder.Append($@"<thead><tr>");
+
+            if (IsShowCheckboxColumn)
+            {
+                headBuilder.Append(theadCheckboxColumn);
+            }
+
+            if (dataTableContext.Columns.Any())
+            {
+                foreach (var column in dataTableContext.Columns)
+                {
+                    var theadSortedColumnBind = !string.IsNullOrWhiteSpace(column.Filed) ? "data-bind=\"click: function(){ $root.sort({field: '" + column.Filed + "'}) }, css: {sorted: '" + column.Filed + "' == $root.orderField()}\"" : "";
+
+                    var theadWidth = column.Width == default ? "" : $"style='width: {column.Width}px;'";
+
+                    var theadSortAscIcon = $"<i data-bind=\"visible: '{column.Filed}' == $root.orderField() && $root.isAsc()\" class='flaticon2-arrow-up'></i>";
+
+                    var theadSortDescIcon = $"<i data-bind=\"visible: '{column.Filed}' == $root.orderField() && !$root.isAsc()\" class='flaticon2-arrow-down'></i>";
+
+                    headBuilder.Append($@"<th class='{column.Classes}' {theadWidth}>
+                                              <a href='javascript:;' {theadSortedColumnBind}>
+                                                  {column.Text}
+                                                  {theadSortAscIcon}
+                                                  {theadSortDescIcon}
+                                              </a>
+                                          </th>");
+                }
+            }
+
+            headBuilder.Append( $@"</tr></thead>");
+
+            return headBuilder.ToString();
+        }
+
+        internal string BuildDataTableBody(DataTableContext dataTableContext)
+        {
+            var tbodyRowClickBind = !String.IsNullOrEmpty(RowClickFunc) ? $@"data-bind='click: $root.{RowClickFunc}'" : "";
+
+            var tbodyCheckboxColumn = $@"<td class='table-checkbox'>
+                                            <label class='kt-checkbox kt-checkbox--single kt-checkbox--solid'>
+                                                <input type='checkbox' data-bind='checked:$root.selectData,value:{CheckedKey}'>&nbsp;<span></span>
+                                            </label>
+                                         </td>";
+            var bodyBuilder = new StringBuilder();
+
+            bodyBuilder.Append($@"<tbody>
+                                    <!-- ko foreach: {SourceKey} -->
+                                        <tr {tbodyRowClickBind}>");
+
+            if (IsShowCheckboxColumn)
+            {
+                bodyBuilder.Append(tbodyCheckboxColumn);
+            }
+
+            if (dataTableContext.Columns.Any())
+            {
+                foreach (var column in dataTableContext.Columns)
+                {
+                    if (!String.IsNullOrWhiteSpace(column.Filed))
+                    {
+                        bodyBuilder.Append($@"<td class='{column.Classes}' data-bind='text:{column.Filed}'></td>");
+                    }
+                    else
+                    {
+                        bodyBuilder.Append($@"<td class='{column.Classes}'>{column.ChildContent.ToHtml()}</td>");
+                    } 
+                }
+            }
+
+            bodyBuilder.Append ( $@"        </tr>
+                                        <!-- /ko -->
+                                    </tbody>");
+
+            return bodyBuilder.ToString();
         }
     }
 }

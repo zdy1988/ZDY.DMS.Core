@@ -18,7 +18,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass($"kt-timeline-{Version.ToValue()}", true),
                     new CssClass($"kt-timeline-v1--justified", Version == TimelineVersion.V1),
                     new CssClass(ClassNames, !String.IsNullOrWhiteSpace(ClassNames))

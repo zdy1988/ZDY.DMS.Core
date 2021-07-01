@@ -147,7 +147,7 @@ namespace ZDY.Metronic.UI.TagHelpers
             {
                 ButtonState = IsDisabled ? ButtonState.Disabled : ButtonState;
 
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("btn", true),
                     new CssClass("btn-icon", IsOnlyIcon),
                     new CssClass($"btn-icon-{OnlyIconSize.ToValue()}", IsOnlyIcon && OnlyIconSize.IsUsed()),

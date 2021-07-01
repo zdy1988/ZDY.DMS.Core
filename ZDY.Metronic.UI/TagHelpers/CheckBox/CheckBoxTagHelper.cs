@@ -54,7 +54,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass($"kt-{CheckInput}", true),
                     new CssClass($"kt-{CheckInput}--{State.ToValue()}", State.IsUsed()),
                     new CssClass($"kt-{CheckInput}--{Mode.ToValue()}", Mode.IsUsed()),
@@ -68,7 +68,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return StringBuilder.Build(
+                return Stringer.Build(
                     ($"checked:{Field}", !String.IsNullOrWhiteSpace(Field)),
                     ("event:{change:function(data,event){this." + Field + "(event.target.checked)}}", IsBindComputed),
                     (Bind, !String.IsNullOrWhiteSpace(Bind))
@@ -80,7 +80,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return StringBuilder.Build(
+                return Stringer.Build(
                     ("required", IsRequired),
                     (Rule, !String.IsNullOrWhiteSpace(Rule))
                 );

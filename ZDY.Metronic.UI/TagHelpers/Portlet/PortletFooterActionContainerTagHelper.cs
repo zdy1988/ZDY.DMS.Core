@@ -24,7 +24,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-portlet__foot", true),
                     new CssClass($"kt-portlet__foot--{Size.ToValue()}", Size.IsUsed()),
                     new CssClass("kt-portlet__foot--solid", IsSoild),

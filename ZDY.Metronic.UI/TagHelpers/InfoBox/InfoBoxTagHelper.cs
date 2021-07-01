@@ -32,7 +32,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-infobox", true),
                     new CssClass($"kt-infobox--{State.ToValue()}", State.IsUsed()),
                     new CssClass(ClassNames, !String.IsNullOrWhiteSpace(ClassNames))

@@ -24,7 +24,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-portlet__head-toolbar", true),
                     new CssClass(ClassNames, !String.IsNullOrWhiteSpace(ClassNames))
                 );
@@ -66,7 +66,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         internal string BuildToolActionCssClasses(State state)
         {
-            var classes = CssClassBuilder.Build(
+            var classes = CssClasser.Build(
                  new CssClass("btn btn-sm btn-icon btn-icon-md", true),
                  new CssClass("btn-clean", IsCleaned),
                  new CssClass(IsOutline ? $"btn-outline-{state.ToValue()}" : $"btn-{state.ToValue()}", IsColored),

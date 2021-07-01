@@ -30,19 +30,19 @@
     <div class="col-md-12">
         <portlet title="实例列表" fit="Fit" data-model="list">
             <data-table is-show-checkbox-column="false">
-                <cell filed="Title"></cell>
-                <cell filed="FlowName"></cell>
-                <cell filed="StepName"></cell>
-                <cell filed="SenderName"></cell>
-                <cell filed="SendTime"></cell>
-                <cell filed="ReceiverName"></cell>
-                <cell filed="ReceiveTime"></cell>
-                <cell>
+                <column filed="Title" text="任务名称"></column>
+                <column filed="FlowName" text="所属流程"></column>
+                <column filed="StepName" text="所在步骤"></column>
+                <column filed="SenderName" text="发送人员"></column>
+                <column filed="SendTime" text="发送时间"></column>
+                <column filed="ReceiverName" text="接收人员"></column>
+                <column filed="ReceiveTime" text="接收时间"></column>
+                <column align="Center" text="任务状态">
                     <lable data-bind="state: $root.dic('WorkFlowTaskState', State, true)"></lable>
-                </cell>
-                <cell>
+                </column>
+                <column align="Center" text="操作" width="1">
                     <button size="Sm" state="Brand" icon="PencilSquare" is-only-icon="true" data-bind="click:$root.goto, attr: {'data-url': '/WorkFlow/WorkFlowTaskExecute?id=' + Id}">详情</button>
-                </cell>
+                </column>
             </data-table>
             <pager></pager>
         </portlet>
@@ -59,16 +59,6 @@
                 { field: 'FlowName', value: ko.observable(), method: zdy.querymethod.contains },
                 { field: 'SenderName', value: ko.observable(), method: zdy.querymethod.contains },
                 { field: 'ReceiverName', value: ko.observable(), method: zdy.querymethod.contains }
-            ],
-            headers: [
-                { text: '任务名称', field: 'Title' },
-                { text: '所属流程', field: 'FlowName' },
-                { text: '所在步骤', field: 'StepName' },
-                { text: '发送人员', field: 'SenderName' },
-                { text: '发送时间', field: 'SendTime' },
-                { text: '接收人员', field: 'ReceiverName' },
-                { text: '接收时间', field: 'ReceiveTime' },
-                { text: '任务状态', field: 'State' }
             ],
             defaultOrderBy: "TimeStamp",
             dataQueryUrl: 'WorkFlowTask/Search'

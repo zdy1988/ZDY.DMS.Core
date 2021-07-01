@@ -9,18 +9,24 @@ using ZDY.Metronic.UI.Untils;
 
 namespace ZDY.Metronic.UI.TagHelpers
 {
-    [HtmlTargetElement("cell", ParentTag = "data-table", TagStructure = TagStructure.NormalOrSelfClosing)]
-    public class DataTableCellTagHelper : HelperBase
+    [HtmlTargetElement("column", ParentTag = "data-table", TagStructure = TagStructure.NormalOrSelfClosing)]
+    public class DataTableColumnTagHelper : HelperBase
     {
+        public virtual string Text { get; set; }
+
         public virtual string Filed { get; set; }
+
+        public virtual double Width { get; set; }
 
         public virtual Align Align { get; set; } = Align.None;
 
-        protected virtual string Classes
+        public IHtmlContent ChildContent { get; set; }
+
+        public virtual string Classes
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new AlignClass(Align),
                     new CssClass(ClassNames, !String.IsNullOrWhiteSpace(ClassNames))
                 );;
@@ -29,21 +35,13 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         public async override Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
-            output.TagName = "td";
+            ChildContent = await output.GetChildContentAsync();
 
-            output.TagMode = TagMode.StartTagAndEndTag;
+            output.SuppressOutput();
 
-            output.Attributes.Add("class", Classes);
-
-            if (!String.IsNullOrWhiteSpace(Filed))
+            if (context.TryGetContext<DataTableContext, DataTableTagHelper>(out DataTableContext dataTableContext))
             {
-                output.Attributes.Add("data-bind", $"text:{Filed}");
-            }
-            else 
-            {
-                var childContent = await output.GetChildContentAsync();
-
-                output.Content.SetHtmlContent(childContent);
+                dataTableContext.Columns.Add(this);
             }
         }
     }

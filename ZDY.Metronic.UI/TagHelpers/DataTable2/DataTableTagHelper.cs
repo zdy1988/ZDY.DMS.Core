@@ -210,7 +210,7 @@ namespace ZDY.Metronic.UI.TagHelpers
                 cell.Attributes.Add("data-width", field.Width.ToString());
             }
 
-            var classes = CssClassBuilder.Build(
+            var classes = CssClasser.Build(
               new CssClass("kt-datatable__cell--sort", field.IsSort),
               new CssClass("kt-datatable__cell--center", field.IsCenter)
             );
@@ -262,7 +262,7 @@ namespace ZDY.Metronic.UI.TagHelpers
                 cell.Attributes.Add("data-width", templateColumn.Item1.Width.ToString());
             }
 
-            var classes = CssClassBuilder.Build(
+            var classes = CssClasser.Build(
                 new CssClass("kt-datatable__cell--sort", templateColumn.Item1.IsSort),
                 new CssClass("kt-datatable__cell--center", templateColumn.Item1.IsCenter)
             );

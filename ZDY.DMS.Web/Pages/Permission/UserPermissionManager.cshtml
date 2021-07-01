@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-md-3">
         <portlet title="全部角色" data-model="permissions">
-            <div class="kt-scroll" data-scroll="true" data-height="750">
+            <scroll-viewer height="575">
                 @if (Model.UserGroups.Count > 0)
                 {
                     <ul class="kt-nav kt-nav--md-space">
@@ -29,7 +29,7 @@
                 {
                     <h3 class="text-center mt-5">暂无角色数据！</h3>
                 }
-            </div>
+            </scroll-viewer>
         </portlet>
     </div>
     <div class="col-md-9">
@@ -39,7 +39,7 @@
                     保存权限
                 </button>
             </portlet-header-action-container>
-            <div class="kt-scroll" data-scroll="true" data-height="750">
+            <scroll-viewer height="625">
                 @if (Model.Pages.Count > 0)
                 {
 
@@ -58,7 +58,7 @@
                     <h3 class="text-center mt-5">暂无页面数据！</h3>
 
                 }
-            </div>
+            </scroll-viewer>
         </portlet>
     </div>
 </div>

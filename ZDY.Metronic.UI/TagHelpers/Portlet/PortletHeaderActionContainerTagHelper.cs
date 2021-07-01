@@ -16,7 +16,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-portlet__head-actions", true),
                     new CssClass(ClassNames, !String.IsNullOrWhiteSpace(ClassNames))
                 );

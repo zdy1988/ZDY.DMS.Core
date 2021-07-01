@@ -42,7 +42,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 		{
 			get
 			{
-				return CssClassBuilder.Build(
+				return CssClasser.Build(
 					new CssClass("kt-portlet", true),
 					new CssClass("kt-portlet--height-fluid", IsHeightFluid),
 					new CssClass("kt-portlet--space", IsLayoutSpaced),
@@ -57,7 +57,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 		{
 			get
 			{
-				return CssClassBuilder.Build(
+				return CssClasser.Build(
 					new CssClass("kt-portlet__head-icon", true),
 					new CssClass($"kt-font-{IconState.ToValue()}", IconState.IsUsed())
 				);
@@ -68,7 +68,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 		{
 			get
 			{
-				return CssClassBuilder.Build(
+				return CssClasser.Build(
 					new CssClass("kt-portlet__head", true),
 					new CssClass($"kt-portlet__head--{HanderFit.ToValue()}", HanderFit.IsUsed()),
 					new CssClass("kt-portlet__head--noborder", !IsHeaderBordered)
@@ -80,7 +80,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 		{
 			get
 			{
-				return CssClassBuilder.Build(
+				return CssClasser.Build(
 					new CssClass("kt-portlet__head-title", true),
 					new CssClass($"kt-font-{TitleState.ToValue()}", TitleState.IsUsed())
 				);
@@ -91,7 +91,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 		{
 			get
 			{
-				return CssClassBuilder.Build(
+				return CssClasser.Build(
 				   new CssClass("kt-portlet__body", true),
 				   new CssClass($"kt-portlet__body--{Fit.ToValue()}", Fit.IsUsed())
 				);
@@ -131,7 +131,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 											<small>{SubTitle}</small>
 						  	 			</h3>
 						  			 </div>
-									 {Use(toolbar)}
+									 {UseHtml(toolbar)}
 								  </div>";
 
 					output.Content.AppendHtml(head);

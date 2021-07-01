@@ -30,16 +30,16 @@
         <portlet title="字典管理" fit="Fit" is-height-fluid="true" data-model="key-table">
             <div class="row">
                 <div class="col-md-12">
-                    <data-table is-show-checkbox-column="false" row-click-funtion="handleRowClick">
-                        <cell filed="Name"></cell>
-                        <cell filed="Code"></cell>
-                        <cell filed="Order"></cell>
-                        <cell>
+                    <data-table is-show-checkbox-column="false" row-click-func="handleRowClick">
+                        <column filed="Name" text="名称"></column>
+                        <column filed="Code" text="标识"></column>
+                        <column filed="Order" align="Center" text="排序"></column>
+                        <column align="Center" text="类型">
                             <lable data-bind="state: $root.dic('DictionaryKinds', Type, true)"></lable>
-                        </cell>
-                        <cell>
+                        </column>
+                        <column align="Center" text="操作" width="1">
                             <button size="Sm" is-outline="true" state="Brand" is-only-icon="true" icon="Edit" data-bind="click:$root.handleDetail" />
-                        </cell>
+                        </column>
                     </data-table>
                     <pager></pager>
                 </div>
@@ -75,13 +75,13 @@
             <div class="row">
                 <div class="col-md-12">
                     <data-table is-show-checkbox-column="false">
-                        <cell filed="Name"></cell>
-                        <cell filed="Value" style="overflow:auto; white-space: normal;"></cell>
-                        <cell filed="ParentValue"></cell>
-                        <cell filed="Order"></cell>
-                        <cell>
+                        <column filed="Name" text="名称"></column>
+                        <column filed="Value" text="当前值" style="overflow:auto; white-space: normal;"></column>
+                        <column filed="ParentValue" text="父级值"></column>
+                        <column filed="Order" align="Center" text="排序"></column>
+                        <column align="Center" text="操作">
                             <button size="Sm" is-outline="true" state="Brand" is-only-icon="true" icon="Edit" data-bind="click:$root.handleDetail" />
-                        </cell>
+                        </column>
                     </data-table>
                 </div>
             </div>
@@ -93,12 +93,6 @@
     <script type="text/javascript">
 
         var keyTable = zdy.table().options({
-            headers: [
-                { text: '名称', field: 'Name', width: 'auto' },
-                { text: '标识', field: 'Code', width: 'auto' },
-                { text: '排序', field: 'Order', width: 'auto' },
-                { text: '类型', field: 'Type', width: 'auto' }
-            ],
             defaultOrderBy: "Order",
             dataQueryUrl: 'DictionaryKey/Search'
         }).import(function () {
@@ -150,12 +144,6 @@
         var valueTable = zdy.table().options({
             fields: [
                 { field: 'DictionaryKey', value: ko.observable(), method: zdy.querymethod.equal }
-            ],
-            headers: [
-                { text: '名称', field: 'Name', width: 'auto' },
-                { text: '当前值', field: 'Value', width: 'auto' },
-                { text: '父级值', field: 'ParentValue', width: 'auto' },
-                { text: '排序', field: 'Order', width: 'auto' }
             ],
             pageSize: 10000,
             defaultOrderBy: "Order",

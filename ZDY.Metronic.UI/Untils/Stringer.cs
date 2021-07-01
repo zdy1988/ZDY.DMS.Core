@@ -3,13 +3,18 @@ using System.Linq;
 
 namespace ZDY.Metronic.UI
 {
-    internal static class StringBuilder
+    internal static class Stringer
     {
         internal static string Build(params ValueTuple<string, bool>[] inputs)
         {
             var strings = inputs.Where(t => t.Item2 == true);
 
             return strings.Count() > 0 ? String.Join(",", strings.Select(t => t.Item1)) : "";
+        }
+
+        internal static string Append(this string input, string additional)
+        {
+            return $"{input}{additional}";
         }
     }
 }

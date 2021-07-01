@@ -46,7 +46,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-pagination", true),
                     new CssClass("kt-pagination--circle", IsCircled),
                     new CssClass($"kt-pagination--{Size.ToValue()}", Size.IsUsed()),

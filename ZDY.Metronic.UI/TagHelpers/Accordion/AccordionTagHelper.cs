@@ -22,7 +22,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("accordion", true),
                     new CssClass($"accordion-{Mode.ToValue()}", Mode.IsUsed()),
                     new CssClass($"accordion-toggle-{ToggleIcon.ToValue()}", ToggleIcon.IsUsed()),

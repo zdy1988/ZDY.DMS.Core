@@ -29,7 +29,7 @@ namespace ZDY.Metronic.UI.TagHelpers
 
                 output.Attributes.Add("id", Id);
 
-                output.Attributes.Add("class", "table-scrollable");
+                output.Attributes.Add("class", "table-container");
 
                 var table = new TagBuilder("table");
 
@@ -185,7 +185,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             var cell = new TagBuilder(tagName);
 
-            var style = StyleBuilder.Build(
+            var style = Styler.Build(
                 ("width", $"{width}px", width > 0),
                 ("text-align", "center", isCentered));
 

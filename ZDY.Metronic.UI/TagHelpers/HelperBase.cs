@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -31,7 +32,7 @@ namespace ZDY.Metronic.UI
 
         public virtual string ClassNames { get; set; }
 
-        protected string Use(IHtmlContent htmlContent)
+        protected string UseHtml(IHtmlContent htmlContent)
         {
             return htmlContent == null ? "" : htmlContent.ToHtml();
         }

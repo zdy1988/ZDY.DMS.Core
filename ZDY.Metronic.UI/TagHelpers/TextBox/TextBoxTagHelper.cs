@@ -76,7 +76,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("form-control", true),
                     new CssClass($"form-control-{Size.ToValue()}", Size.IsUsed()),
                     new CssClass("date-picker", IsUseDatePicker),
@@ -91,14 +91,14 @@ namespace ZDY.Metronic.UI.TagHelpers
             {
                 if (Icon.IsUsed())
                 {
-                    return CssClassBuilder.Build(
+                    return CssClasser.Build(
                         new CssClass("kt-input-icon", true),
                         new CssClass($"kt-input-icon--{IconAlign.ToValue()}", true)
                     );
                 }
                 else
                 {
-                    return CssClassBuilder.Build(
+                    return CssClasser.Build(
                         new CssClass("input-group", true),
                         new CssClass($"input-group-{Size.ToValue()}", Size.IsUsed())
                     );
@@ -110,7 +110,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-input-icon__icon", true),
                     new CssClass($"kt-input-icon__icon--{IconAlign.ToValue()}", true)
                 );
@@ -121,7 +121,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return StringBuilder.Build(
+                return Stringer.Build(
                     ($"value:{Field}", !String.IsNullOrWhiteSpace(Field)),
                     ("event:{change:function(data,event){this." + Field + "(event.target.value)}}", IsBindComputed),
                     (Bind, !String.IsNullOrWhiteSpace(Bind))
@@ -133,7 +133,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return StringBuilder.Build(
+                return Stringer.Build(
                     ("required", IsRequired),
                     (Rule, !String.IsNullOrWhiteSpace(Rule))
                 );

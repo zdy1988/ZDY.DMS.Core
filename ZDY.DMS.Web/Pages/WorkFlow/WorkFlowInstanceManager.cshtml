@@ -30,18 +30,18 @@
     <div class="col-md-12">
         <portlet title="实例列表" fit="Fit" data-model="list">
             <data-table is-show-checkbox-column="false">
-                <cell filed="Title"></cell>
-                <cell filed="FlowName"></cell>
-                <cell filed="LastExecuteStepName"></cell>
-                <cell filed="CreaterName"></cell>
-                <cell filed="TimeStamp"></cell>
-                <cell filed="LastModifyTime"></cell>
-                <cell>
+                <column filed="Title" text="实例名称"></column>
+                <column filed="FlowName" text="所属流程"></column>
+                <column filed="LastExecuteStepName" text="行进步骤"></column>
+                <column filed="CreaterName" text="创建人员"></column>
+                <column filed="TimeStamp" text="创建时间"></column>
+                <column filed="LastModifyTime" text="归档时间"></column>
+                <column align="Center" text="实例状态">
                     <lable data-bind="state: $root.dic('WorkFlowInstanceState', State, true)"></lable>
-                </cell>
-                <cell>
+                </column>
+                <column align="Center" text="操作" width="1">
                     <button size="Sm" state="Brand" icon="Git" is-only-icon="true" data-bind="click:$root.handleShowProcess">详情</button>
-                </cell>
+                </column>
             </data-table>
             <pager></pager>
         </portlet>
@@ -65,15 +65,6 @@
                 { field: 'FlowName', value: ko.observable(), method: zdy.querymethod.contains },
                 { field: 'LastExecuteStepName', value: ko.observable(), method: zdy.querymethod.contains },
                 { field: 'CreaterName', value: ko.observable(), method: zdy.querymethod.contains }
-            ],
-            headers: [
-                { text: '实例名称', field: 'Title' },
-                { text: '所属流程', field: 'FlowName' },
-                { text: '行进步骤', field: 'LastExecuteStepName' },
-                { text: '创建人员', field: 'CreaterName' },
-                { text: '创建时间', field: 'TimeStamp' },
-                { text: '归档时间', field: 'LastModifyTime' },
-                { text: '实例状态', field: 'State' }
             ],
             defaultOrderBy: "TimeStamp",
             dataQueryUrl: 'WorkFlowInstance/Search'

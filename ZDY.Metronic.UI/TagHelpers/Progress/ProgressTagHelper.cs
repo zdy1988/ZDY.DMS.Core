@@ -41,7 +41,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("progress", true),
                     new CssClass($"progress-{Size.ToValue()}", Size.IsUsed()),
                     new CssClass(ClassNames, !String.IsNullOrWhiteSpace(ClassNames))
@@ -53,7 +53,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("progress-bar", true),
                     new CssClass($"bg-{State.ToValue()}", State.IsUsed()),
                     new CssClass("progress-bar-striped", Striped.IsUsed()),

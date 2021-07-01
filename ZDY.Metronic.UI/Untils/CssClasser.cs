@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ZDY.Metronic.UI.Untils
 {
-    internal static class CssClassBuilder
+    internal static class CssClasser
     {
         internal static string Build(params CssClass[] classNames)
         {

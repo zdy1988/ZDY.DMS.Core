@@ -28,7 +28,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("tab-list row", true),
                     new CssClass(ClassNames, !String.IsNullOrWhiteSpace(ClassNames))
                 );
@@ -39,7 +39,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("nav nav-tabs nav-tabs-line nav-tabs-bold nav-tabs-line-2x", true),
                     new CssClass("nav-fill", IsJustified),
                     new CssClass($"nav-tabs-line-{State.ToValue()}", State.IsUsed()),

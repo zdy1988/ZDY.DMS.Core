@@ -51,7 +51,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-badge", true),
                     new CssClass($"kt-badge--{StateValue}", true),
                     new CssClass($"kt-badge--{Size.ToValue()}", Size.IsUsed()),

@@ -86,7 +86,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return StyleBuilder.Build(
+                return Styler.Build(
                     ("top", $"{RibbonTop}px", RibbonTop != int.MaxValue),
                     ("bottom", $"{RibbonBottom}px", RibbonBottom != int.MaxValue),
                     ("left", $"{RibbonLeft}px", RibbonLeft != int.MaxValue),
@@ -99,7 +99,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-ribbon", true),
                     new CssClass($"kt-ribbon--{PlacementValue}", true),
                     new CssClass($"kt-ribbon--{RibbonStateValue}", true),

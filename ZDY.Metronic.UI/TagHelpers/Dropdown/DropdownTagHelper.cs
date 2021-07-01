@@ -62,7 +62,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("btn-group", Mode != DropdownMode.Icon),
                     new CssClass("dropdown dropdown-inline", Mode == DropdownMode.Icon),
                     new CssClass($"drop{Direction.ToValue()}", Direction.IsUsed()),
@@ -75,7 +75,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("dropdown-menu", true),
                     new CssClass($"dropdown-menu-{Size.ToValue()}", Size.IsUsed()),
                     new CssClass($"dropdown-menu-{Fit.ToValue()}", Fit.IsUsed())
@@ -87,7 +87,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                    new CssClass("btn", true),
                    new CssClass("dropdown-toggle", Mode != DropdownMode.Icon),
                    new CssClass("dropdown-toggle-split", Mode == DropdownMode.Split),
@@ -104,7 +104,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                    new CssClass("btn", true),
                    new CssClass($"btn-{StateValue}", true),
                    new CssClass($"btn-{ButtonSize.ToValue()}", ButtonSize.IsUsed()),

@@ -30,7 +30,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("modal-dialog", true), 
                     new CssClass("modal-dialog-centered", IsCentered),
                     new CssClass("modal-dialog-scrollable", IsScrollabled || ContentHeight > 0 || MaxContentHeight > 0),
@@ -44,7 +44,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return StyleBuilder.Build(
+                return Styler.Build(
                     ("height", $"{ContentHeight}px", ContentHeight > 0), 
                     ("max-height", $"{MaxContentHeight}px", MaxContentHeight > 0)
                 );

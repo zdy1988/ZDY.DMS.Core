@@ -34,16 +34,23 @@
             </portlet-header-action-container>
 
             <data-table is-show-checkbox-column="false">
-                <cell filed="UserName" />
-                <cell filed="NickName" />
-                <cell filed="Name" />
-                <cell filed="Gender" />
-                <cell filed="Mobile" />
-                <cell filed="Email" />
-                <cell />
-                <cell align="Center">
+                <column filed="UserName" text="账号"/>
+                <column filed="NickName" text="昵称"/>
+                <column filed="Name" text="姓名"/>
+                <column filed="Gender" text="性别" align="Center"/>
+                <column filed="Mobile" text="手机号码"/>
+                <column filed="Email" text="Email"/>
+                <column text="用户状态" align="Center">
+                    <!-- ko {if: IsDisabled} -->
+                    启用
+                    <!-- /ko -->
+                    <!-- ko {ifnot: IsDisabled} -->
+                    禁用
+                    <!-- /ko -->
+                </column>
+                <column align="Center" text="操作" width="1">
                     <button size="Sm" is-outline="true" state="Brand" is-only-icon="true" icon="CommentO" data-bind="click:$root.goto, attr: {'data-url': '/User/UserDetail?id=' + Id}" />
-                </cell>
+                </column>
             </data-table>
 
             <pager></pager>
@@ -59,15 +66,6 @@
                 { field: 'NickName', value: ko.observable(), method: zdy.querymethod.contains },
                 { field: 'Name', value: ko.observable(), method: zdy.querymethod.contains },
                 { field: 'Mobile', value: ko.observable(), method: zdy.querymethod.contains }
-            ],
-            headers: [
-                { text: '账号', field: 'UserName' },
-                { text: '昵称', field: 'NickName' },
-                { text: '姓名', field: 'Name' },
-                { text: '性别', field: 'Gender' },
-                { text: '手机号码', field: 'Mobile' },
-                { text: '电子邮箱', field: 'Email' },
-                { text: '用户状态', field: 'IsDisabled' }
             ],
             defaultOrderBy: "TimeStamp",
             dataQueryUrl: 'User/Search'

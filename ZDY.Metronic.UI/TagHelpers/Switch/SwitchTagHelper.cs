@@ -30,7 +30,7 @@ namespace ZDY.Metronic.UI.TagHelpers
         {
             get
             {
-                return CssClassBuilder.Build(
+                return CssClasser.Build(
                     new CssClass("kt-switch", true),
                     new CssClass($"kt-switch--{State.ToValue()}", State.IsUsed()),
                     new CssClass($"kt-switch--{Size.ToValue()}", Size.IsUsed()),
