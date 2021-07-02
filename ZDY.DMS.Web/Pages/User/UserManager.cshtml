@@ -30,7 +30,7 @@
     <div class="col-md-12">
         <portlet title="用户列表" fit="Fit" data-model="list">
             <portlet-header-action-container>
-                <button state="Brand" icon="UserPlus" size="Sm" data-bind="click:$root.goto, attr: {'data-url': '/User/UserDetail'}">新增用户</button>
+                <button state="Brand" icon="UserPlus" size="Sm" route-to="/User/UserDetail">新增用户</button>
             </portlet-header-action-container>
 
             <data-table is-show-checkbox-column="false">
@@ -49,7 +49,7 @@
                     <!-- /ko -->
                 </column>
                 <column align="Center" text="操作" width="1">
-                    <button size="Sm" is-outline="true" state="Brand" is-only-icon="true" icon="CommentO" data-bind="click:$root.goto, attr: {'data-url': '/User/UserDetail?id=' + Id}" />
+                    <button size="Sm" is-outline="true" state="Brand" is-only-icon="true" icon="CommentO" route-to="'/User/UserDetail?id=' + Id"/>
                 </column>
             </data-table>
 

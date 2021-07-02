@@ -78,17 +78,13 @@ h1, h2, h3, h4, h5, h6,
 /*#endregion*/
 
 /*#region btn*/
-.btn-sm, .btn-group-sm > .btn {
-    font-size: 1rem;
-}
 
-    .btn.btn-sm [class^="la-"],
-    .btn-group-sm > .btn [class^="la-"],
-    .btn.btn-sm [class*=" la-"],
-    .btn-group-sm > .btn [class*=" la-"] {
-        font-size: 1.3rem;
-        margin-top: -3px;
-    }
+.btn.btn-sm [class^="la-"],
+.btn-group-sm > .btn [class^="la-"],
+.btn.btn-sm [class*=" la-"],
+.btn-group-sm > .btn [class*=" la-"] {
+    vertical-align: top;
+}
 
 /*#endregion*/
 
@@ -186,10 +182,17 @@ h1, h2, h3, h4, h5, h6,
 
 /*#endregion*/
 
-/*#region table*/
+/*#region table tree*/
 
 .table.table-tree {
 }
+
+    .table.table-tree thead th {
+        background: #ffffff;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
 
     .table.table-tree svg {
         margin-top: -2px;

@@ -30,7 +30,7 @@
     <div class="col-md-12">
         <portlet title="公司列表" fit="Fit" data-model="list">
             <portlet-header-action-container>
-                <button state="Brand" icon="PlusSquare" size="Sm" data-bind="click:$root.goto, attr: {'data-url': '/Organization/CompanyDetail'}">新增公司</button>
+                <button state="Brand" icon="PlusCircle" size="Sm" route-to="/Organization/CompanyDetail">新增公司</button>
             </portlet-header-action-container>
 
             <data-table is-show-checkbox-column="false">
@@ -42,8 +42,8 @@
                 </column>
                 <column filed="Address" text="公司地址"></column>
                 <column align="Center" text="操作" width="1">
-                    <button size="Sm" is-outline="true" state="Brand" icon="Home" is-only-icon="true" tooltip="部门" data-bind="click:$root.goto, attr: {'data-url': '/Organization/DepartmentManager?companyId=' + Id }"/>
-                    <button size="Sm" is-outline="true" state="Success" icon="Edit" is-only-icon="true" data-bind="click:$root.goto, attr: {'data-url': '/Organization/CompanyDetail?id=' + Id }"/>
+                    <button size="Sm" is-outline="true" state="Brand" icon="Home" is-only-icon="true" tooltip="部门" route-to="'/Organization/DepartmentManager?companyId=' + Id"/>
+                    <button size="Sm" is-outline="true" state="Success" icon="Edit" is-only-icon="true" route-to="'/Organization/CompanyDetail?id=' + Id"/>
                 </column>
             </data-table>
 

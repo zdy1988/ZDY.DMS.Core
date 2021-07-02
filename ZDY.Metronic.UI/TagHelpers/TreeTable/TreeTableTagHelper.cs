@@ -19,6 +19,8 @@ namespace ZDY.Metronic.UI.TagHelpers
 
         public List<TreeTableItem> Dataset { get; set; }
 
+        public double Height { get; set; } = 360;
+
         public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         {
             if (context.TryAddContext<TreeTableContext, TreeTableTagHelper>(out TreeTableContext treeTableContext))

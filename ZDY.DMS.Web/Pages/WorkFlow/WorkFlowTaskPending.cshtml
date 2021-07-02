@@ -41,7 +41,7 @@
                     <lable data-bind="state: $root.dic('WorkFlowTaskState', State, true)"></lable>
                 </column>
                 <column align="Center" text="操作">
-                    <button size="Sm" state="Brand" icon="PencilSquare" is-only-icon="true" data-bind="click:$root.goto, attr: {'data-url': '/WorkFlow/WorkFlowTaskExecute?id=' + Id}">详情</button>
+                    <button size="Sm" state="Brand" icon="PencilSquare" is-only-icon="true" route-to="'/WorkFlow/WorkFlowTaskExecute?id=' + Id">详情</button>
                 </column>
             </data-table>
             <pager></pager>
